@@ -1,0 +1,33 @@
+<div id="login_page">
+    <strong>Don`t have an account?</strong>
+    <router-link :to="{ name: 'app_registration' }">Let`s create it!</router-link>
+    <br />
+    <br />
+
+    <b-form @submit="loginUser">
+
+        <b-form-group
+                label="Email address:"
+                label-for="login_username_input">
+            <b-form-input id="login_username_input"
+                          type="email"
+                          v-model="username"
+                          required
+                          placeholder="Enter email">
+            </b-form-input>
+        </b-form-group>
+
+        <b-form-group
+                label="Password:"
+                label-for="login_password_input">
+            <b-form-input id="login_password_input"
+                          type="password"
+                          v-model="password"
+                          required
+                          placeholder="Enter password">
+            </b-form-input>
+        </b-form-group>
+
+        <b-button type="submit" variant="primary">Login</b-button>
+    </b-form>
+</div>
