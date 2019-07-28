@@ -1,6 +1,6 @@
 const Config = {
     api: {
-        baseUrl: "http://strategy.local"
+        baseUrl: "http://watchfilms.local"
     },
     params: {
         dateTimeFormat: "DD-MM-YYYY HH:mm:ss",
