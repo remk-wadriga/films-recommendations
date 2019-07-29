@@ -2,15 +2,21 @@
 
 namespace App\Entity;
 
+use App\Helpers\AccessTokenEntityInterface;
+use App\Helpers\AccessTokenHelper;
 use Doctrine\ORM\Mapping as ORM;
+use Faker\Factory;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Validator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("email", message="User with the same email already registered in system.")
  */
-class User
+class User implements AccessTokenEntityInterface
 {
     use TimestampableEntity;
 
@@ -50,9 +56,14 @@ class User
     private $age;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $aboutMe;
+
+    /**
      * @ORM\Column(type="string", length=64)
      */
-    private $passwordHash;
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -68,6 +79,11 @@ class User
      * @ORM\Column(type="string", length=64)
      */
     private $accessToken;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $renewToken;
 
     /**
      * @ORM\Column(type="datetime")
@@ -157,20 +173,35 @@ class User
         return $this;
     }
 
-    public function getPasswordHash(): ?string
+    public function getAboutMe(): ?string
     {
-        return $this->passwordHash;
+        return $this->aboutMe;
     }
 
-    public function setPasswordHash(string $passwordHash): self
+    public function setAboutMe(?string $aboutMe): self
     {
-        $this->passwordHash = $passwordHash;
+        $this->aboutMe = $aboutMe;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
 
     public function getSalt(): ?string
     {
+        if ($this->salt === null) {
+            $this->salt = Factory::create()->md5;
+        }
         return $this->salt;
     }
 
@@ -193,6 +224,18 @@ class User
         return $this;
     }
 
+    public function getRenewToken(): ?string
+    {
+        return $this->renewToken;
+    }
+
+    public function setRenewToken(string $renewToken): self
+    {
+        $this->renewToken = $renewToken;
+
+        return $this;
+    }
+
     public function getAccessTokenExpiredAt(): ?\DateTimeInterface
     {
         return $this->accessTokenExpiredAt;
@@ -203,5 +246,88 @@ class User
         $this->accessTokenExpiredAt = $accessTokenExpiredAt;
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $password): self
+    {
+        $this->plainPassword = $password;
+        return $this;
+    }
+
+
+    // Implementing UserInterface
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+
+    }
+
+    // Implementing Serializable
+
+    public function serialize()
+    {
+        return serialize([
+            $this->getId(),
+            $this->getEmail(),
+            $this->getFirstName(),
+            $this->getLastName(),
+            $this->getPassword(),
+            $this->getSalt(),
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->firstName,
+            $this->lastName,
+            $this->passwordHash,
+            $this->salt
+            ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+
+    // Lifecycle Callbacks
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function beforeCreate()
+    {
+        if ($this->getAccessToken() === null) {
+            $this->setAccessToken(AccessTokenHelper::generateAccessToken($this));
+        }
+        if ($this->getRenewToken() === null) {
+            $this->setRenewToken(AccessTokenHelper::generateAccessToken($this));
+        }
+        if ($this->getAccessTokenExpiredAt() === null) {
+            $this->setAccessTokenExpiredAt(AccessTokenHelper::getAccessTokenExpiredAt());
+        }
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new \DateTime());
+        }
+        if ($this->getUpdatedAt() === null) {
+            $this->setUpdatedAt(new \DateTime());
+        }
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function beforeUpdate()
+    {
+        $this->setUpdatedAt(new \DateTime());
     }
 }
