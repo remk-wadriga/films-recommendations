@@ -153,6 +153,6 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
             'message' => $authException->getMessage(),
             'code' => $authException->getCode(),
         ];
-        return new JsonResponse(['error' => $data], Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 }
