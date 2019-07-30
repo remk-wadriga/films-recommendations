@@ -14,8 +14,8 @@
             }
         },
         mounted () {
-            this.$http.get('games').then(response => {
-
+            this.$http.get('user').then(response => {
+                console.log(response)
             }, errorResponse => {
                 //console.log(errorResponse)
             })

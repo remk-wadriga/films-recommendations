@@ -2,12 +2,21 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     encoders:
         App\Entity\User: bcrypt
+    providers:
+        access_token_user_provider:
+            #entity:
+            #    class: App\Entity\User
+            #    property: accessToken
+            id: App\Security\AccessTokenUserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
+            anonymous: ~
+            guard:
+                authenticators:
+                    - App\Security\AccessTokenAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
