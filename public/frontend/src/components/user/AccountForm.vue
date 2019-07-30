@@ -1,8 +1,9 @@
 <template src="@/templates/user/account-form.html" />
 
 <script>
+    import Vue from 'vue'
     import { mapMutations } from 'vuex'
-    import { SET_ACCESS_TOKEN_MUTATION, UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
+    import { SET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 
     const SEX_MALE = 'male'
     const SEX_FEMALE = 'female'
@@ -11,15 +12,7 @@
         name: "AccountForm",
         data() {
             return {
-                userParams: {
-                    email: null,
-                    firstName: null,
-                    lastName: null,
-                    sex: SEX_MALE,
-                    age: null,
-                    aboutMe: null,
-                    password: null
-                },
+                user: Vue.user,
                 repeatPassword: null,
                 sexNames: [
                     {value: SEX_MALE, text: 'Male'},
@@ -32,22 +25,21 @@
         },
         methods: {
             ...mapMutations({
-                setAccessToken: SET_ACCESS_TOKEN_MUTATION,
-                unsetAccessToken: UNSET_ACCESS_TOKEN_MUTATION
+                setAccessToken: SET_ACCESS_TOKEN_MUTATION
             }),
-            registerUser() {
+            successFrom() {
                 this.errors = []
-                if (!this.userParams.email || !this.userParams.sex || !this.userParams.age || !this.userParams.password || !this.repeatPassword) {
+                if (!this.user.email || !this.user.sex || !this.user.age || (!this.user.isLogged && (!this.user.password || !this.repeatPassword))) {
                     this.errors.push('Params "Username", "Sex", "Age", "Password" and "Repeat password" are required!')
                 }
-                if (this.userParams.sex !== SEX_MALE && this.userParams.sex !== SEX_FEMALE) {
+                if (this.user.sex !== SEX_MALE && this.user.sex !== SEX_FEMALE) {
                     this.errors.push('Incorrect "Sex" value')
                 }
 
-                if (this.userParams.age && (this.userParams.age < this.minAge || this.userParams.age > this.maxAge)) {
+                if (this.user.age && (this.user.age < this.minAge || this.user.age > this.maxAge)) {
                     this.errors.push('"Age" must be an integer between ' + this.minAge + ' and ' + this.maxAge + '!')
                 }
-                if (this.userParams.password !== this.repeatPassword) {
+                if (this.repeatPassword && this.user.password !== this.repeatPassword) {
                     this.errors.push('Passwords are not match!')
                 }
 
@@ -55,32 +47,46 @@
                     return
                 }
 
-                this.userParams.plainPassword = {
-                    first: this.userParams.password,
-                    second: this.repeatPassword
+                let params = {
+                    email: this.user.email,
+                    firstName: this.user.firstName,
+                    lastName: this.user.lastName,
+                    age: this.user.age,
+                    sex: this.user.sex,
+                    aboutMe: this.user.aboutMe
                 }
-                delete this.userParams.password
+                if (this.repeatPassword) {
+                    params.plainPassword = {
+                        first: this.user.password,
+                        second: this.repeatPassword
+                    }
+                }
 
-                this.$http.post('registration', {'user_form': this.userParams}).then(response => this.registrationSuccessful(response), errorResponse => this.registrationFailed(errorResponse));
+                let url = this.user.isLogged ? 'account' : 'registration'
+                this.$http.post(url, {'user_form': params}).then(response => this.registrationSuccessful(response), errorResponse => this.registrationFailed(errorResponse));
             },
             registrationSuccessful (response) {
-                if (response.body['access_token'] === undefined) {
-                    let message = response.body.message ? response.body.message : 'No access token given'
-                    this.errors.push(message)
-                    return
+                // If this is new user - check the access token in response and login him
+                if (!Vue.user.isLogged) {
+                    if (response.body['access_token'] === undefined) {
+                        let message = response.body.message ? response.body.message : 'No access token given'
+                        this.errors.push(message)
+                        return
+                    }
+                    // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
+                    this.setAccessToken(response.body['access_token'])
+
+                    // Init user params
+                    Vue.user.init()
                 }
-                // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
-                this.setAccessToken(response.body['access_token'])
+
                 // Redirect logged user to home page
-                this.$router.push({name: 'app_homepage'})
+                this.$router.push({name: 'user_account'})
             },
             registrationFailed (response) {
                 let message = response.body.message ? response.body.message : 'Unknown error'
                 this.errors.push(message)
             }
-        },
-        mounted () {
-            this.unsetAccessToken()
         }
     }
 </script>

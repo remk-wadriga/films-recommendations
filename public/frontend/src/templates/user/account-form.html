@@ -1,6 +1,6 @@
 <div id="account_form">
 
-    <b-form @submit="registerUser">
+    <b-form @submit="successFrom">
 
         <p v-if="errors.length" align="left">
             <b>Please fix errors:</b>
@@ -15,7 +15,7 @@
                 description="We'll never share your username with anyone else.">
             <b-form-input id="register_email_input"
                           type="email"
-                          v-model="userParams.email"
+                          v-model="user.email"
                           required
                           placeholder="Enter username">
             </b-form-input>
@@ -26,7 +26,7 @@
                 label-for="register_first_name_input">
             <b-form-input id="register_first_name_input"
                           type="text"
-                          v-model="userParams.firstName"
+                          v-model="user.firstName"
                           placeholder="Enter your first name">
             </b-form-input>
         </b-form-group>
@@ -36,7 +36,7 @@
                 label-for="register_last_name_input">
             <b-form-input id="register_last_name_input"
                           type="text"
-                          v-model="userParams.lastName"
+                          v-model="user.lastName"
                           placeholder="Enter your last name">
             </b-form-input>
         </b-form-group>
@@ -45,7 +45,7 @@
                 label="Sex:"
                 label-for="register_sex_input">
             <b-form-select id="register_sex_input"
-                    v-model="userParams.sex"
+                    v-model="user.sex"
                     :options="sexNames"
                     required>
             </b-form-select>
@@ -58,7 +58,7 @@
                           type="number"
                           :min="minAge"
                           :max="maxAge"
-                          v-model="userParams.age"
+                          v-model="user.age"
                           required
                           placeholder="Enter your age">
             </b-form-input>
@@ -70,7 +70,7 @@
             <b-form-textarea id="register_about_me_input"
                     rows="3"
                     maxrows="6"
-                    v-model="userParams.aboutMe"
+                    v-model="user.aboutMe"
                     placeholder="Say few words about you">
             </b-form-textarea>
         </b-form-group>
@@ -80,8 +80,8 @@
                 label-for="register_password_input">
             <b-form-input id="register_password_input"
                           type="password"
-                          v-model="userParams.password"
-                          required
+                          v-model="user.password"
+                          :required="!user.isLogged"
                           placeholder="Enter password">
             </b-form-input>
         </b-form-group>
@@ -92,11 +92,11 @@
             <b-form-input id="register_repeat_password_input"
                           type="password"
                           v-model="repeatPassword"
-                          required
+                          :required="!user.isLogged"
                           placeholder="Enter password one more time">
             </b-form-input>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">Register</b-button>
+        <b-button type="submit" variant="primary">{{ user.isLogged ? 'Update' : 'Register' }}</b-button>
     </b-form>
 </div>

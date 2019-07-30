@@ -16,7 +16,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/registration", name="security_registration", methods={"POST"})
      */
-    public function registration(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function registration(Request $request, UserPasswordEncoderInterface $passwordEncoder, AccessTokenUserProvider $userProvider)
     {
         // Create form and handle data
         $user = new User();
@@ -30,7 +30,8 @@ class SecurityController extends AbstractController
         $em->flush();
 
         // Return new user access token
-        return $this->json(['OK']);
+        $token = $userProvider->getAccessTokenForUser($user);
+        return $this->json($token->toApi());
     }
 
     /**

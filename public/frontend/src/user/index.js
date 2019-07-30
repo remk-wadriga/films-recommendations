@@ -3,12 +3,13 @@ import store from "../store";
 
 const User = {
     id: null,
-    username: null,
+    email: null,
     firstName: null,
     lastName: null,
     age: null,
-    sec: null,
+    sex: null,
     aboutMe: null,
+    password: null,
     fullName: null,
     isLogged: false,
 
@@ -20,12 +21,13 @@ const User = {
 
     flush () {
         this.id = null
-        this.username = null
+        this.email = null
         this.firstName = null
         this.lastName = null
         this.age = null
-        this.sec = null
+        this.sex = null
         this.aboutMe = null
+        this.password = null
         this.fullName = null
         this.isLogged = false
     },
@@ -33,11 +35,11 @@ const User = {
     responseSuccessFul(response) {
         if (response.body.id) {
             this.id = response.body.id
-            this.username = response.body.username
+            this.email = response.body.email
             this.firstName = response.body.firstName
             this.lastName = response.body.lastName
             this.age = response.body.age
-            this.sec = response.body.sec
+            this.sex = response.body.sex
             this.aboutMe = response.body.aboutMe
 
             this.fullName = this.firstName
@@ -45,7 +47,7 @@ const User = {
                 this.fullName += ' ' + this.lastName;
             }
             if (!this.fullName) {
-                this.fullName = this.username
+                this.fullName = this.email
             }
             this.isLogged = true
         }

@@ -9,8 +9,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 abstract class AbstractType extends BaseAbstractType
 {
-    const ACTION_CREATE = 'mode_create';
-    const ACTION_UPDATE = 'mode_update';
+    const ACTION_CREATE = 'action_create';
+    const ACTION_UPDATE = 'action_update';
 
     protected static $actions = [self::ACTION_CREATE, self::ACTION_UPDATE];
     protected $action = self::ACTION_CREATE;

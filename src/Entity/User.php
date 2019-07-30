@@ -260,6 +260,12 @@ class User implements AccessTokenEntityInterface
     }
 
 
+    public function getIsNew()
+    {
+        return $this->getId() === null;
+    }
+
+
     // Implementing UserInterface
 
     public function getUsername()
