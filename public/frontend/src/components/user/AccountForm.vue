@@ -35,7 +35,6 @@
                 if (this.user.sex !== SEX_MALE && this.user.sex !== SEX_FEMALE) {
                     this.errors.push('Incorrect "Sex" value')
                 }
-
                 if (this.user.age && (this.user.age < this.minAge || this.user.age > this.maxAge)) {
                     this.errors.push('"Age" must be an integer between ' + this.minAge + ' and ' + this.maxAge + '!')
                 }
