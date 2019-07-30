@@ -20,7 +20,8 @@ class UserController extends AbstractController
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'age' => $user->getAge(),
-            'sex' => $user->getSex()
+            'sex' => $user->getSex(),
+            'aboutMe' => $user->getAboutMe(),
         ]);
     }
 }

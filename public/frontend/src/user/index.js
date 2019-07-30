@@ -8,6 +8,7 @@ const User = {
     lastName: null,
     age: null,
     sec: null,
+    aboutMe: null,
     fullName: null,
     isLogged: false,
 
@@ -24,6 +25,7 @@ const User = {
         this.lastName = null
         this.age = null
         this.sec = null
+        this.aboutMe = null
         this.fullName = null
         this.isLogged = false
     },
@@ -36,6 +38,7 @@ const User = {
             this.lastName = response.body.lastName
             this.age = response.body.age
             this.sec = response.body.sec
+            this.aboutMe = response.body.aboutMe
 
             this.fullName = this.firstName
             if (this.lastName && this.fullName) {
