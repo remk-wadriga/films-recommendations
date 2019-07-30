@@ -1,10 +1,52 @@
 <div id="app">
 
+    <b-navbar toggleable="md" type="dark" variant="info">
+
+        <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+
+        <b-navbar-brand :to="{ name: 'app_homepage' }">Home</b-navbar-brand>
+
+        <b-collapse is-nav id="nav_collapse">
+
+            <b-navbar-nav>
+                <b-nav-item :to="{ name: 'app_login' }" v-if="!user.isLogged">Login</b-nav-item>
+                <!--<b-nav-item href="#" disabled>Disabled</b-nav-item>-->
+            </b-navbar-nav>
+
+            <!-- Right aligned nav items -->
+            <b-navbar-nav class="ml-auto">
+
+                <!--<b-nav-form>
+                    <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
+                    <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+                </b-nav-form>-->
+
+                <!--<b-nav-item-dropdown text="Lang" right>
+                    <b-dropdown-item href="#">EN</b-dropdown-item>
+                    <b-dropdown-item href="#">ES</b-dropdown-item>
+                    <b-dropdown-item href="#">RU</b-dropdown-item>
+                    <b-dropdown-item href="#">FA</b-dropdown-item>
+                </b-nav-item-dropdown>-->
+
+                <b-nav-item-dropdown right v-if="user.isLogged">
+                    <!-- Using button-content slot -->
+                    <template slot="button-content">
+                        <em>{{ user.fullName }}</em>
+                    </template>
+                    <b-dropdown-item :to="{ name: 'user_account' }">Profile</b-dropdown-item>
+                    <b-dropdown-item href="#" @click="logoutUser">Logout</b-dropdown-item>
+                </b-nav-item-dropdown>
+            </b-navbar-nav>
+
+        </b-collapse>
+    </b-navbar>
+
     <div class="container">
-        <router-link :to="{ name: 'app_login' }">Login</router-link>
-        <br />
-        <br />
-        <router-view/>
+
+        <router-view v-if="user.isLogged" />
+
+        <LoginForm v-if="!user.isLogged" />
+
     </div>
 
 </div>

@@ -1,6 +1,7 @@
 <template src="@/templates/auth/login-form.html" />
 
 <script>
+    import Vue from 'vue'
     import { mapMutations } from 'vuex'
     import { SET_ACCESS_TOKEN_MUTATION, UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 
@@ -32,6 +33,10 @@
 
                 // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
                 this.setAccessToken(response.body['access_token'])
+
+                // Init user
+                Vue.user.init()
+
                 // Redirect logged user to home page
                 this.$router.push({name: 'app_homepage'})
             },

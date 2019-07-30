@@ -15,6 +15,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         return $this->json([
+            'id' => $user->getId(),
             'username' => $user->getEmail(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),

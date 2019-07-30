@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import user from './user'
 import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
@@ -21,6 +22,10 @@ Vue.http.headers.common['Content-Type'] = 'application/json'
 if (localStorage.accessToken) {
     store.commit(SET_ACCESS_TOKEN_MUTATION, localStorage.accessToken)
 }
+
+Vue.user = user
+
+user.init()
 
 new Vue({
     el: '#app',
