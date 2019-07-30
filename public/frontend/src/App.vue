@@ -4,13 +4,13 @@
     import 'bootstrap/dist/css/bootstrap.css'
     import 'bootstrap-vue/dist/bootstrap-vue.css'
     import Vue from 'vue'
-    import LoginForm from '@/components/auth/LoginForm.vue'
+    import Login from '@/components/auth/Login.vue'
     import { mapMutations } from 'vuex'
     import { UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 
     export default {
         name: 'App',
-        components: { LoginForm },
+        components: { Login },
         data () {
             return {
                 user: Vue.user
@@ -31,6 +31,11 @@
                     // Redirect logged user to home page
                     this.$router.push({name: 'app_homepage'})
                 });
+            }
+        },
+        computed: {
+            needLogin () {
+                return !Vue.user.isLogged && this.$router.resolve({name: 'app_registration'}).route.path !== this.$route.path
             }
         }
     }

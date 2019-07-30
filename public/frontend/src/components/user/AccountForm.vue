@@ -1,4 +1,4 @@
-<template src="@/templates/auth/registration-form.html" />
+<template src="@/templates/user/account-form.html" />
 
 <script>
     import { mapMutations } from 'vuex'
@@ -8,7 +8,7 @@
     const SEX_FEMALE = 'female'
 
     export default {
-        name: "RegistrationForm",
+        name: "AccountForm",
         data() {
             return {
                 userParams: {

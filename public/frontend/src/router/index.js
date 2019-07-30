@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Content from '@/components/Content'
-import LoginForm from '@/components/auth/LoginForm'
-import RegistrationForm from '@/components/auth/RegistrationForm'
-import UserAccount from '@/components/UserAccount'
+import Login from '@/components/auth/Login'
+import Registration from '@/components/auth/Registration'
+import Account from '@/components/user/Account'
 
 Vue.use(Router)
 
@@ -17,17 +17,17 @@ export default new Router({
         {
             path: '/login',
             name: 'app_login',
-            component: LoginForm
+            component: Login
         },
         {
             path: '/registration',
             name: 'app_registration',
-            component: RegistrationForm
+            component: Registration
         },
         {
             path: '/account',
             name: 'user_account',
-            component: UserAccount
+            component: Account
         }
     ]
 })

@@ -1,4 +1,4 @@
-<template src="@/templates/auth/login-form.html" />
+<template src="@/templates/user/login-form.html" />
 
 <script>
     import Vue from 'vue'
@@ -43,9 +43,6 @@
             loginFailed () {
                 this.unsetAccessToken()
             }
-        },
-        mounted () {
-            this.unsetAccessToken()
         }
     }
 </script>

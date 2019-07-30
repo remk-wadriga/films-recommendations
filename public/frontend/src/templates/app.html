@@ -43,9 +43,9 @@
 
     <div class="container">
 
-        <router-view v-if="user.isLogged" />
+        <router-view v-if="!needLogin" />
 
-        <LoginForm v-if="!user.isLogged" />
+        <Login v-if="needLogin" />
 
     </div>
 
