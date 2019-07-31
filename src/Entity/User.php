@@ -29,6 +29,7 @@ class User implements AccessTokenEntityInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Validator\NotEmpty(message="Email can not be blank.")
      * @Assert\Email(
      *     message = "The email {{ value }} is not a valid email.",
      * )
@@ -61,7 +62,7 @@ class User implements AccessTokenEntityInterface
     private $aboutMe;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=120)
      */
     private $password;
 

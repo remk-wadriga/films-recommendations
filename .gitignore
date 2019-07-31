@@ -13,6 +13,7 @@
 /var/
 /vendor/
 /phpunit.xml
+/.env.test
 ###< symfony/framework-bundle ###
 
 ###> VueJS-bundle ###
@@ -24,3 +25,8 @@
 /public/frontend/yarn-error.log*
 /public/frontend/test/unit/coverage/
 ###< VueJS-bundle ###
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###

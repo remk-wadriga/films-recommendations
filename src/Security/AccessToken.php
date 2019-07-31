@@ -138,6 +138,11 @@ class AccessToken implements TokenInterface
         $this->_attributes[$name] = $value;
     }
 
+    public function getRoleNames()
+    {
+        return ['ROLE_USER'];
+    }
+
     public function serialize()
     {
         return serialize($this->getCredentials());
