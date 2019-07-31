@@ -47,12 +47,8 @@ class SecurityControllerTest extends AbstractWebTestCase
 
         // 4. Try to get user info with incorrect access token
         $testKeysID = 'get user info after logout';
-        $responseCheckingParams = [
-            'message' => 'string',
-            'code' => 'integer'
-        ];
         $response = $this->request('get_user_info');
-        $this->checkResponse($response, $testKeysID, $responseCheckingParams, true, Response::HTTP_UNAUTHORIZED);
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_UNAUTHORIZED);
     }
 
     public function testRenewToken()
@@ -72,12 +68,8 @@ class SecurityControllerTest extends AbstractWebTestCase
 
         // 4. Try to get user info with old access token
         $testKeysID = 'get user info after renew token with old token';
-        $responseCheckingParams = [
-            'message' => 'string',
-            'code' => 'integer'
-        ];
         $response = $this->request('get_user_info');
-        $this->checkResponse($response, $testKeysID, $responseCheckingParams, true, Response::HTTP_UNAUTHORIZED);
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_UNAUTHORIZED);
 
         // 5. Try to get user info with new token
         $this->accessToken = $renewTokenData['access_token'];
@@ -85,7 +77,7 @@ class SecurityControllerTest extends AbstractWebTestCase
         $response = $this->request('get_user_info');
         $this->checkResponseStatus($response, $testKeysID, Response::HTTP_OK);
 
-        // 5. Clear old auth params
+        // 6. Clear old auth params
         $this->clearUserInfo();
     }
 
@@ -115,7 +107,14 @@ class SecurityControllerTest extends AbstractWebTestCase
         $response = $this->request('security_login', ['username' => $userParams['email'], 'password' => $userParams['plainPassword']['first']], 'POST');
         $this->checkResponseToken($response, $testKeysID);
 
-        // 6. Try to register already existed user
+        // 6. Check registration action with correct data but without "firstName", "lastName" and "aboutMe" param
+        $testKeysID = 'test registration without firstName, lastName and aboutMe';
+        $userParams = $this->createUserEntityParams();
+        unset($userParams['firstName'], $userParams['lastName'], $userParams['aboutMe']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkResponseToken($response, $testKeysID);
+
+        // 7. Try to register already existed user
         $testKeysID = 'test registration with incorrect data: existed user';
         $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'already registered');
@@ -126,23 +125,62 @@ class SecurityControllerTest extends AbstractWebTestCase
         $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'email can not be blank');
 
-        // 8. Try to register user with incorrect email
+        // 9. Try to register user without sex
+        $testKeysID = 'test registration with incorrect data: without sex';
+        $userParams = $this->createUserEntityParams();
+        unset($userParams['sex']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'sex can not be blank');
+
+        // 10. Try to register user without age
+        $testKeysID = 'test registration with incorrect data: without age';
+        $userParams = $this->createUserEntityParams();
+        unset($userParams['age']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'age can not be blank');
+
+        // 11. Try to register user with incorrect email
         $testKeysID = 'test registration with incorrect data: incorrect email';
         $userParams = $this->createUserEntityParams(['email' => 'INVALID_EMAIL']);
         $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'is not a valid email');
 
-        // 8. Try to register user without password
+        // 12. Try to register user without password
         $testKeysID = 'test registration with incorrect data: without password';
         $userParams = $this->createUserEntityParams([], false);
         $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password can not be blank');
 
-        // 9. Try to register user with invalid second password
+        // 13. Try to register user with invalid second password
         $testKeysID = 'test registration with incorrect data: invalid second password';
         $userParams = $this->createUserEntityParams();
         $userParams['plainPassword']['second'] = 'INCORRECT_PASSWORD';
         $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password fields are not match');
+
+        // 14. Try to register user without second password
+        $testKeysID = 'test registration with incorrect data: without second password';
+        unset($userParams['plainPassword']['second']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password fields are not match');
+
+        // 15. Try to register user without first password
+        $testKeysID = 'test registration with incorrect data: without first password';
+        $userParams = $this->createUserEntityParams();
+        unset($userParams['plainPassword']['first']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password fields are not match');
+
+        // 16. Try to register user without first and second passwords
+        $testKeysID = 'test registration with incorrect data: without first and second passwords';
+        unset($userParams['plainPassword']['second']);
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password can not be blank');
+
+        // 17. Try to register user with empty first and second passwords
+        $testKeysID = 'test registration with incorrect data: empty first and second passwords';
+        $userParams['plainPassword'] = ['first' => '', 'second' => ''];
+        $response = $this->request('security_registration', ['user_form' => $userParams], 'POST');
+        $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_BAD_REQUEST, 'password can not be blank');
     }
 }

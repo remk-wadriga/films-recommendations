@@ -48,11 +48,13 @@ class User implements AccessTokenEntityInterface
 
     /**
      * @ORM\Column(type="string", length=8)
+     * @Validator\NotEmpty(message="Sex can not be blank.")
      */
     private $sex;
 
     /**
      * @ORM\Column(type="integer")
+     * @Validator\NotEmpty(message="Age can not be blank.")
      */
     private $age;
 
