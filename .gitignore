@@ -12,6 +12,7 @@
 /public/bundles/
 /var/
 /vendor/
+/phpunit.xml
 ###< symfony/framework-bundle ###
 
 ###> VueJS-bundle ###
