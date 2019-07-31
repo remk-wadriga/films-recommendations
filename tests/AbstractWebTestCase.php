@@ -311,4 +311,16 @@ abstract class AbstractWebTestCase extends WebTestCase
 
         return $params;
     }
+
+    protected function createUserCheckingParams($params = [])
+    {
+        $keys = array_keys($this->createUserEntityParams($params, false));
+        $params = [];
+        foreach ($keys as $key) {
+            $params[$key] = 'string';
+        }
+        unset($params['id']);
+        $params['age'] = 'integer';
+        return $params;
+    }
 }
