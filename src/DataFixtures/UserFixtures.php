@@ -11,6 +11,8 @@ class UserFixtures extends AbstractFixture
 {
     private $encoder;
 
+    protected $isEnabled = false;
+
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;

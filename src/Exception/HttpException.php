@@ -54,6 +54,7 @@ class HttpException extends BaseHttpException
 
         switch ($code) {
             case self::CODE_NOT_FOUND:
+            case FileException::NOT_FOUND:
                 $statusCode = Response::HTTP_NOT_FOUND;
                 break;
             case self::CODE_BAD_REQUEST:
@@ -64,6 +65,9 @@ class HttpException extends BaseHttpException
                 break;
             case ServiceException::CODE_INVALID_PARAMS:
                 $statusCode = Response::HTTP_BAD_REQUEST;
+                break;
+            case FileException::UNSUPPORTED_FORMAT:
+                $statusCode = Response::HTTP_UNSUPPORTED_MEDIA_TYPE;
                 break;
             default:
                 $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
