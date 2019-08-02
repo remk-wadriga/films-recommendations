@@ -3,6 +3,7 @@
 <script>
     import Vue from 'vue'
     import { mapMutations } from 'vuex'
+    import { ROUTE_ACCOUNT } from '@/router/routes-list'
     import { SET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { REGISTRATION_URL, ACCOUNT_UPDATE_URL } from '@/api/request-urls'
 
@@ -86,7 +87,7 @@
                 }
 
                 // Redirect logged user to home page
-                this.$router.push({name: 'user_account'})
+                this.$router.push({name: ROUTE_ACCOUNT})
             },
             registrationFailed (response) {
                 let message = response.message ? response.message : 'Unknown error'

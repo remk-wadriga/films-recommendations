@@ -6,16 +6,22 @@
     import Vue from 'vue'
     import Login from '@/components/auth/Login'
     import Logger from '@/components/Logger'
+    import TopButtons from '@/components/TopButtons'
     import { mapMutations } from 'vuex'
+    import { ROUTE_HOMEPAGE, ROUTE_LOGIN, ROUTE_REGISTRATION, ROUTE_ACCOUNT } from '@/router/routes-list'
     import { UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { LOGOUT_URL } from '@/api/request-urls'
 
     export default {
         name: 'App',
-        components: { Login, Logger },
+        components: { Login, Logger, TopButtons },
         data () {
             return {
-                user: Vue.user
+                user: Vue.user,
+                routeHomepage: ROUTE_HOMEPAGE,
+                routeLogin: ROUTE_LOGIN,
+                routeRegistration: ROUTE_REGISTRATION,
+                routeAccount: ROUTE_ACCOUNT
             }
         },
         methods: {
@@ -34,12 +40,15 @@
                 Vue.user.flush();
 
                 // Redirect logged user to home page
-                this.$router.push({name: 'app_homepage'})
+                this.$router.push({name: ROUTE_HOMEPAGE})
             }
         },
         computed: {
             needLogin () {
-                return !Vue.user.isLogged && this.$router.resolve({name: 'app_registration'}).route.path !== this.$route.path
+                return !Vue.user.isLogged && this.$router.resolve({name: ROUTE_REGISTRATION}).route.path !== this.$route.path
+            },
+            pageTitle () {
+                return this.$store.state.pageTitle
             }
         }
     }

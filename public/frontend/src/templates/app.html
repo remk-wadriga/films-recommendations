@@ -4,12 +4,12 @@
 
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-        <b-navbar-brand :to="{ name: 'app_homepage' }">Home</b-navbar-brand>
+        <b-navbar-brand :to="{ name: routeHomepage }">Home</b-navbar-brand>
 
         <b-collapse is-nav id="nav_collapse">
 
             <b-navbar-nav>
-                <b-nav-item :to="{ name: 'app_login' }" v-if="!user.isLogged">Login</b-nav-item>
+                <b-nav-item :to="{ name: routeLogin }" v-if="!user.isLogged">Login</b-nav-item>
                 <!--<b-nav-item href="#" disabled>Disabled</b-nav-item>-->
             </b-navbar-nav>
 
@@ -33,7 +33,7 @@
                     <template slot="button-content">
                         <em>{{ user.fullName }}</em>
                     </template>
-                    <b-dropdown-item :to="{ name: 'user_account' }">Profile</b-dropdown-item>
+                    <b-dropdown-item :to="{ name: routeAccount }">Profile</b-dropdown-item>
                     <b-dropdown-item href="#" @click="logoutUser">Logout</b-dropdown-item>
                 </b-nav-item-dropdown>
             </b-navbar-nav>
@@ -42,14 +42,29 @@
     </b-navbar>
 
     <b-container>
+
         <b-row>
             <logger />
         </b-row>
 
-        <b-row>
-            <router-view v-if="!needLogin" />
+        <b-row v-if="!needLogin">
 
-            <Login v-if="needLogin" />
+            <b-col class="text-left">
+                <h2>{{ pageTitle }}</h2>
+            </b-col>
+
+            <b-col class="text-right">
+                <TopButtons />
+            </b-col>
+
+        </b-row>
+
+        <b-row v-if="!needLogin">
+            <router-view />
+        </b-row>
+
+        <b-row v-if="needLogin">
+            <Login />
         </b-row>
     </b-container>
 

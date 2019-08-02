@@ -3,7 +3,9 @@ import Vuex from 'vuex'
 import { SET_ACCESS_TOKEN_MUTATION,
     UNSET_ACCESS_TOKEN_MUTATION,
     ADD_LOGGER_MESSAGE_MUTATION,
-    DELETE_LOGGER_MESSAGE_MUTATION
+    DELETE_LOGGER_MESSAGE_MUTATION,
+    SET_PAGE_TITLE_MUTATION,
+    SET_TOP_BUTTONS_MUTATION
 } from './mutation-types'
 
 Vue.use(Vuex);
@@ -14,7 +16,9 @@ export default new Vuex.Store({
     state: {
         accessToken: null,
         renewToken: null,
-        loggerMessages: []
+        pageTitle: null,
+        loggerMessages: [],
+        pageTopButtons: []
     },
     mutations: {
         [ SET_ACCESS_TOKEN_MUTATION ] (state, value) {
@@ -53,6 +57,16 @@ export default new Vuex.Store({
                     state.loggerMessages.splice(i, 1)
                 }
             })
+        },
+
+        [ SET_PAGE_TITLE_MUTATION ] (state, title) {
+            state.pageTitle = title
+        },
+        [ SET_TOP_BUTTONS_MUTATION ] (state, buttons) {
+            buttons.forEach(btn => {
+                btn.click = JSON.stringify(btn.click)
+            })
+            state.pageTopButtons = buttons
         }
     }
 })

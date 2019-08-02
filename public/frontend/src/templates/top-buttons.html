@@ -1,0 +1,14 @@
+<div id="top_buttons_block">
+    <div>
+        <b-button
+            v-for="btn in buttons"
+            :key="btn.title"
+            :variant="btn.type"
+            :size="btnSize"
+            class="mr-3"
+            @click="btnClick(btn.click)"
+        >
+            {{ btn.title }}
+        </b-button>
+    </div>
+</div>

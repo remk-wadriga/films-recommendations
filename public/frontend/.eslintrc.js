@@ -34,6 +34,7 @@ module.exports = {
     'no-trailing-spaces': 'off',
     'quotes': 'off',
     'no-multiple-empty-lines': 'off',
-    'space-before-function-paren': 'off'
+    'space-before-function-paren': 'off',
+    'no-eval': 'off'
   }
 }

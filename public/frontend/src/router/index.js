@@ -1,9 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Content from '@/components/Content'
 import Login from '@/components/auth/Login'
 import Registration from '@/components/auth/Registration'
 import Account from '@/components/user/Account'
+
+import FilmsList from '@/components/film/List'
+import FilmCreate from '@/components/film/Create'
+import FilmUpdate from '@/components/film/Update'
+import {
+    ROUTE_HOMEPAGE,
+    ROUTE_LOGIN,
+    ROUTE_REGISTRATION,
+    ROUTE_ACCOUNT,
+    ROUTE_FILM_CREATE,
+    ROUTE_FILM_UPDATE
+} from './routes-list'
 
 Vue.use(Router)
 
@@ -11,23 +22,33 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'app_homepage',
-            component: Content
+            name: ROUTE_HOMEPAGE,
+            component: FilmsList
         },
         {
             path: '/login',
-            name: 'app_login',
+            name: ROUTE_LOGIN,
             component: Login
         },
         {
             path: '/registration',
-            name: 'app_registration',
+            name: ROUTE_REGISTRATION,
             component: Registration
         },
         {
             path: '/account',
-            name: 'user_account',
+            name: ROUTE_ACCOUNT,
             component: Account
+        },
+        {
+            path: '/film/',
+            name: ROUTE_FILM_CREATE,
+            component: FilmCreate
+        },
+        {
+            path: '/film/:id',
+            name: ROUTE_FILM_UPDATE,
+            component: FilmUpdate
         }
     ]
 })

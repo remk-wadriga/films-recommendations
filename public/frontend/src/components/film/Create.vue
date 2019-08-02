@@ -1,17 +1,16 @@
-<template src="@/templates/user/account.html" />
+<template src="@/templates/film/create.html" />
 
 <script>
-    import Vue from 'vue'
     import { mapMutations } from 'vuex'
-    import AccountForm from '@/components/user/AccountForm'
+    import Form from '@/components/film/Form'
     import { SET_PAGE_TITLE_MUTATION, SET_TOP_BUTTONS_MUTATION } from '@/store/mutation-types'
 
     export default {
-        name: "Account",
-        components: { AccountForm },
+        name: "Create",
+        components: { Form },
         data () {
             return {
-                user: Vue.user
+
             }
         },
         methods: {
@@ -21,7 +20,7 @@
             })
         },
         mounted () {
-            this.setPageTitle('Account')
+            this.setPageTitle('Add film')
             this.setTopButtons([])
         }
     }

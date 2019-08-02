@@ -3,6 +3,7 @@
 <script>
     import Vue from 'vue'
     import { mapMutations } from 'vuex'
+    import { ROUTE_HOMEPAGE } from '@/router/routes-list'
     import { SET_ACCESS_TOKEN_MUTATION, UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { LOGIN_URL } from '@/api/request-urls'
 
@@ -45,7 +46,7 @@
                 Vue.user.init()
 
                 // Redirect logged user to home page
-                this.$router.push({name: 'app_homepage'})
+                this.$router.push({name: ROUTE_HOMEPAGE})
             },
             loginFailed (response) {
                 //this.unsetAccessToken()
