@@ -11,8 +11,8 @@
         name: "LoginForm",
         data () {
             return {
-                username: '',
-                password: ''
+                username: null,
+                password: null
             }
         },
         methods: {

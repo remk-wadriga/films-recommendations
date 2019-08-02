@@ -1,7 +1,8 @@
 import Vue from 'vue'
-import store from "../store";
+import store from '../store'
 import Config from '@/config.js'
-import { ADD_LOGGER_MESSAGE_MUTATION, SET_ACCESS_TOKEN_MUTATION, UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
+import logger from '@/logger'
+import { SET_ACCESS_TOKEN_MUTATION, UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 import { LOGIN_URL, LOGOUT_URL, REGISTRATION_URL, RENEW_TOKEN_URL } from './request-urls'
 
 const Api = {
@@ -127,7 +128,7 @@ const Api = {
                     this.fulfillNoAuthorizedRequest(response)
                 }
             } else {
-                store.commit(ADD_LOGGER_MESSAGE_MUTATION, {type: 'warning', text: response.body.message})
+                logger.add(response.body.message, 'warning')
             }
         }
 
@@ -152,7 +153,7 @@ const Api = {
     },
 
     fulfillNoAuthorizedRequest (response) {
-        store.commit(ADD_LOGGER_MESSAGE_MUTATION, {type: 'warning', text: response.body.message})
+        logger.add(response.body.message, 'warning')
         store.commit(UNSET_ACCESS_TOKEN_MUTATION)
         this.accessToken = null
         this.renewToken = null

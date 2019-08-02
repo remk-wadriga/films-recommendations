@@ -2,6 +2,7 @@
 
 <script>
     import Vue from 'vue'
+    import logger from '@/logger'
     import { mapMutations } from 'vuex'
     import { ROUTE_ACCOUNT } from '@/router/routes-list'
     import { SET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
@@ -79,11 +80,17 @@
                         this.errors.push(message)
                         return
                     }
-                    // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
+
+
+
+                        // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
                     this.setAccessToken({accessToken: response['access_token'], renewToken: response['renew_token']})
 
                     // Init user params
                     Vue.user.init()
+                } else {
+                    // Say that user successfully created or updated
+                    logger.add('Account info successfully updated', 'success')
                 }
 
                 // Redirect logged user to home page
