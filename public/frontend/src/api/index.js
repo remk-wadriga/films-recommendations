@@ -8,6 +8,7 @@ const Api = {
     driver: null,
     baseUrl: Config.api.baseUrl,
     tokenType: 'Bearer',
+    authorizationHeaderKey: 'Authorization',
     accessToken: null,
     renewToken: null,
     headers: {
@@ -25,7 +26,7 @@ const Api = {
         this.driver.options.root = this.baseUrl
 
         if (this.accessToken !== null) {
-            this.driver.headers.common['Authorization'] = this.tokenType + ' ' + this.accessToken
+            this.driver.headers.common[this.authorizationHeaderKey] = this.tokenType + ' ' + this.accessToken
         }
 
         Object.keys(this.headers).forEach(key => {
@@ -80,7 +81,7 @@ const Api = {
         resolve(response.body)
     },
 
-     requestFailed (resolve, response) {
+    requestFailed (resolve, response) {
         let re3 = new RegExp("^" + this.baseUrl + "/(\\w+/\\w+/\\w+).*$");
         let re2 = new RegExp("^" + this.baseUrl + "/(\\w+/\\w+).*$");
         let re1 = new RegExp("^" + this.baseUrl + "/(\\w+).*$");
@@ -133,6 +134,7 @@ const Api = {
         this.notFulfillStatuses = []
         resolve(response.body)
     },
+
     async fulfillSuccessfulTokenUpdating (response) {
         // Remove old tokens
         this.accessToken = null
@@ -148,6 +150,7 @@ const Api = {
             Vue.user.isLogged = true
         }
     },
+
     fulfillNoAuthorizedRequest (response) {
         store.commit(ADD_LOGGER_MESSAGE_MUTATION, {type: 'warning', text: response.body.message})
         store.commit(UNSET_ACCESS_TOKEN_MUTATION)
