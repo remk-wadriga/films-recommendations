@@ -4,6 +4,7 @@
 namespace App\Security;
 
 use App\Exception\AccessTokenAuthenticationException;
+use App\Exception\HttpException;
 use App\Helpers\AccessTokenEntityInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
             $this->router->generate('security_login'),
             $this->router->generate('security_registration'),
         ];
+
         return !in_array($request->getPathInfo(), $urls);
     }
 
@@ -115,7 +117,7 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
         if (isset($credentials['renew_token']) && $credentials['renew_token'] !== $user->getRenewToken()) {
             throw new AuthenticationException('Invalid renew token', AccessTokenAuthenticationException::CODE_INVALID_REQUEST_PARAMS);
         // For all other requests check the access token is not expired
-        } elseif ($user->getAccessTokenExpiredAt()->getTimestamp() < (new \DateTime())->getTimestamp()) {
+        } elseif (!isset($credentials['renew_token']) && $user->getAccessTokenExpiredAt()->getTimestamp() < (new \DateTime())->getTimestamp()) {
             throw new AuthenticationException('Access token expired', AccessTokenAuthenticationException::CODE_ACCESS_TOKEN_EXPIRED);
         }
 
@@ -124,13 +126,7 @@ class AccessTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        $data = [
-            'message' => $exception->getMessage(),
-            'code' => $exception->getCode(),
-        ];
-        $code = $exception->getCode() !== AccessTokenAuthenticationException::CODE_SYSTEM_ERROR ?
-            Response::HTTP_UNAUTHORIZED : Response::HTTP_INTERNAL_SERVER_ERROR;
-        return new JsonResponse($data, $code);
+        throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

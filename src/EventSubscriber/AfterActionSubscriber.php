@@ -34,9 +34,6 @@ class AfterActionSubscriber implements EventSubscriberInterface
     public function handleException(ExceptionEvent $event)
     {
         $exception = $event->getException();
-        if (!($exception instanceof HttpException) && !($exception instanceof SymfonyHttpException)) {
-            return;
-        }
 
         if (!($exception instanceof HttpException) && $exception instanceof SymfonyHttpException) {
             $exception = new HttpException($exception->getMessage(), 0, $exception);

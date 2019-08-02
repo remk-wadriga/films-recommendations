@@ -22,7 +22,7 @@ class HttpException extends BaseHttpException
 
     public function __construct(?string $message = null, int $code = 0, \Exception $previous = null, array $headers = [])
     {
-        if ($previous !== null && $previous instanceof ServiceException) {
+        if ($previous !== null) {
             if ($code === 0) {
                 $code = $previous->getCode();
             }
@@ -68,6 +68,11 @@ class HttpException extends BaseHttpException
                 break;
             case FileException::UNSUPPORTED_FORMAT:
                 $statusCode = Response::HTTP_UNSUPPORTED_MEDIA_TYPE;
+                break;
+            case AccessTokenAuthenticationException::CODE_ACCESS_TOKEN_EXPIRED:
+            case AccessTokenAuthenticationException::CODE_INVALID_ACCESS_TOKEN:
+            case AccessTokenAuthenticationException::CODE_REQUIRED_PARAM_MISSING:
+                $statusCode = Response::HTTP_UNAUTHORIZED;
                 break;
             default:
                 $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;

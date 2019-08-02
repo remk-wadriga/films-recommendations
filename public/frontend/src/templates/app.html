@@ -41,12 +41,16 @@
         </b-collapse>
     </b-navbar>
 
-    <div class="container">
+    <b-container>
+        <b-row>
+            <logger />
+        </b-row>
 
-        <router-view v-if="!needLogin" />
+        <b-row>
+            <router-view v-if="!needLogin" />
 
-        <Login v-if="needLogin" />
-
-    </div>
+            <Login v-if="needLogin" />
+        </b-row>
+    </b-container>
 
 </div>

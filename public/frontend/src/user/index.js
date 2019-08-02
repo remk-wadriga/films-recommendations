@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import store from "../store";
+import { ACCOUNT_INFO_URL } from '@/api/request-urls'
 
 const User = {
     id: null,
@@ -13,9 +14,14 @@ const User = {
     fullName: null,
     isLogged: false,
 
-    init () {
+    async init () {
         if (!this.isLogged && store.state.accessToken !== null) {
-            Vue.http.get('user').then(response => this.responseSuccessFul(response), errorResponse => this.responseFailed(errorResponse))
+            let response = await Vue.api.get(ACCOUNT_INFO_URL)
+            if (response.isOk) {
+                this.responseSuccessFul(response)
+            } else {
+                this.responseFailed(response)
+            }
         }
     },
 
@@ -33,14 +39,14 @@ const User = {
     },
 
     responseSuccessFul(response) {
-        if (response.body.id) {
-            this.id = response.body.id
-            this.email = response.body.email
-            this.firstName = response.body.firstName
-            this.lastName = response.body.lastName
-            this.age = response.body.age
-            this.sex = response.body.sex
-            this.aboutMe = response.body.aboutMe
+        if (response.id) {
+            this.id = response.id
+            this.email = response.email
+            this.firstName = response.firstName
+            this.lastName = response.lastName
+            this.age = response.age
+            this.sex = response.sex
+            this.aboutMe = response.aboutMe
 
             this.fullName = this.firstName
             if (this.lastName && this.fullName) {

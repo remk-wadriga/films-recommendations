@@ -1,0 +1,6 @@
+export const LOGIN_URL = 'login'
+export const LOGOUT_URL = 'logout'
+export const REGISTRATION_URL = 'registration'
+export const RENEW_TOKEN_URL = 'renew-token'
+export const ACCOUNT_INFO_URL = 'user'
+export const ACCOUNT_UPDATE_URL = 'account'
