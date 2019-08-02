@@ -81,9 +81,7 @@
                         return
                     }
 
-
-
-                        // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
+                    // Set mutate store with new access token (set access token to local store and add it to default requests's headers)
                     this.setAccessToken({accessToken: response['access_token'], renewToken: response['renew_token']})
 
                     // Init user params
