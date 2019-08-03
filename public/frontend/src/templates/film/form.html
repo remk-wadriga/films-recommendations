@@ -1,3 +1,36 @@
 <div id="film_form">
-    <h1>FIlm Form</h1>
+        <h1>OK</h1>
+    <b-form @submit="successFrom">
+
+        <p v-if="errors.length" align="left">
+            <b>Please fix errors:</b>
+        <ul>
+            <li v-for="error in errors">{{ error }}</li>
+        </ul>
+        </p>
+
+        <b-form-group
+                label="Name:"
+                label-for="film_name_input">
+            <b-form-input id="film_name_input"
+                  type="text"
+                  v-model="film.name"
+                  required
+                  placeholder="Enter film name">
+            </b-form-input>
+        </b-form-group>
+
+        <b-form-group
+                label="Genres:"
+                label-for="film_genres_input">
+            <b-form-select id="film_genres_input"
+                   v-model="film.genres"
+                   :options="genresNames"
+                   required>
+            </b-form-select>
+        </b-form-group>
+
+        <b-button type="submit" variant="primary">{{ film.isNew ? 'Update' : 'Create' }}</b-button>
+    </b-form>
+
 </div>

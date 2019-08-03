@@ -7,11 +7,19 @@
         name: "Form",
         data () {
             return {
-
+                film: {
+                    isNew: false,
+                    name: null,
+                    genres: []
+                },
+                genresNames: [],
+                errors: []
             }
         },
         methods: {
-
+            successFrom () {
+                console.log(this.film)
+            }
         },
         mounted () {
 

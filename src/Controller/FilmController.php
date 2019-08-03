@@ -18,7 +18,7 @@ class FilmController extends AbstractController
     }
 
     /**
-     * @Route("/films", name="get_films_list", methods={"GET"})
+     * @Route("/films", name="films_list", methods={"GET"})
      */
     public function list()
     {
@@ -27,9 +27,26 @@ class FilmController extends AbstractController
     }
 
     /**
-     * @Route("/film", name="create_films", methods={"POST"})
+    * @Route("/film/{id}", name="film_view", methods={"GET"})
+    */
+    public function view(Film $film)
+    {
+        $filmData = $this->toApi([$film]);
+        return $this->json($filmData[0]);
+    }
+
+    /**
+     * @Route("/film", name="film_create", methods={"POST"})
      */
     public function create(Request $request)
+    {
+        dd($request->getContent());
+    }
+
+    /**
+     * @Route("/film/{id}", name="film_update", methods={"PUT"})
+     */
+    public function update(Film $film, Request $request)
     {
         dd($request->getContent());
     }
