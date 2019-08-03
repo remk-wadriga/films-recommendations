@@ -65,7 +65,7 @@
                 }
 
                 Vue.api.notFulfillStatuses = [400]
-                let response = await Vue.api.post(this.user.isLogged ? ACCOUNT_UPDATE_URL : REGISTRATION_URL, {'user_form': params})
+                let response = await Vue.api.request(this.user.isLogged ? ACCOUNT_UPDATE_URL : REGISTRATION_URL, {'user_form': params})
                 if (response.isOk) {
                     this.registrationSuccessful(response)
                 } else {

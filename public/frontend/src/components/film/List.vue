@@ -24,7 +24,7 @@
             this.setPageTitle('Films')
             this.setTopButtons([{title: 'Add film', type: 'success', click: {url: {name: ROUTE_FILM_CREATE}}}])
 
-            this.films = await Vue.api.get(FILMS_LIST_URL)
+            this.films = await Vue.api.request(FILMS_LIST_URL)
         }
     }
 </script>

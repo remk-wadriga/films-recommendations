@@ -26,7 +26,7 @@
                     password: this.password
                 }
 
-                let response = await Vue.api.post(LOGIN_URL, params)
+                let response = await Vue.api.request(LOGIN_URL, params)
                 if (response.isOk) {
                     this.loginSuccessful(response)
                 } else {

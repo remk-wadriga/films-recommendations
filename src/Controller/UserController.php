@@ -29,7 +29,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/account", name="update_user_info", methods={"POST"})
+     * @Route("/account", name="update_user_info", methods={"PUT"})
      */
     public function update(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {

@@ -35,24 +35,42 @@ const Api = {
         })
     },
 
-    get (url, data = {}, headers = {}) {
-        return this.request(url, data, 'GET', headers)
-    },
+    request (url, data = {}, headers = {}) {
+        this.lastRequest = {url, data, headers}
 
-    post (url, data = {}, headers = {}) {
-        return this.request(url, data, 'POST', headers)
-    },
+        let urlParams = {}
+        if (typeof url === 'object') {
+            urlParams = url[1]
+            url = url[0]
+        }
 
-    put (url, data = {}, headers = {}) {
-        return this.request(url, data, 'PUT', headers)
-    },
+        let re1 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+/\\w+)/:(.+)")
+        let re2 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+)/:(.+)")
+        let re3 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+/\\w+)")
+        let re4 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+)")
 
-    delete (url, data = {}, headers = {}) {
-        return this.request(url, data, 'DELETE', headers)
-    },
+        let urlData = url.match(re1)
+        if (urlData === null) {
+            urlData = url.match(re2)
+        }
+        if (urlData === null) {
+            urlData = url.match(re3)
+        }
+        if (urlData === null) {
+            urlData = url.match(re4)
+        }
 
-    request (url, data = {}, method = 'GET', headers = {}) {
-        this.lastRequest = {url, data, method, headers}
+        if (urlData === null) {
+            let error = 'Invalid url: "' + url + '"'
+            logger.add(error, 'warning')
+            return {isOk: false, message: error}
+        }
+
+        let method = urlData[1]
+        url = urlData[2]
+        if (urlData[3] !== undefined && urlParams[urlData[3]] !== undefined) {
+            url += '/' + urlParams[urlData[3]]
+        }
 
         return new Promise(resolve => {
             let driver = null
@@ -71,7 +89,7 @@ const Api = {
             } else {
                 driver.then(response => this.requestOk(resolve, response), errorResponse => this.requestFailed(resolve, errorResponse));
             }
-        });
+        })
     },
 
     requestOk (resolve, response) {
@@ -146,7 +164,7 @@ const Api = {
         this.init()
 
         // Make last request again
-        response = await this.request(this.lastRequest.url, this.lastRequest.data, this.lastRequest.method, this.lastRequest.headers)
+        response = await this.request(this.lastRequest.url, this.lastRequest.data, this.lastRequest.headers)
         if (response.isOk) {
             Vue.user.isLogged = true
         }

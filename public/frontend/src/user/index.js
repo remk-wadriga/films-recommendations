@@ -16,7 +16,7 @@ const User = {
 
     async init () {
         if (!this.isLogged && store.state.accessToken !== null) {
-            let response = await Vue.api.get(ACCOUNT_INFO_URL)
+            let response = await Vue.api.request(ACCOUNT_INFO_URL)
             if (response.isOk) {
                 this.responseSuccessFul(response)
             } else {
