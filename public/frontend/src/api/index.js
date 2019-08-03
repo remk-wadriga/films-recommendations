@@ -124,6 +124,8 @@ const Api = {
             response.body.code = 0
         }
 
+
+
         let needToFulfill = true
         this.notFulfillStatuses.forEach(status => {
             if (response.status === status) {
@@ -146,7 +148,7 @@ const Api = {
                     this.fulfillNoAuthorizedRequest(response)
                 }
             } else {
-                logger.add(response.body.message, 'warning')
+                logger.add(response.body.message, 'danger')
             }
         }
 
@@ -171,7 +173,7 @@ const Api = {
     },
 
     fulfillNoAuthorizedRequest (response) {
-        logger.add(response.body.message, 'warning')
+        logger.add(response.body.message, 'danger')
         store.commit(UNSET_ACCESS_TOKEN_MUTATION)
         this.accessToken = null
         this.renewToken = null

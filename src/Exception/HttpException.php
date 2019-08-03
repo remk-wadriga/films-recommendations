@@ -27,10 +27,15 @@ class HttpException extends BaseHttpException
                 $code = $previous->getCode();
             }
             if (!empty($previous->getMessage())) {
-                if ($message !== null) {
+                if ($message !== null && $message !== $previous->getMessage()) {
                     $message .= ': ';
                 }
-                $message .= $previous->getMessage();
+                if ($message !== $previous->getMessage()) {
+                    $message .= $previous->getMessage();
+                }
+                if ($message === null) {
+                    $message = $previous->getMessage();
+                }
             }
         }
 
