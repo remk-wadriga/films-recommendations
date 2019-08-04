@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Producer;
+use App\Repository\ProducerRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class ProducerController extends AbstractController
     /**
      * @Route("/producers", name="producers_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        /** @var Producer[] $producers */
-        $producers = $this->getDoctrine()->getRepository(Producer::class)->findAll();
+        /** @var ProducerRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Producer::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
+        /** @var Producer[] $companies */
+        if ($request->get('search')) {
+            $producers = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $producers = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($producers));
     }
 

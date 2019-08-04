@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Premium;
+use App\Repository\PremiumRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class PremiumController extends AbstractController
     /**
      * @Route("/premiums", name="premiums_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        /** @var Premium[] $premiums */
-        $premiums = $this->getDoctrine()->getRepository(Premium::class)->findAll();
+        /** @var PremiumRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Premium::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
+        /** @var Premium[] $companies */
+        if ($request->get('search')) {
+            $premiums = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $premiums = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($premiums));
     }
 

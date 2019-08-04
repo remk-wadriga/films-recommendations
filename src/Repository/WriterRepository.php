@@ -18,32 +18,29 @@ class WriterRepository extends AbstractRepository
         parent::__construct($registry, Writer::class);
     }
 
-    // /**
-    //  * @return Writer[] Returns an array of Writer objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName($name, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->createQuery($limit, $offset)
+            ->andWhere("LOWER(w.name) LIKE LOWER(CONCAT('%', :search_string, '%'))")
+            ->setParameter('search_string', $name)
+            ->getQuery()->getResult()
+            ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Writer
+    public function findForPage($limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQuery($limit, $offset)->getQuery()->getResult();
     }
-    */
+
+    public function createQuery($limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('w')->orderBy('w.name', 'ASC');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb;
+    }
 }

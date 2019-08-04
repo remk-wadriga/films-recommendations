@@ -18,32 +18,29 @@ class PremiumRepository extends AbstractRepository
         parent::__construct($registry, Premium::class);
     }
 
-    // /**
-    //  * @return Premium[] Returns an array of Premium objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName($name, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        return $this->createQuery($limit, $offset)
+            ->andWhere("LOWER(p.name) LIKE LOWER(CONCAT('%', :search_string, '%'))")
+            ->setParameter('search_string', $name)
+            ->getQuery()->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Premium
+    public function findForPage($limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQuery($limit, $offset)->getQuery()->getResult();
     }
-    */
+
+    public function createQuery($limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('p')->orderBy('p.name', 'ASC');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb;
+    }
 }

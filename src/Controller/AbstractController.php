@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package App\Controller
  *
  * @method User getUser
+ * @property ServiceLocator $container
  */
 abstract class AbstractController extends JsonController
 {

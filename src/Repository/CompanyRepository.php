@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Company;
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -18,32 +19,29 @@ class CompanyRepository extends AbstractRepository
         parent::__construct($registry, Company::class);
     }
 
-    // /**
-    //  * @return Company[] Returns an array of Company objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName($name, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        return $this->createQuery($limit, $offset)
+            ->andWhere("LOWER(c.name) LIKE LOWER(CONCAT('%', :search_string, '%'))")
+            ->setParameter('search_string', $name)
+            ->getQuery()->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Company
+    public function findForPage($limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQuery($limit, $offset)->getQuery()->getResult();
     }
-    */
+
+    public function createQuery($limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('c')->orderBy('c.name', 'ASC');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb;
+    }
 }

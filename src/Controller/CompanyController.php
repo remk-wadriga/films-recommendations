@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Repository\CompanyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class CompanyController extends AbstractController
     /**
      * @Route("/companies", name="companies_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
+        /** @var CompanyRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Company::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
         /** @var Company[] $companies */
-        $companies = $this->getDoctrine()->getRepository(Company::class)->findAll();
+        if ($request->get('search')) {
+            $companies = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $companies = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($companies));
     }
 
@@ -24,7 +33,7 @@ class CompanyController extends AbstractController
      */
     public function view(Company $company)
     {
-        $data = $this->toApi([$genre]);
+        $data = $this->toApi([$company]);
         return $this->json($data[0]);
     }
 

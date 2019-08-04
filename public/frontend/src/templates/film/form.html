@@ -1,6 +1,6 @@
 <div id="film_form">
         <h1>OK</h1>
-    <b-form @submit="successFrom">
+    <b-form @submit="successForm">
 
         <p v-if="errors.length" align="left">
             <b>Please fix errors:</b>
@@ -8,6 +8,16 @@
             <li v-for="error in errors">{{ error }}</li>
         </ul>
         </p>
+
+        <b-form-group
+                label="Poster:"
+                label-for="film_poster_input">
+            <b-form-file id="film_poster_input"
+                  v-model="film.poster"
+                  required
+                  placeholder="Select the file for poster">
+            </b-form-file>
+        </b-form-group>
 
         <b-form-group
                 label="Name:"
@@ -20,14 +30,220 @@
             </b-form-input>
         </b-form-group>
 
-        <b-form-group
-                label="Genres:"
-                label-for="film_genres_input">
-            <b-form-select id="film_genres_input"
-                   v-model="film.genres"
-                   :options="genresNames"
-                   required>
-            </b-form-select>
+        <b-form-group>
+            <label class="typo__label" for="film_genres_input">Genres:</label>
+            <multiselect
+                v-model="film.genres"
+                id="film_genres_input"
+                label="name"
+                track-by="id"
+                placeholder="Type to search"
+                open-direction="bottom"
+                :options="genresNames"
+                :multiple="true"
+                :searchable="true"
+                :loading="false"
+                :internal-search="false"
+                :clear-on-select="true"
+                :close-on-select="true"
+                :options-limit="300"
+                :max-height="600"
+                :show-no-results="false"
+                :hide-selected="true"
+                @search-change="searchGenres">
+            <template slot="tag"  slot-scope="{ option, remove }">
+                <span class="custom__tag"><span>
+                    {{ option.name }}
+                </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+            </template>
+            <span slot="noResult">No genres found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_companies_input">Companies:</label>
+            <multiselect
+                v-model="film.companies"
+                id="film_companies_input"
+                label="name"
+                track-by="id"
+                placeholder="Type to search"
+                open-direction="bottom"
+                :options="companiesNames"
+                :multiple="true"
+                :searchable="true"
+                :loading="false"
+                :internal-search="false"
+                :clear-on-select="true"
+                :close-on-select="false"
+                :options-limit="300"
+                :max-height="600"
+                :show-no-results="false"
+                :hide-selected="true"
+                @input="addCompany"
+                @search-change="searchCompanies">
+            <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+            </template>
+            <span slot="noResult">No companies found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_directors_input">Directors:</label>
+            <multiselect
+                    v-model="film.directors"
+                    id="film_directors_input"
+                    label="name"
+                    track-by="id"
+                    placeholder="Type to search"
+                    open-direction="bottom"
+                    :options="directorsNames"
+                    :multiple="true"
+                    :searchable="true"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @input="addDirector"
+                    @search-change="searchDirectors">
+                <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+                <span slot="noResult">No directors found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_actors_input">Actors:</label>
+            <multiselect
+                    v-model="film.actors"
+                    id="film_actors_input"
+                    label="name"
+                    track-by="id"
+                    placeholder="Type to search"
+                    open-direction="bottom"
+                    :options="actorsNames"
+                    :multiple="true"
+                    :searchable="true"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @input="addActor"
+                    @search-change="searchActors">
+                <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+                <span slot="noResult">No actors found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_producers_input">Producers:</label>
+            <multiselect
+                    v-model="film.producers"
+                    id="film_producers_input"
+                    label="name"
+                    track-by="id"
+                    placeholder="Type to search"
+                    open-direction="bottom"
+                    :options="producersNames"
+                    :multiple="true"
+                    :searchable="true"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @input="addProducer"
+                    @search-change="searchProducers">
+                <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+                <span slot="noResult">No producers found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_writers_input">Writers:</label>
+            <multiselect
+                    v-model="film.writers"
+                    id="film_writers_input"
+                    label="name"
+                    track-by="id"
+                    placeholder="Type to search"
+                    open-direction="bottom"
+                    :options="writersNames"
+                    :multiple="true"
+                    :searchable="true"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @input="addWriter"
+                    @search-change="searchWriters">
+                <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+                <span slot="noResult">No writers found</span>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group>
+            <label class="typo__label" for="film_premiums_input">Premiums:</label>
+            <multiselect
+                    v-model="film.premiums"
+                    id="film_premiums_input"
+                    label="name"
+                    track-by="id"
+                    placeholder="Type to search"
+                    open-direction="bottom"
+                    :options="premiumsNames"
+                    :multiple="true"
+                    :searchable="true"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="false"
+                    :options-limit="300"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true"
+                    @input="addPremium"
+                    @search-change="searchPremiums">
+                <template slot="tag"  slot-scope="{ option, remove }">
+            <span class="custom__tag"><span>
+                {{ option.name }}
+            </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+                <span slot="noResult">No premiums found</span>
+            </multiselect>
         </b-form-group>
 
         <b-button type="submit" variant="primary">{{ film.isNew ? 'Update' : 'Create' }}</b-button>

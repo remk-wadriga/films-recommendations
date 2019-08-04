@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Actor;
+use App\Repository\ActorRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class ActorController extends AbstractController
     /**
      * @Route("/actors", name="actors_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        /** @var Actor[] $actors */
-        $actors = $this->getDoctrine()->getRepository(Actor::class)->findAll();
+        /** @var ActorRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Actor::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
+        /** @var Actor[] $companies */
+        if ($request->get('search')) {
+            $actors = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $actors = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($actors));
     }
 

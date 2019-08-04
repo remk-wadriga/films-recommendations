@@ -75,7 +75,15 @@ const Api = {
         return new Promise(resolve => {
             let driver = null
             if (method === 'GET') {
-                driver = this.driver.get(url, data)
+                Object.keys(data).forEach(key => {
+                    if (url.indexOf('?') === -1) {
+                        url += '?'
+                    } else {
+                        url += '&'
+                    }
+                    url += key + '=' + data[key]
+                })
+                driver = this.driver.get(url)
             } else if (method === 'POST') {
                 driver = this.driver.post(url, data)
             } else if (method === 'PUT') {

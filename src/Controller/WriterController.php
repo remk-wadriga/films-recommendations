@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Writer;
+use App\Repository\WriterRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class WriterController extends AbstractController
     /**
      * @Route("/writers", name="writers_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        /** @var Writer[] $writers */
-        $writers = $this->getDoctrine()->getRepository(Writer::class)->findAll();
+        /** @var WriterRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Writer::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
+        /** @var Writer[] $companies */
+        if ($request->get('search')) {
+            $writers = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $writers = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($writers));
     }
 

@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Director;
+use App\Repository\DirectorRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,10 +13,18 @@ class DirectorController extends AbstractController
     /**
      * @Route("/directors", name="directors_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        /** @var Director[] $directors */
-        $directors = $this->getDoctrine()->getRepository(Director::class)->findAll();
+        /** @var DirectorRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Director::class);
+        $defaultLimit = $this->getParameter('default_item_limit');
+
+        /** @var Director[] $companies */
+        if ($request->get('search')) {
+            $directors = $repository->findByName($request->get('search'), $request->get('limit', $defaultLimit), $request->get('offset'));
+        } else {
+            $directors = $repository->findForPage($request->get('limit', $defaultLimit), $request->get('offset'));
+        }
         return $this->json($this->toApi($directors));
     }
 

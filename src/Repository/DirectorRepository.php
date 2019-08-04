@@ -18,32 +18,29 @@ class DirectorRepository extends AbstractRepository
         parent::__construct($registry, Director::class);
     }
 
-    // /**
-    //  * @return Director[] Returns an array of Director objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName($name, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->createQuery($limit, $offset)
+            ->andWhere("LOWER(d.name) LIKE LOWER(CONCAT('%', :search_string, '%'))")
+            ->setParameter('search_string', $name)
+            ->getQuery()->getResult()
+            ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Director
+    public function findForPage($limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQuery($limit, $offset)->getQuery()->getResult();
     }
-    */
+
+    public function createQuery($limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('d')->orderBy('d.name', 'ASC');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb;
+    }
 }

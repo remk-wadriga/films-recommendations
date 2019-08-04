@@ -18,32 +18,29 @@ class ActorRepository extends AbstractRepository
         parent::__construct($registry, Actor::class);
     }
 
-    // /**
-    //  * @return Actor[] Returns an array of Actor objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByName($name, $limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->createQuery($limit, $offset)
+            ->andWhere("LOWER(a.name) LIKE LOWER(CONCAT('%', :search_string, '%'))")
+            ->setParameter('search_string', $name)
+            ->getQuery()->getResult()
+            ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Actor
+    public function findForPage($limit = null, $offset = null)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQuery($limit, $offset)->getQuery()->getResult();
     }
-    */
+
+    public function createQuery($limit = null, $offset = null)
+    {
+        $qb = $this->createQueryBuilder('a')->orderBy('a.name', 'ASC');
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+        if ($offset > 0) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb;
+    }
 }

@@ -8,6 +8,7 @@ parameters:
     frontend_date_time_format: 'Y-m-d H:i'
     dir_sep: !php/const DIRECTORY_SEPARATOR
     files_dir: '%kernel.project_dir%%dir_sep%var%dir_sep%files'
+    default_item_limit: 20
 
 services:
     # default configuration for services in *this* file
