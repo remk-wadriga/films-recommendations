@@ -53,6 +53,7 @@
                 :max-height="600"
                 :show-no-results="false"
                 :hide-selected="true"
+                required
                 @search-change="searchGenres">
             <template slot="tag"  slot-scope="{ option, remove }">
                 <span class="custom__tag"><span>
@@ -84,6 +85,7 @@
                 :show-no-results="false"
                 :hide-selected="true"
                 @input="addCompany"
+                required
                 @search-change="searchCompanies">
             <template slot="tag"  slot-scope="{ option, remove }">
             <span class="custom__tag"><span>
@@ -97,25 +99,26 @@
         <b-form-group>
             <label class="typo__label" for="film_directors_input">Directors:</label>
             <multiselect
-                    v-model="film.directors"
-                    id="film_directors_input"
-                    label="name"
-                    track-by="id"
-                    placeholder="Type to search"
-                    open-direction="bottom"
-                    :options="directorsNames"
-                    :multiple="true"
-                    :searchable="true"
-                    :loading="false"
-                    :internal-search="false"
-                    :clear-on-select="true"
-                    :close-on-select="false"
-                    :options-limit="300"
-                    :max-height="600"
-                    :show-no-results="false"
-                    :hide-selected="true"
-                    @input="addDirector"
-                    @search-change="searchDirectors">
+                v-model="film.directors"
+                id="film_directors_input"
+                label="name"
+                track-by="id"
+                placeholder="Type to search"
+                open-direction="bottom"
+                :options="directorsNames"
+                :multiple="true"
+                :searchable="true"
+                :loading="false"
+                :internal-search="false"
+                :clear-on-select="true"
+                :close-on-select="false"
+                :options-limit="300"
+                :max-height="600"
+                :show-no-results="false"
+                :hide-selected="true"
+                @input="addDirector"
+                required
+                @search-change="searchDirectors">
                 <template slot="tag"  slot-scope="{ option, remove }">
             <span class="custom__tag"><span>
                 {{ option.name }}
@@ -146,6 +149,7 @@
                     :show-no-results="false"
                     :hide-selected="true"
                     @input="addActor"
+                    required
                     @search-change="searchActors">
                 <template slot="tag"  slot-scope="{ option, remove }">
             <span class="custom__tag"><span>
@@ -177,6 +181,7 @@
                     :show-no-results="false"
                     :hide-selected="true"
                     @input="addProducer"
+                    required
                     @search-change="searchProducers">
                 <template slot="tag"  slot-scope="{ option, remove }">
             <span class="custom__tag"><span>
@@ -208,6 +213,7 @@
                     :show-no-results="false"
                     :hide-selected="true"
                     @input="addWriter"
+                    required
                     @search-change="searchWriters">
                 <template slot="tag"  slot-scope="{ option, remove }">
             <span class="custom__tag"><span>
@@ -267,6 +273,7 @@
                     :options-limit="150"
                     :max-height="600"
                     :show-no-results="false"
+                    required
                     :hide-selected="true">
                 <template slot="tag"  slot-scope="{ option, remove }">
                     <span class="custom__tag"><span>

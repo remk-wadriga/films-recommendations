@@ -104,7 +104,7 @@ class FilmController extends AbstractController
                 'id' => $film->getId(),
                 'name' => $film->getName(),
                 'description' => $film->getDescription(),
-                'poster' => $this->getParameter('web_path') . $film->getPoster(),
+                'poster' => $this->getParameter('images_web_path') . '/' . $film->getPoster(),
                 'genres' => $this->getItemsList($film->getGenres()),
                 'companies' => $this->getItemsList($film->getCompanies()),
                 'directors' => $this->getItemsList($film->getDirectors()),

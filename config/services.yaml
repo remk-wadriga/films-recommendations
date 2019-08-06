@@ -12,6 +12,7 @@ parameters:
     web_path: 'http://watchfilms.local'
     images_path: 'img'
     images_dir: '%kernel.project_dir%%dir_sep%public%dir_sep%%images_path%'
+    images_web_path: '%web_path%/%images_path%'
     default_item_limit: 20
 
 services:

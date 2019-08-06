@@ -7,6 +7,7 @@ use App\Entity\Actor;
 use App\Entity\Company;
 use App\Entity\Director;
 use App\Entity\Film;
+use App\Entity\Genre;
 use App\Entity\Premium;
 use App\Entity\Producer;
 use App\Entity\User;
@@ -88,6 +89,9 @@ class FilmService extends AbstractService
         }
 
         // Flush film old related entities
+        foreach ($film->getGenres() as $genre) {
+            $film->removeGenre($genre);
+        }
         foreach ($film->getCompanies() as $company) {
             $film->removeCompany($company);
         }
@@ -117,6 +121,14 @@ class FilmService extends AbstractService
         $film->setDuration($params['duration']);
 
         // Set film related entities
+        foreach ($params['genres'] as $id) {
+            $genre = $this->em->getRepository(Genre::class)->findOneById($id);
+            if (empty($genre)) {
+                $errors[] = sprintf('Genre #%s not found', $id);
+                continue;
+            }
+            $film->addGenre($genre);
+        }
         foreach ($params['companies'] as $id) {
             $company = $this->em->getRepository(Company::class)->findOneById($id);
             if (empty($company)) {
@@ -176,7 +188,7 @@ class FilmService extends AbstractService
         if ($film->getId() === null || $film->getPoster() != $params['poster']['name']) {
             $fileCreator = FileCreatorFactory::createReader($filesDirectory, $params['poster']['name'], $params['poster']['data']);
             $fileEntity = $fileCreator->create();
-            $film->setPoster('/' . $this->getParam('images_path') . '/' . basename($fileEntity->path));
+            $film->setPoster(basename($fileEntity->path));
         }
     }
 }

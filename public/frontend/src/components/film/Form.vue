@@ -42,7 +42,7 @@
                     {id: 'CH', name: 'Chinese'},
                     {id: 'JP', name: 'Japanese'}
                 ],
-                dateFormat: 'y-MM-d'
+                dateFormat: 'y-MM-dd'
             }
         },
         props: {
@@ -78,6 +78,8 @@
                 film.languages = languages
             },
             async successForm () {
+                this.errors = []
+
                 let url = FILM_CREATE_URL
                 if (!this.film.isNew) {
                     url = [FILM_UPDATE_URL, {id: this.film.id}]
@@ -128,6 +130,31 @@
 
                 if (data.poster === null && this.film.isNew) {
                     this.errors.push('Poster is required!')
+                }
+                if (data.genres.length === 0) {
+                    this.errors.push('Genre is required!')
+                }
+                if (data.companies.length === 0) {
+                    this.errors.push('Company is required!')
+                    return false
+                }
+                if (data.directors.length === 0) {
+                    this.errors.push('Director is required!')
+                }
+                if (data.actors.length === 0) {
+                    this.errors.push('Actor is required!')
+                }
+                if (data.producers.length === 0) {
+                    this.errors.push('Producer is required!')
+                }
+                if (data.writers.length === 0) {
+                    this.errors.push('Writer is required!')
+                }
+                if (data.languages.length === 0) {
+                    this.errors.push('Language is required!')
+                }
+
+                if (this.errors.length > 0) {
                     return false
                 }
 
