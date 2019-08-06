@@ -173,7 +173,7 @@ class FilmService extends AbstractService
         }
 
         // Create film poster (if this is new film or it's updated)
-        if ($film->getId() !== null && $film->getPoster() != $params['poster']['name']) {
+        if ($film->getId() === null || $film->getPoster() != $params['poster']['name']) {
             $fileCreator = FileCreatorFactory::createReader($filesDirectory, $params['poster']['name'], $params['poster']['data']);
             $fileEntity = $fileCreator->create();
             $film->setPoster('/' . $this->getParam('images_path') . '/' . basename($fileEntity->path));

@@ -2,10 +2,10 @@
 
 <script>
     import Vue from 'vue'
-    import logger from '@/logger'
     import { Multiselect } from 'vue-multiselect'
     import { Datetime } from 'vue-datetime'
     import 'vue-datetime/dist/vue-datetime.css'
+    import { ROUTE_FILMS_LIST } from '@/router/routes-list'
     import { FILM_CREATE_URL, FILM_UPDATE_URL, GENRES_LIST_URL, COMPANIES_LIST_URL, DIRECTORS_LIST_URL, ACTORS_LIST_URL, PRODUCERS_LIST_URL, WRITERS_LIST_URL, PREMIUMS_LIST_URL } from '@/api/request-urls'
 
     export default {
@@ -131,12 +131,26 @@
                     return false
                 }
 
+                if (typeof data.budget === 'string') {
+                    data.budget = Number(data.budget)
+                }
+                if (typeof data.sales === 'string') {
+                    data.sales = Number(data.sales)
+                }
+                if (typeof data.duration === 'string') {
+                    data.duration = Number(data.duration)
+                }
+
                 let film = await Vue.api.request(url, data)
 
                 if (film.isOk) {
-                    delete film.isOk
-                    this.film.isNew = false
-                    this.init(film)
+                    if (this.film.isNew) {
+                        this.$router.push({name: ROUTE_FILMS_LIST})
+                    } else {
+                        delete film.isOk
+                        this.film.isNew = false
+                        this.init(film)
+                    }
                 }
             },
 

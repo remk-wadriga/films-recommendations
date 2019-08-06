@@ -24,7 +24,7 @@
                     budget: 0,
                     sales: 0,
                     languages: [],
-                    date: [],
+                    date: null,
                     duration: 0
                 }
             }

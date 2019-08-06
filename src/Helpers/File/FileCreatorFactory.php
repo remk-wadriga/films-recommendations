@@ -10,10 +10,12 @@ class FileCreatorFactory
 {
     const EXT_JPG = 'jpg';
     const EXT_JPEG = 'jpeg';
+    const EXT_PNG = 'png';
 
     private static $_classesMap = [
         self::EXT_JPG => ImageCreator::class,
-        self::EXT_JPEG => ImageCreator::class
+        self::EXT_JPEG => ImageCreator::class,
+        self::EXT_PNG => ImageCreator::class,
     ];
 
     public static function createReader(string $directory, string $name, string $data): FileCreatorInterface
