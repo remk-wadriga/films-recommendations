@@ -1,6 +1,7 @@
 <template src="@/templates/film/update.html" />
 
 <script>
+    import Vue from 'vue'
     import { mapMutations } from 'vuex'
     import Form from '@/components/film/Form'
     import { FILM_INFO_URL } from '@/api/request-urls'
@@ -12,18 +13,26 @@
         components: { Form },
         data () {
             return {
-                ...mapMutations({
-                    setPageTitle: SET_PAGE_TITLE_MUTATION,
-                    setTopButtons: SET_TOP_BUTTONS_MUTATION
-                })
+                film: null
             }
         },
         methods: {
-
+            ...mapMutations({
+                setPageTitle: SET_PAGE_TITLE_MUTATION,
+                setTopButtons: SET_TOP_BUTTONS_MUTATION
+            })
         },
-        mounted () {
+        async mounted () {
             this.setPageTitle('Update film')
             this.setTopButtons([{title: 'Add film', type: 'success', click: {url: {name: ROUTE_FILM_CREATE}}}])
+
+            const id = this.$route.params.id
+            let film = await Vue.api.request([FILM_INFO_URL, {id}])
+            if (film.isOk) {
+                film.isNew = false
+                delete film.isOk
+                this.film = film
+            }
         }
     }
 </script>

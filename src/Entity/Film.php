@@ -40,37 +40,37 @@ class Film
     private $poster;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Genre", inversedBy="companies")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Genre", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $genres;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Company", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Company", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $companies;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Director", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Director", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $directors;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Actor", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Actor", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $actors;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Producer", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Producer", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $producers;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Writer", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Writer", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $writers;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Premium", inversedBy="films")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Premium", inversedBy="films", fetch="EXTRA_LAZY")
      */
     private $premiums;
 
@@ -294,7 +294,7 @@ class Film
     }
 
     /**
-     * @return Collection|writer[]
+     * @return Collection|Writer[]
      */
     public function getWriters(): Collection
     {
@@ -371,6 +371,9 @@ class Film
 
     public function getLanguages(): ?array
     {
+        if (!is_array($this->languages)) {
+            $this->languages = [];
+        }
         return $this->languages;
     }
 

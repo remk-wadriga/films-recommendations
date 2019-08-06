@@ -1,12 +1,15 @@
 <div id="film_form">
-        <h1>OK</h1>
     <b-form @submit="successForm">
 
         <p v-if="errors.length" align="left">
             <b>Please fix errors:</b>
-        <ul>
-            <li v-for="error in errors">{{ error }}</li>
-        </ul>
+            <ul>
+                <li v-for="error in errors">{{ error }}</li>
+            </ul>
+        </p>
+
+        <p>
+            <img :src="posterPreview" alt="" width="150px" />
         </p>
 
         <b-form-group
@@ -14,7 +17,7 @@
                 label-for="film_poster_input">
             <b-form-file id="film_poster_input"
                   v-model="film.poster"
-                  required
+                  @change="setPoster"
                   placeholder="Select the file for poster">
             </b-form-file>
         </b-form-group>
@@ -246,7 +249,78 @@
             </multiselect>
         </b-form-group>
 
-        <b-button type="submit" variant="primary">{{ film.isNew ? 'Update' : 'Create' }}</b-button>
+        <b-form-group>
+            <label class="typo__label" for="film_languages_input">Languages:</label>
+            <multiselect
+                    v-model="film.languages"
+                    id="film_languages_input"
+                    label="name"
+                    track-by="id"
+                    open-direction="bottom"
+                    :options="languagesNames"
+                    :multiple="true"
+                    :searchable="false"
+                    :loading="false"
+                    :internal-search="false"
+                    :clear-on-select="true"
+                    :close-on-select="true"
+                    :options-limit="150"
+                    :max-height="600"
+                    :show-no-results="false"
+                    :hide-selected="true">
+                <template slot="tag"  slot-scope="{ option, remove }">
+                    <span class="custom__tag"><span>
+                        {{ option.name }}
+                    </span><span class="custom__remove" @click="remove(option)">❌</span></span>
+                </template>
+            </multiselect>
+        </b-form-group>
+
+        <b-form-group
+                label="Budget:"
+                label-for="film_budget_input">
+            <b-form-input id="film_budget_input"
+                  type="number"
+                  v-model="film.budget"
+                  required
+                  placeholder="Film budget">
+            </b-form-input>
+        </b-form-group>
+
+        <b-form-group
+                label="Sales:"
+                label-for="film_sales_input">
+            <b-form-input id="film_sales_input"
+                  type="number"
+                  v-model="film.sales"
+                  required
+                  placeholder="Film sales">
+            </b-form-input>
+        </b-form-group>
+
+        <b-form-group
+                label="Duration:"
+                label-for="film_duration_input">
+            <b-form-input id="film_duration_input"
+                  type="number"
+                  v-model="film.duration"
+                  required
+                  placeholder="Film duration">
+            </b-form-input>
+        </b-form-group>
+
+        <b-form-group
+                label="Date:"
+                label-for="film_date_input">
+            <datetime
+                v-model="film.date"
+                id="film_date_input"
+                :format="dateFormat"
+            >
+            </datetime>
+        </b-form-group>
+
+        <b-button type="submit" variant="primary">{{ film.isNew ? 'Create' : 'Update' }}</b-button>
     </b-form>
 
 </div>

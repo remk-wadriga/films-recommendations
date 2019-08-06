@@ -10,7 +10,23 @@
         components: { Form },
         data () {
             return {
-
+                film: {
+                    isNew: true,
+                    poster: null,
+                    name: null,
+                    genres: [],
+                    companies: [],
+                    directors: [],
+                    actors: [],
+                    producers: [],
+                    writers: [],
+                    premiums: [],
+                    budget: 0,
+                    sales: 0,
+                    languages: [],
+                    date: [],
+                    duration: 0
+                }
             }
         },
         methods: {

@@ -4,17 +4,22 @@
 namespace App\Controller;
 
 use App\Entity\Film;
+use App\Exception\HttpException;
+use App\Exception\ServiceException;
 use App\Service\FilmService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
 
 class FilmController extends AbstractController
 {
     private $filmService;
+    private $logger;
 
-    public function __construct(FilmService $filmService)
+    public function __construct(FilmService $filmService, LoggerInterface $logger)
     {
         $this->filmService = $filmService;
+        $this->logger = $logger;
     }
 
     /**
@@ -40,7 +45,25 @@ class FilmController extends AbstractController
      */
     public function create(Request $request)
     {
-        dd($request->getContent());
+        $params = json_decode($request->getContent(), true);
+        if (empty($params)) {
+            throw new HttpException('Invalid json', HttpException::CODE_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $film = new Film();
+        $film->setUser($this->getUser());
+        $em->persist($film);
+
+        try {
+            $this->filmService->setFilmParams($film, $params);
+        } catch (ServiceException $e) {
+            throw new HttpException('Can not update film', 0, $e);
+        }
+
+        $em->flush();
+        $data = $this->toApi([$film]);
+        return $this->json($data[0]);
     }
 
     /**
@@ -48,7 +71,23 @@ class FilmController extends AbstractController
      */
     public function update(Film $film, Request $request)
     {
-        dd($request->getContent());
+        $params = json_decode($request->getContent(), true);
+        if (empty($params)) {
+            throw new HttpException('Invalid json', HttpException::CODE_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($film);
+
+        try {
+            $this->filmService->setFilmParams($film, $params);
+        } catch (ServiceException $e) {
+            throw new HttpException('Can not update film', 0, $e);
+        }
+
+        $em->flush();
+        $data = $this->toApi([$film]);
+        return $this->json($data[0]);
     }
 
 
@@ -61,7 +100,24 @@ class FilmController extends AbstractController
         $params = [];
 
         foreach ($films as $film) {
-            dd($film);
+            $params[] = [
+                'id' => $film->getId(),
+                'name' => $film->getName(),
+                'description' => $film->getDescription(),
+                'poster' => $this->getParameter('web_path') . $film->getPoster(),
+                'genres' => $this->getItemsList($film->getGenres()),
+                'companies' => $this->getItemsList($film->getCompanies()),
+                'directors' => $this->getItemsList($film->getDirectors()),
+                'actors' => $this->getItemsList($film->getActors()),
+                'producers' => $this->getItemsList($film->getProducers()),
+                'writers' => $this->getItemsList($film->getWriters()),
+                'premiums' => $this->getItemsList($film->getPremiums()),
+                'budget' => $film->getBudget(),
+                'sales' => $film->getSales(),
+                'languages' => $film->getLanguages(),
+                'date' => $this->formatDate($film->getDate()),
+                'duration' => $film->getDuration(),
+            ];
         }
 
         return $params;

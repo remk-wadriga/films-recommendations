@@ -3,27 +3,18 @@
 <script>
     import Vue from 'vue'
     import logger from '@/logger'
-    //import { MultiSelect } from 'vue-search-select'
-    import Multiselect from 'vue-multiselect'
+    import { Multiselect } from 'vue-multiselect'
+    import { Datetime } from 'vue-datetime'
+    import 'vue-datetime/dist/vue-datetime.css'
     import { FILM_CREATE_URL, FILM_UPDATE_URL, GENRES_LIST_URL, COMPANIES_LIST_URL, DIRECTORS_LIST_URL, ACTORS_LIST_URL, PRODUCERS_LIST_URL, WRITERS_LIST_URL, PREMIUMS_LIST_URL } from '@/api/request-urls'
 
     export default {
         name: "Form",
-        components: { Multiselect },
+        components: { Multiselect, Datetime },
         data () {
             return {
-                film: {
-                    isNew: false,
-                    poster: null,
-                    name: null,
-                    genres: [],
-                    companies: [],
-                    directors: [],
-                    actors: [],
-                    producers: [],
-                    writers: [],
-                    premiums: []
-                },
+                posterPreview: null,
+                poster: null,
                 genres: [],
                 genresNames: [],
                 companies: [],
@@ -40,25 +31,130 @@
                 premiumsNames: [],
                 errors: [],
                 searchTextMinLength: 3,
-                isLoading: false
+                languagesNames: [
+                    {id: 'EN', name: 'English'},
+                    {id: 'RU', name: 'Russian'},
+                    {id: 'FR', name: 'French'},
+                    {id: 'DE', name: 'Deutsch'},
+                    {id: 'KZ', name: 'Kazakh'},
+                    {id: 'IN', name: 'Indian'},
+                    {id: 'IT', name: 'Italian'},
+                    {id: 'CH', name: 'Chinese'},
+                    {id: 'JP', name: 'Japanese'}
+                ],
+                dateFormat: 'y-MM-d'
             }
         },
+        props: {
+            film: Object
+        },
         methods: {
+            init (film = null) {
+                if (this.film.isNew) {
+                    return true
+                }
+                if (film === null) {
+                    film = this.film
+                }
+
+                this.posterPreview = film.poster
+
+                let languages = []
+                film.languages.forEach(code => {
+                    let name = null
+                    if (typeof code === 'object') {
+                        name = code.name
+                        code = code.id
+                    } else {
+                        name = code
+                    }
+                    this.languagesNames.forEach(item => {
+                        if (item.id === code) {
+                            name = item.name
+                        }
+                    })
+                    languages.push({id: code, name: name})
+                })
+                film.languages = languages
+            },
             async successForm () {
                 let url = FILM_CREATE_URL
                 if (!this.film.isNew) {
-                    let url = [FILM_UPDATE_URL, {id: this.film.id}]
+                    url = [FILM_UPDATE_URL, {id: this.film.id}]
                 }
-                delete this.film.isNew
-                delete this.film.id
+                let data = {
+                    poster: null,
+                    name: this.film.name,
+                    genres: [],
+                    companies: [],
+                    directors: [],
+                    actors: [],
+                    producers: [],
+                    writers: [],
+                    premiums: [],
+                    budget: this.film.budget,
+                    sales: this.film.sales,
+                    languages: [],
+                    date: this.film.date,
+                    duration: this.film.duration
+                }
+                if (this.poster !== null) {
+                    data.poster = this.poster
+                }
+                this.film.genres.forEach(item => {
+                    data.genres.push(item.id)
+                })
+                this.film.companies.forEach(item => {
+                    data.companies.push(item.id)
+                })
+                this.film.directors.forEach(item => {
+                    data.directors.push(item.id)
+                })
+                this.film.actors.forEach(item => {
+                    data.actors.push(item.id)
+                })
+                this.film.producers.forEach(item => {
+                    data.producers.push(item.id)
+                })
+                this.film.writers.forEach(item => {
+                    data.writers.push(item.id)
+                })
+                this.film.premiums.forEach(item => {
+                    data.premiums.push(item.id)
+                })
+                this.film.languages.forEach(item => {
+                    data.languages.push(item.id)
+                })
 
-                let film = await Vue.api.request(url, this.film)
+                if (data.poster === null && this.film.isNew) {
+                    this.errors.push('Poster is required!')
+                    return false
+                }
+
+                let film = await Vue.api.request(url, data)
+
                 if (film.isOk) {
                     delete film.isOk
-                    this.film = film
                     this.film.isNew = false
+                    this.init(film)
+                }
+            },
+
+            setPoster (event) {
+                if (event.target.files.length === 0) {
+                    this.errors.push('File not set')
                 } else {
-                    console.log(film.message)
+                    this.poster = event.target.files[0]
+                    let reader = new FileReader()
+                    reader.readAsBinaryString(this.poster)
+                    reader.onload = () => {
+                        let base64 = btoa(reader.result)
+                        this.poster = {
+                            name: this.poster.name,
+                            data: base64
+                        }
+                        this.posterPreview = 'data:image/jpeg;base64,' + base64
+                    }
                 }
             },
 
@@ -196,6 +292,8 @@
             }
         },
         async mounted () {
+            this.init()
+
             let genres = await Vue.api.request(GENRES_LIST_URL)
             if (genres.isOk) {
                 this.genresNames = this.genres = genres

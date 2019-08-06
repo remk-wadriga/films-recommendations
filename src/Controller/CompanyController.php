@@ -29,7 +29,7 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/genre/{id}", name="company_view", methods={"GET"})
+     * @Route("/company/{id}", name="company_view", methods={"GET"})
      */
     public function view(Company $company)
     {
@@ -38,7 +38,7 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/genre", name="company_create", methods={"POST"})
+     * @Route("/company", name="company_create", methods={"POST"})
      */
     public function create(Request $request)
     {
@@ -46,7 +46,7 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/genre/{id}", name="company_update", methods={"PUT"})
+     * @Route("/company/{id}", name="company_update", methods={"PUT"})
      */
     public function update(Company $company, Request $request)
     {

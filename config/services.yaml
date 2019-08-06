@@ -6,8 +6,12 @@
 parameters:
     locale: 'en'
     frontend_date_time_format: 'Y-m-d H:i'
+    frontend_date_format: 'Y-m-d'
     dir_sep: !php/const DIRECTORY_SEPARATOR
     files_dir: '%kernel.project_dir%%dir_sep%var%dir_sep%files'
+    web_path: 'http://watchfilms.local'
+    images_path: 'img'
+    images_dir: '%kernel.project_dir%%dir_sep%public%dir_sep%%images_path%'
     default_item_limit: 20
 
 services:
