@@ -1,3 +1,63 @@
-<div id="films_list">
-    {{ films }}
-</div>
+<b-col id="films_list">
+    <b-row>
+        <b-col md="4" class="my-2">
+            <b-form-group label="Filter" class="mb-0">
+                <b-input-group>
+                    <b-form-input v-model="filter" placeholder="Type to Search" />
+                    <b-input-group-append>
+                        <b-btn :disabled="!filter" @click="filter = ''">Clear</b-btn>
+                    </b-input-group-append>
+                </b-input-group>
+            </b-form-group>
+        </b-col>
+    </b-row>
+
+    <b-row>
+        <b-col md="4" class="my-2">
+            <b-form-group label="Per page" class="mb-0">
+                <b-form-select :options="[5, 10, 15, {value: 100000, text: 'All'}]" v-model="perPage" />
+            </b-form-group>
+        </b-col>
+    </b-row>
+
+    <b-row>
+        <b-col md="4" class="my-2">
+            <span style="font-size: large">Total: {{ totalRows }}</span>
+        </b-col>
+    </b-row>
+
+    <b-row>
+        <b-col md="12" class="my-2">
+            <b-table
+                striped hover
+                stacked="md"
+                :items="films"
+                :fields="fields"
+                :filter="filter"
+                :current-page="currentPage"
+                :per-page="perPage"
+                @filtered="onFiltered"
+            >
+                <template slot="poster" slot-scope="row">
+                    <img :src="row.item.poster" width="70px" />
+                </template>
+                <template slot="actions" slot-scope="row">
+                    <b-button :variant="viewBtnVar" size="sm" @click.stop="viewFilm(row.item)" class="mr-1">
+                        View
+                    </b-button>
+                    <!--<b-button :variant="deleteBtnVar" size="sm" @click.stop="deleteFilm(row.item)" class="mr-1">
+                        Delete
+                    </b-button>-->
+                </template>
+            </b-table>
+        </b-col>
+
+    </b-row>
+
+    <b-row>
+        <b-col md="8" class="my-1">
+            <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+        </b-col>
+    </b-row>
+
+</b-col>

@@ -10,6 +10,7 @@ export const FILMS_LIST_URL = 'GET /films'
 export const FILM_INFO_URL = 'GET /film/:id'
 export const FILM_CREATE_URL = 'POST /film'
 export const FILM_UPDATE_URL = 'PUT /film/:id'
+export const FILM_DELTE_URL = 'DELETE /film/:id'
 
 export const GENRES_LIST_URL = 'GET /genres'
 export const GENRE_INFO_URL = 'GET /genre/:id'
