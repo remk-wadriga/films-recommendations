@@ -8,6 +8,8 @@ import router from './router'
 import store from './store'
 import VueResource from 'vue-resource'
 import BootstrapVue from 'bootstrap-vue'
+import VueMoment from 'vue-moment'
+import moment from 'moment-timezone'
 import { SET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 
 Vue.config.productionTip = true;
@@ -24,6 +26,8 @@ Vue.api.init()
 
 Vue.user = user
 Vue.user.init()
+
+Vue.use(VueMoment, {moment})
 
 new Vue({
     el: '#app',

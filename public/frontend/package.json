@@ -15,8 +15,10 @@
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.27",
     "luxon": "^1.17.2",
+    "moment-timezone": "^0.5.26",
     "vue": "^2.5.2",
     "vue-datetime": "^1.0.0-beta.10",
+    "vue-moment": "^4.0.0",
     "vue-multiselect": "^2.1.6",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",

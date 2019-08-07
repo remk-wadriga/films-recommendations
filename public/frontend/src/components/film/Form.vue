@@ -76,6 +76,8 @@
                     languages.push({id: code, name: name})
                 })
                 film.languages = languages
+
+                film.date = this.$moment(film.date).add(1, 'day').format()
             },
             async successForm () {
                 this.errors = []
