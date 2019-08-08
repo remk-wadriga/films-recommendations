@@ -1,0 +1,63 @@
+<b-card
+    v-if="film !== null"
+    id="film_view_page"
+    class="mb-xl-5"
+    :img-src="film.poster"
+    img-alt="Card image"
+    img-top
+    width="600px"
+>
+
+    <h5 slot="header" class="mb-2">Name: <strong>{{film.name}}</strong></h5>
+
+    <b-card-text>
+        <b>Genres</b>: {{ film.genres }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Countries</b>: {{ film.countries }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Companies</b>: {{ film.companies }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Directors</b>: {{ film.directors }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Actors</b>: {{ film.actors }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Producers</b>: {{ film.producers }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Writers</b>: {{ film.writers }}
+    </b-card-text>
+
+    <b-card-text v-if="film.premiums">
+        <b>Premiums</b>: {{ film.premiums }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Budget</b>: {{ film.budget }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Sales</b>: {{ film.sales }}
+    </b-card-text>
+
+    <b-card-text>
+        <b>Languages</b>: {{ film.languages }}
+    </b-card-text>
+
+    <b-card-text v-if="film.description">
+        <b>Description</b>: {{ film.description }}
+    </b-card-text>
+
+    <em slot="footer">Date: <strong>{{film.date}}</strong></em>
+
+</b-card>

@@ -7,8 +7,8 @@ export const ACCOUNT_INFO_URL = 'GET /user'
 export const ACCOUNT_UPDATE_URL = 'PUT /account'
 
 export const FILMS_LIST_URL = 'GET /films'
-export const FILM_INFO_URL = 'GET /film/:id'
 export const FILM_CREATE_URL = 'POST /film'
+export const FILM_VIEW_URL = 'GET /film/:id'
 export const FILM_UPDATE_URL = 'PUT /film/:id'
 export const FILM_DELTE_URL = 'DELETE /film/:id'
 

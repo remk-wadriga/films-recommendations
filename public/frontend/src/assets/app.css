@@ -8,6 +8,10 @@ button {
     cursor: pointer;
 }
 
+.container {
+    max-width: 1400px;
+}
+
 .min-width-eighty-presents {
     min-width: 80%;
 }
@@ -19,6 +23,12 @@ button {
 }
 .min-width-fifty-presents {
     min-width: 50%;
+}
+.width-hundred-presents {
+    width: 100%;
+}
+.width-ninety-presents {
+    width: 90%;
 }
 .width-eighty-presents {
     width: 80%;

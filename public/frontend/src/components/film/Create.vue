@@ -36,7 +36,7 @@
             })
         },
         mounted () {
-            this.setPageTitle('Add film')
+            this.setPageTitle('Create film')
             this.setTopButtons([])
         }
     }

@@ -4,7 +4,7 @@
     import Vue from 'vue'
     import { mapMutations } from 'vuex'
     import { FILMS_LIST_URL, FILM_DELTE_URL } from '@/api/request-urls'
-    import { ROUTE_FILM_CREATE, ROUTE_FILM_UPDATE } from '@/router/routes-list'
+    import { ROUTE_FILM_CREATE, ROUTE_FILM_VIEW, ROUTE_FILM_UPDATE } from '@/router/routes-list'
     import { SET_PAGE_TITLE_MUTATION, SET_TOP_BUTTONS_MUTATION } from '@/store/mutation-types'
 
     export default {
@@ -16,6 +16,7 @@
                     poster: {},
                     name: {sortable: true},
                     genres: {},
+                    countries: {},
                     languages: {},
                     date: {sortable: true},
                     budget: {sortable: true},
@@ -41,10 +42,13 @@
                 this.currentPage = 1
             },
             viewFilm (film) {
+                this.$router.push({name: ROUTE_FILM_VIEW, params: {id: film.id}})
+            },
+            updateFilm (film) {
                 this.$router.push({name: ROUTE_FILM_UPDATE, params: {id: film.id}})
             },
             async deleteFilm (film) {
-                let response = Vue.api.request([FILM_DELTE_URL, {id: film.id}])
+                let response = await Vue.api.request([FILM_DELTE_URL, {id: film.id}])
                 if (response.isOk) {
                     this.films.forEach((item, index) => {
                         if (item.id === film.id) {
@@ -57,7 +61,7 @@
         },
         async mounted () {
             this.setPageTitle('Films')
-            this.setTopButtons([{title: 'Add film', type: 'success', click: {url: {name: ROUTE_FILM_CREATE}}}])
+            this.setTopButtons([{title: 'Create film', type: 'success', click: {url: {name: ROUTE_FILM_CREATE}}}])
 
             this.films = await Vue.api.request(FILMS_LIST_URL)
             this.totalRows = this.films.length
@@ -66,6 +70,10 @@
                 let genres = []
                 film.genres.forEach(item => { genres.push(item.name) })
                 film.genres = genres.join(', ')
+
+                let countries = []
+                film.countries.forEach(item => { countries.push(item.name) })
+                film.countries = countries.join(', ')
 
                 film.languages = film.languages.join(', ')
             })

@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Country;
 use App\Entity\Film;
 use App\Exception\HttpException;
 use App\Exception\ServiceException;
@@ -10,6 +11,7 @@ use App\Service\FilmService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class FilmController extends AbstractController
 {
@@ -68,6 +70,7 @@ class FilmController extends AbstractController
 
     /**
      * @Route("/film/{id}", name="film_update", methods={"PUT"})
+     * @IsGranted("MANAGE", subject="film")
      */
     public function update(Film $film, Request $request)
     {
@@ -90,6 +93,19 @@ class FilmController extends AbstractController
         return $this->json($data[0]);
     }
 
+    /**
+     * @Route("/film/{id}", name="film_update", methods={"DELETE"})
+     * @IsGranted("DELETE", subject="film")
+     */
+    public function delete(Film $film)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($film);
+        $em->flush();
+
+        return $this->json('OK');
+    }
+
 
     /**
      * @param Film[] $films
@@ -100,12 +116,18 @@ class FilmController extends AbstractController
         $params = [];
 
         foreach ($films as $film) {
+            /** @var Country[] $countries */
+            $countries = [];
+            foreach ($film->getCompanies() as $company) {
+                $countries[] = $company->getCountry();
+            }
             $params[] = [
                 'id' => $film->getId(),
                 'name' => $film->getName(),
                 'description' => $film->getDescription(),
                 'poster' => $this->getParameter('images_web_path') . '/' . $film->getPoster(),
                 'genres' => $this->getItemsList($film->getGenres()),
+                'countries' => $this->getItemsList($countries),
                 'companies' => $this->getItemsList($film->getCompanies()),
                 'directors' => $this->getItemsList($film->getDirectors()),
                 'actors' => $this->getItemsList($film->getActors()),
@@ -117,6 +139,7 @@ class FilmController extends AbstractController
                 'languages' => $film->getLanguages(),
                 'date' => $this->formatDate($film->getDate()),
                 'duration' => $film->getDuration(),
+                'isMy' => $film->getUser() === $this->getUser(),
             ];
         }
 

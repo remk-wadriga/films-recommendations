@@ -49,7 +49,7 @@ class UserControllerTest extends AbstractWebTestCase
         $newUserParams['firstName'] = $this->faker->firstName;
         $newUserParams['lastName'] = $this->faker->lastName;
         $newUserParams['age'] = $this->faker->numberBetween(7, 120);
-        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'POST');
+        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'PUT');
         $this->checkResponseStatus($response, $testKeysID, Response::HTTP_OK);
 
         // 4. Get user new params from web
@@ -72,25 +72,25 @@ class UserControllerTest extends AbstractWebTestCase
         $this->checkResponseStatus($response, $testKeysID, Response::HTTP_OK);
 
         // 8. Try to update user info
-        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'POST');
+        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'PUT');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_UNAUTHORIZED, 'invalid access token');
 
         // 9. Login user again acd check is "POST /user" action works
         $this->clearUserInfo();
         $this->logInAsUser();
-        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'POST');
+        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'PUT');
         $this->checkResponseStatus($response, 'check user action after re-login', Response::HTTP_OK);
 
         // 10. Try to update user with incorrect access token
         $testKeysID = 'check update action after re-login with incorrect access token';
         $this->accessToken = 'INVALID_TOKEN';
-        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'POST');
+        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'PUT');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_UNAUTHORIZED, 'invalid access token');
 
         // 11. Try to update user without access token
         $testKeysID = 'check update action after re-login without access token';
         $this->accessToken = null;
-        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'POST');
+        $response = $this->request('update_user_info', ['user_form' => $newUserParams], 'PUT');
         $this->checkIncorrectResponse($response, $testKeysID, Response::HTTP_UNAUTHORIZED, 'access token missed');
 
         // 12. Clear all access params

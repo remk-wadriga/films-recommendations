@@ -9,13 +9,16 @@
 namespace App\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException as BaseHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class HttpException extends BaseHttpException
 {
-    const CODE_NOT_FOUND = 1404;
-    const CODE_ACCESS_DENIED = 1403;
     const CODE_BAD_REQUEST = 1400;
+    const CODE_UNAUTHORIZED = 1401;
+    const CODE_ACCESS_DENIED = 1403;
+    const CODE_NOT_FOUND = 1404;
     const CODE_SYSTEM_ERROR = 1500;
 
     public $message = 'Something went wrong!';
@@ -43,7 +46,7 @@ class HttpException extends BaseHttpException
             $message = '';
         }
 
-        if ($code === 0 && $previous instanceof BaseHttpException) {
+        if ($previous instanceof BaseHttpException) {
             switch ($previous->getStatusCode()) {
                 case Response::HTTP_FORBIDDEN:
                     $code = self::CODE_ACCESS_DENIED;
@@ -55,6 +58,10 @@ class HttpException extends BaseHttpException
                     $code = self::CODE_NOT_FOUND;
                     break;
             }
+        } elseif ($previous instanceof AccessDeniedException) {
+            $code = self::CODE_ACCESS_DENIED;
+        } elseif ($previous instanceof AuthenticationException) {
+            $code = self::CODE_UNAUTHORIZED;
         }
 
         switch ($code) {
@@ -74,6 +81,7 @@ class HttpException extends BaseHttpException
             case FileException::UNSUPPORTED_FORMAT:
                 $statusCode = Response::HTTP_UNSUPPORTED_MEDIA_TYPE;
                 break;
+            case self::CODE_UNAUTHORIZED:
             case AccessTokenAuthenticationException::CODE_ACCESS_TOKEN_EXPIRED:
             case AccessTokenAuthenticationException::CODE_INVALID_ACCESS_TOKEN:
             case AccessTokenAuthenticationException::CODE_REQUIRED_PARAM_MISSING:

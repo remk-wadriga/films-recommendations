@@ -6,6 +6,7 @@ import Account from '@/components/user/Account'
 
 import FilmsList from '@/components/film/List'
 import FilmCreate from '@/components/film/Create'
+import FilmView from '@/components/film/View'
 import FilmUpdate from '@/components/film/Update'
 import {
     ROUTE_HOMEPAGE,
@@ -13,6 +14,7 @@ import {
     ROUTE_REGISTRATION,
     ROUTE_ACCOUNT,
     ROUTE_FILM_CREATE,
+    ROUTE_FILM_VIEW,
     ROUTE_FILM_UPDATE
 } from './routes-list'
 
@@ -41,12 +43,17 @@ export default new Router({
             component: Account
         },
         {
-            path: '/film/',
+            path: '/film/create',
             name: ROUTE_FILM_CREATE,
             component: FilmCreate
         },
         {
             path: '/film/:id',
+            name: ROUTE_FILM_VIEW,
+            component: FilmView
+        },
+        {
+            path: '/film/:id/update',
             name: ROUTE_FILM_UPDATE,
             component: FilmUpdate
         }
