@@ -215,29 +215,29 @@ abstract class AbstractWebTestCase extends WebTestCase
                 $testKeysID, gettype($data), $response->getContent()));
         }
 
-        foreach ($data as $stats) {
-            $jsonData = json_encode($stats);
-            $this->assertInternalType('array', $stats, sprintf('Wrong test "%s" response. Each response data item must be an array, but "%s" given. Data: %s',
-                $testKeysID, gettype($stats), $jsonData));
+        foreach ($data as $item) {
+            $jsonData = json_encode($item);
+            $this->assertInternalType('array', $item, sprintf('Wrong test "%s" response. Each response data item must be an array, but "%s" given. Data: %s',
+                $testKeysID, gettype($item), $jsonData));
 
             foreach ($params as $attr => $type) {
-                $this->assertArrayHasKey($attr, $stats, sprintf('Wrong test "%s" response. Each response data item have the "%s" param, but it\'s not. Data: %s',
+                $this->assertArrayHasKey($attr, $item, sprintf('Wrong test "%s" response. Each response data item have the "%s" param, but it\'s not. Data: %s',
                     $testKeysID, $attr, $jsonData));
 
                 if (is_array($type)) {
-                    if (in_array('null', $type) && $stats[$attr] === null) {
+                    if (in_array('null', $type) && $item[$attr] === null) {
                         break;
                     }
                     $type1 = $type[0];
                     $type2 = $type[1];
                     $type = $type1;
-                    if (gettype($stats[$attr]) === $type2) {
-                        settype($stats[$attr], $type1);
+                    if (gettype($item[$attr]) === $type2) {
+                        settype($item[$attr], $type1);
                     }
                 }
 
-                $this->assertInternalType($type, $stats[$attr], sprintf('Wrong test "%s" response. Each response data.%s item must be a %s, but "%s" given. Data: %s',
-                    $testKeysID, $attr, $type, gettype($stats[$attr]), $jsonData));
+                $this->assertInternalType($type, $item[$attr], sprintf('Wrong test "%s" response. Each response data.%s item must be a %s, but "%s" given. Data: %s',
+                    $testKeysID, $attr, $type, gettype($item[$attr]), $jsonData));
             }
         }
     }
