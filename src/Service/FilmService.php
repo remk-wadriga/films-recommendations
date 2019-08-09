@@ -14,17 +14,22 @@ use App\Entity\User;
 use App\Entity\Writer;
 use App\Exception\ServiceException;
 use App\Helpers\File\FileCreatorFactory;
+use App\Repository\FilmRepository;
 
 class FilmService extends AbstractService
 {
     /**
      * @param User $user
+     * @param int $limit
+     * @param int|null $offset
+     *
      * @return Film[]
      */
-    public function getRecommendedForUser(User $user)
+    public function getRecommendedForUser(User $user, int $limit, int $offset = null)
     {
+        /** @var FilmRepository $repository */
         $repository = $this->em->getRepository(Film::class);
-        return $repository->findAll();
+        return $repository->findForPage($limit, $offset);
     }
 
     /**

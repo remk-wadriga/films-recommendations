@@ -27,9 +27,10 @@ class FilmController extends AbstractController
     /**
      * @Route("/films", name="films_list", methods={"GET"})
      */
-    public function list()
+    public function list(Request $request)
     {
-        $films = $this->filmService->getRecommendedForUser($this->getUser());
+        $defaultLimit = $this->getParameter('default_item_limit');
+        $films = $this->filmService->getRecommendedForUser($this->getUser(), $request->get('limit', $defaultLimit), $request->get('offset'));
         return $this->json($this->toApi($films));
     }
 
