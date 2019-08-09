@@ -66,11 +66,11 @@ class FilmControllerTest extends AbstractWebTestCase
         $newFirstFilm = $data[0];
         $newLastFilm = end($data);
 
-        // 5 Check is first element of "limited" request and the first element of request with limit and offset are not equals
+        // 5. Check is first element of "limited" request and the first element of request with limit and offset are not equals
         $testKeysID = 'check the difference between first elements of "limited" request and request with limit and offset';
         $this->assertNotEquals($oldFirstFilm['id'], $newFirstFilm['id'], sprintf('Test case "%s" failed: elements area equals', $testKeysID));
 
-        // 5 Check is last element of "limited" request and the last element of request with limit and offset are not equals
+        // 6. Check is last element of "limited" request and the last element of request with limit and offset are not equals
         $testKeysID = 'check the difference between last elements of "limited" request and request with limit and offset';
         $this->assertNotEquals($oldLastFilm['id'], $newLastFilm['id'], sprintf('Test case "%s" failed: elements area equals', $testKeysID));
 
