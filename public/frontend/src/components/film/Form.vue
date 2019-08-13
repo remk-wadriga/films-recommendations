@@ -5,6 +5,7 @@
     import { Multiselect } from 'vue-multiselect'
     import { Datetime } from 'vue-datetime'
     import 'vue-datetime/dist/vue-datetime.css'
+    import logger from '@/logger'
     import { ROUTE_FILMS_LIST } from '@/router/routes-list'
     import { FILM_CREATE_URL, FILM_UPDATE_URL, GENRES_LIST_URL, COMPANIES_LIST_URL, DIRECTORS_LIST_URL, ACTORS_LIST_URL, PRODUCERS_LIST_URL, WRITERS_LIST_URL, PREMIUMS_LIST_URL } from '@/api/request-urls'
 
@@ -175,7 +176,9 @@
                 if (film.isOk) {
                     if (this.film.isNew) {
                         this.$router.push({name: ROUTE_FILMS_LIST})
+                        logger.add('Film successfully created', 'success')
                     } else {
+                        logger.add('Film successfully updated', 'success')
                         delete film.isOk
                         this.film.isNew = false
                         this.init(film)
