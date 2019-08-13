@@ -95,7 +95,7 @@ class FilmController extends AbstractController
     }
 
     /**
-     * @Route("/film/{id}", name="film_update", methods={"DELETE"})
+     * @Route("/film/{id}", name="film_delete", methods={"DELETE"})
      * @IsGranted("DELETE", subject="film")
      */
     public function delete(Film $film)

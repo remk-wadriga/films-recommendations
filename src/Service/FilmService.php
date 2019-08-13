@@ -49,7 +49,6 @@ class FilmService extends AbstractService
             'actors' => 'array',
             'producers' => 'array',
             'writers' => 'array',
-            'premiums' => 'array',
             'budget' => 'integer',
             'sales' => 'integer',
             'languages' => 'array',
@@ -67,11 +66,12 @@ class FilmService extends AbstractService
 
         // Filter params
         $errors = [];
+        $posterParamsError = 'Param "poster" must be an array with string-params "name" and "data"';
         foreach ($requiredParams as $attr => $type) {
-            if (!isset($params[$attr])) {
-                $errors[] = sprintf('Param "%s" is required', $attr);
+            if (!array_key_exists($attr, $params) || empty($params[$attr])) {
+                $errors[$attr] = sprintf('Param "%s" is required', $attr);
             } elseif (gettype($params[$attr]) !== $type) {
-                $errors[] = sprintf('Param "%s" must have a type %s', $attr, $type);
+                $errors[$attr] = sprintf('Param "%s" must have a type %s', $attr, $type);
             }
         }
         if (isset($params['description'])) {
@@ -81,14 +81,22 @@ class FilmService extends AbstractService
         } else {
             $params['description'] = null;
         }
-        try {
-            $params['date'] = new \DateTime($params['date']);
-        } catch (\Exception $e) {
-            $errors[] = sprintf('Invalid date format: %s', $e->getMessage());
+        if (!isset($errors['date'])) {
+            try {
+                $params['date'] = new \DateTime($params['date']);
+            } catch (\Exception $e) {
+                $errors[] = sprintf('Invalid date format: %s', $e->getMessage());
+            }
         }
         if (!isset($params['poster']['name']) || !is_string($params['poster']['name']) || !isset($params['poster']['data']) || !is_string($params['poster']['data'])) {
-            $errors[] = 'Param "poster" must be an array with string-params "name" and "data"';
+            $errors[] = $posterParamsError;
+        } elseif ($film->getId() === null && (empty($params['poster']['name']) || empty($params['poster']['data']))) {
+            $errors[] = $posterParamsError;
         }
+        if (isset($params['premiums']) && !is_array($params['premiums'])) {
+            $errors[] = sprintf('Param "%s" must have a type %s', 'premiums', 'array');
+        }
+
         if (!empty($errors)) {
             throw new ServiceException(implode('; ', $errors), ServiceException::CODE_INVALID_PARAMS);
         }
@@ -174,13 +182,15 @@ class FilmService extends AbstractService
             }
             $film->addWriter($writer);
         }
-        foreach ($params['premiums'] as $id) {
-            $premium = $this->em->getRepository(Premium::class)->findOneById($id);
-            if (empty($premium)) {
-                $errors[] = sprintf('Premium #%s not found', $id);
-                continue;
+        if (isset($params['premiums'])) {
+            foreach ($params['premiums'] as $id) {
+                $premium = $this->em->getRepository(Premium::class)->findOneById($id);
+                if (empty($premium)) {
+                    $errors[] = sprintf('Premium #%s not found', $id);
+                    continue;
+                }
+                $film->addPremium($premium);
             }
-            $film->addPremium($premium);
         }
 
         // To create the image files for film posters we need specified directory for them
@@ -191,8 +201,12 @@ class FilmService extends AbstractService
 
         // Create film poster (if this is new film or it's updated)
         if ($film->getId() === null || $film->getPoster() != $params['poster']['name']) {
-            $fileCreator = FileCreatorFactory::createReader($filesDirectory, $params['poster']['name'], $params['poster']['data']);
-            $fileEntity = $fileCreator->create();
+            try {
+                $fileCreator = FileCreatorFactory::createReader($filesDirectory, $params['poster']['name'], $params['poster']['data']);
+                $fileEntity = $fileCreator->create();
+            } catch (\Exception $e) {
+                throw new ServiceException(sprintf('Invalid poster image data: %s', $e->getMessage()), ServiceException::CODE_INVALID_PARAMS);
+            }
             $film->setPoster(basename($fileEntity->path));
         }
     }

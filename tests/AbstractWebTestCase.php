@@ -5,9 +5,11 @@ namespace App\Tests;
 
 use App\Entity\Types\Enum\GenderEnum;
 use App\Entity\User;
+use App\Helpers\File\FileReaderFactory;
 use App\Security\AccessTokenAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Faker\Factory;
 
@@ -329,5 +331,40 @@ abstract class AbstractWebTestCase extends WebTestCase
         unset($params['id']);
         $params['age'] = 'integer';
         return $params;
+    }
+
+    protected function getRandomEntities($entityClass, $limit = null, $offset = null)
+    {
+        if ($limit === null) {
+            $limit = $this->faker->numberBetween(1, 100);
+        }
+        $qb = $this->em->getRepository($entityClass)
+            ->createQueryBuilder('e')
+            ->setMaxResults($limit);
+        if ($offset !== null) {
+            $qb->setFirstResult($offset);
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    protected function getLanguages()
+    {
+        $file = $this->getParam('files_dir') . DIRECTORY_SEPARATOR . 'languages.csv';
+        $reader = FileReaderFactory::createReader($file);
+        return $reader->readFile();
+    }
+
+    protected function getFilePath($fileName)
+    {
+        return $this->getParam('kernel.project_dir') . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $fileName;
+    }
+
+    protected function formatDate(?\DateTimeInterface $date, string $format = null): string
+    {
+        $format = $format === null ? $this->getParam('frontend_date_format') : $format;
+        if ($date === null || empty($format)) {
+            return '';
+        }
+        return $date->format($format);
     }
 }
