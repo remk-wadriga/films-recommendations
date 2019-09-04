@@ -79,7 +79,7 @@ abstract class AbstractFixture extends Fixture
             };
         }
 
-        $fileReader = FileReaderFactory::createReader($file);
+        $fileReader = FileReaderFactory::createFileReader($file);
         foreach ($fileReader->readFile($requiredAttributes) as $i => $data) {
             $entity = new $className();
             $factory($entity, $data, $i);

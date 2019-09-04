@@ -9,12 +9,14 @@ use App\Exception\ServiceException;
 class FileReaderFactory
 {
     const EXT_CSV = 'csv';
+    const EXT_JSON = 'json';
 
     private static $_classesMap = [
-        self::EXT_CSV => CsvFileReader::class
+        self::EXT_CSV => CsvFileReader::class,
+        self::EXT_JSON => JsonFileReader::class,
     ];
 
-    public static function createReader(string $file): FileReaderInterface
+    public static function createFileReader(string $file): FileReaderInterface
     {
         $ext = FileHelper::getExt($file);
 

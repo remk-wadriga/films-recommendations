@@ -350,7 +350,7 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected function getLanguages()
     {
         $file = $this->getParam('files_dir') . DIRECTORY_SEPARATOR . 'languages.csv';
-        $reader = FileReaderFactory::createReader($file);
+        $reader = FileReaderFactory::createFileReader($file);
         return $reader->readFile();
     }
 

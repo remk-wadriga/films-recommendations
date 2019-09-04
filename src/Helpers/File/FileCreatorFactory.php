@@ -18,7 +18,7 @@ class FileCreatorFactory
         self::EXT_PNG => ImageCreator::class,
     ];
 
-    public static function createReader(string $directory, string $name, string $data): FileCreatorInterface
+    public static function createFileCreator(string $directory, string $name, string $data): FileCreatorInterface
     {
         $ext = FileHelper::getExt($name);
 

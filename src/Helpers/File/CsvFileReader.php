@@ -60,4 +60,20 @@ class CsvFileReader extends AbstractFileReader
 
         return $this->file->data;
     }
+
+    public function convertData(array $data): string
+    {
+        if (empty($data)) {
+            return '';
+        }
+
+        $keys = array_keys(current($data));
+        $dataString = implode($this->sep, $keys);
+
+        foreach ($data as $params) {
+            $dataString .= sprintf("\n%s", implode($this->sep, array_values($params)));
+        }
+
+        return $dataString;
+    }
 }

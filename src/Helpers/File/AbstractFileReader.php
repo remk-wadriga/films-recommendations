@@ -17,4 +17,11 @@ abstract class AbstractFileReader implements FileReaderInterface
     {
         return $this->file;
     }
+
+    public function writeData(array $data)
+    {
+        file_put_contents($this->file->path, $this->convertData($data));
+    }
+
+    abstract public function convertData(array $data): string;
 }

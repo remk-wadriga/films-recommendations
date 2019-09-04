@@ -202,7 +202,7 @@ class FilmService extends AbstractService
         // Create film poster (if this is new film or it's updated)
         if ($film->getId() === null || $film->getPoster() != $params['poster']['name']) {
             try {
-                $fileCreator = FileCreatorFactory::createReader($filesDirectory, $params['poster']['name'], $params['poster']['data']);
+                $fileCreator = FileCreatorFactory::createFileCreator($filesDirectory, $params['poster']['name'], $params['poster']['data']);
                 $fileEntity = $fileCreator->create();
             } catch (\Exception $e) {
                 throw new ServiceException(sprintf('Invalid poster image data: %s', $e->getMessage()), ServiceException::CODE_INVALID_PARAMS);
