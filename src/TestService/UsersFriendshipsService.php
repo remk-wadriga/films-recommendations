@@ -10,8 +10,8 @@ class UsersFriendshipsService extends AbstractTestService
 {
     protected $usersFile = 'users.json';
     protected $usersFriendshipsFile = 'users_friendships.json';
+    protected $usersInterestsFile = 'users_interests.json';
     protected $users;
-    protected $friendships;
 
     /**
      * @return UserEntity[]
@@ -28,7 +28,7 @@ class UsersFriendshipsService extends AbstractTestService
             $this->users[] = $this->createObject(UserEntity::class, $data);
         }
 
-        foreach ($this->getFriendships() as $friendship) {
+        foreach ($this->getFileReader($this->usersFriendshipsFile)->readFile() as $friendship) {
             list($i, $j) = $friendship;
             $userI = $this->findUserByID($i);
             $userJ = $this->findUserByID($j);
@@ -38,15 +38,14 @@ class UsersFriendshipsService extends AbstractTestService
             $userI->addFriend($userJ);
         }
 
-        return $this->users;
-    }
-
-    public function getFriendships()
-    {
-        if ($this->friendships !== null) {
-            return $this->friendships;
+        foreach ($this->getFileReader($this->usersInterestsFile)->readFile() as $userInterest) {
+            $user = $this->findUserByID($userInterest[0]);
+            if ($user !== null) {
+                $user->addInterest($userInterest[1]);
+            }
         }
-        return $this->friendships = $this->getFileReader($this->usersFriendshipsFile)->readFile();
+
+        return $this->users;
     }
 
     public function findUserByID($id): ?UserEntity

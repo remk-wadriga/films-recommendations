@@ -12,6 +12,7 @@ class UserEntity extends AbstractEntity
     public $friendsCount = 0;
     /** @var UserEntity[] */
     public $friends = [];
+    public $interests = [];
 
     protected $commonFriends = [];
 
@@ -23,6 +24,13 @@ class UserEntity extends AbstractEntity
         $this->friends[] = $friend;
         $friend->addFriend($this);
         $this->friendsCount++;
+    }
+
+    public function addInterest(string $interest)
+    {
+        if (!in_array($interest, $this->interests)) {
+            $this->interests[] = $interest;
+        }
     }
 
     /**
