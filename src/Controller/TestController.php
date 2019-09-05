@@ -26,6 +26,8 @@ class TestController extends AbstractController
         $user8 = $friendshipsService->findUserByID(8);
         $user9 = $friendshipsService->findUserByID(9);
 
+
+        dd($friendshipsService->getInterestsWordsCountsSortedByCount());
         //dd($friendshipsService->getUsersSortedByFiendsCount());
 
         //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));

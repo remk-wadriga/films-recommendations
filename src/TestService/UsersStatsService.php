@@ -40,12 +40,26 @@ class UsersStatsService extends AbstractTestService
      */
     public function getUsersSortedByFiendsCount()
     {
-        $sorted = $this->getUsers();
-        usort($sorted, function (UserEntity $userI, UserEntity $userJ) {
+        $list = $this->getUsers();
+        usort($list, function (UserEntity $userI, UserEntity $userJ) {
             return $userI->friendsCount > $userJ->friendsCount ? -1 : 1;
         });
-        return $sorted;
+        return $list;
     }
 
+    /**
+     * Calculate frequency for words in users interests
+     *
+     * @param array $words
+     * @return mixed
+     */
+    public function getInterestsWordsCountsSortedByCount(array $words = [])
+    {
+        $list = $this->getInterestsWordsCountsIndexedByWords($words);
+        uasort($list, function ($countI, $countJ) {
+            return $countI > $countJ ? -1 : 1;
+        });
+        return $list;
+    }
 
 }

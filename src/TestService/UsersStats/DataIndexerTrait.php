@@ -6,6 +6,7 @@ namespace App\TestService\UsersStats;
 trait DataIndexerTrait
 {
     protected $salariesByTenures = [];
+    protected $interestsWordsCountsIndexedByWords = [];
 
     /**
      * @param array $tenures
@@ -13,6 +14,11 @@ trait DataIndexerTrait
      */
     public function getSalariesIndexedByTenures(array $tenures = [])
     {
+        $key = !empty($tenures) ? implode(':', $tenures) : 'all';
+        if (isset($this->salariesByTenures[$key])) {
+            return $this->salariesByTenures[$key];
+        }
+
         if (empty($tenures)) {
             foreach ($this->getUsers() as $user) {
                 if (!in_array($user->tenure, $tenures)) {
@@ -23,10 +29,6 @@ trait DataIndexerTrait
         usort($tenures, function ($tenureI, $tenureJ) {
             return $tenureI > $tenureJ ? 1 : -1;
         });
-        $key = implode(':', $tenures);
-        if (isset($this->salariesByTenures[$key])) {
-            return $this->salariesByTenures[$key];
-        }
 
         $this->salariesByTenures[$key] = [];
         foreach ($tenures as $tenure) {
@@ -72,5 +74,39 @@ trait DataIndexerTrait
         }
 
         return $this->salariesByTenures[$key];
+    }
+
+    public function getInterestsWordsCountsIndexedByWords(array $words = [])
+    {
+        $key = !empty($words) ? implode(':', $words) : 'all';
+        if (isset($this->interestsWordsCountsIndexedByWords[$key])) {
+            return $this->interestsWordsCountsIndexedByWords[$key];
+        }
+
+        if (empty($words)) {
+            foreach ($this->getInterests() as $interest) {
+                foreach (explode(' ', $interest[1]) as $word) {
+                    if (!in_array($word, $words)) {
+                        $words[] = $word;
+                    }
+                }
+            }
+        }
+
+        $this->interestsWordsCountsIndexedByWords[$key] = [];
+        foreach ($words as $word) {
+            if (!isset($this->interestsWordsCountsIndexedByWords[$key][$word])) {
+                $this->interestsWordsCountsIndexedByWords[$key][$word] = 0;
+            }
+            foreach ($this->getInterests() as $interest) {
+                foreach (explode(' ', $interest[1]) as $interestWord) {
+                    if (strtolower($word) === strtolower($interestWord)) {
+                        $this->interestsWordsCountsIndexedByWords[$key][$word]++;
+                    }
+                }
+            }
+        }
+
+        return $this->interestsWordsCountsIndexedByWords[$key];
     }
 }
