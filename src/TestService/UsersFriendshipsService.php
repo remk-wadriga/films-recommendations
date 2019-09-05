@@ -87,4 +87,21 @@ class UsersFriendshipsService extends AbstractTestService
         });
         return $sorted;
     }
+
+    /**
+     * @param UserEntity $user
+     * @return UserEntity[]
+     */
+    public function getFriendsOfUserFriends(UserEntity $user)
+    {
+        $friends = [];
+        foreach ($user->friends as $friend) {
+            foreach ($friend->friends as $friendOfFriend) {
+                if ($friendOfFriend !== $user && !in_array($friendOfFriend, $user->friends) && !in_array($friendOfFriend, $friends)) {
+                    $friends[] = $friendOfFriend;
+                }
+            }
+        }
+        return $friends;
+    }
 }
