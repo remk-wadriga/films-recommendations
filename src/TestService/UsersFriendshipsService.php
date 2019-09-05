@@ -14,6 +14,7 @@ class UsersFriendshipsService extends AbstractTestService
     protected $usersSalariesAndTenuresFile = 'users_salaries_and_tenures.json';
     protected $users;
     protected $usersByInterests = [];
+    protected $salariesByTenures = [];
 
     /**
      * @return UserEntity[]
@@ -116,6 +117,79 @@ class UsersFriendshipsService extends AbstractTestService
         return $this->calculateConnectionsCount() / count($this->getUsers());
     }
 
+    public function getSalariesIndexedByTenures(array $tenures = [])
+    {
+        if (empty($tenures)) {
+            foreach ($this->getUsers() as $user) {
+                if (!in_array($user->tenure, $tenures)) {
+                    $tenures[] = $user->tenure;
+                }
+            }
+        }
+        usort($tenures, function ($tenureI, $tenureJ) {
+            return $tenureI > $tenureJ ? 1 : -1;
+        });
+        $key = implode(':', $tenures);
+        if (isset($this->salariesByTenures[$key])) {
+            return $this->salariesByTenures[$key];
+        }
+
+        $this->salariesByTenures[$key] = [];
+        foreach ($tenures as $tenure) {
+            $this->salariesByTenures[$key][(string)$tenure] = [];
+        }
+
+        foreach ($this->getUsers() as $user) {
+            $tenure = (string)$user->tenure;
+            if (!isset($this->salariesByTenures[$key][$tenure])) {
+                $realIndex = null;
+                foreach (array_keys($this->salariesByTenures[$key]) as $indexedTenure) {
+                    if (!preg_match("/^(<|>) (\d+)$/", $indexedTenure, $matches) || !is_array($matches) || count($matches) !== 3) {
+                        $matches = [$indexedTenure, '=', $tenure];
+                    }
+                    $tenureFloatVal = floatval($matches[2]);
+                    switch ($matches[1]) {
+                        case '<':
+                            if ($user->tenure < $tenureFloatVal) {
+                                $realIndex = $indexedTenure;
+                            }
+                            break;
+                        case '>':
+                            if ($user->tenure > $tenureFloatVal) {
+                                $realIndex = $indexedTenure;
+                            }
+                            break;
+                        default:
+                            if ($user->tenure === $tenureFloatVal) {
+                                $realIndex = $indexedTenure;
+                            }
+                            break;
+                    }
+                    if ($realIndex !== null) {
+                        $tenure = $realIndex;
+                        break;
+                    }
+                }
+                if ($realIndex === null) {
+                    continue;
+                }
+            }
+            $this->salariesByTenures[$key][$tenure][] = $user->salary;
+        }
+
+        return $this->salariesByTenures[$key];
+    }
+
+    public function calculateAverageSalariesForTenures(array $tenures = [])
+    {
+        $indexedSalaries = $this->getSalariesIndexedByTenures($tenures);
+        $result = [];
+        foreach ($indexedSalaries as $tenure => $salaries) {
+            $result[$tenure] = !empty($salaries) ? array_sum($salaries) / count($salaries) : 0;
+        }
+        return $result;
+    }
+
     /**
      * Calculate "Degree Centrality": the more user has friends the closer he is to the "centre"
      *
@@ -130,4 +204,6 @@ class UsersFriendshipsService extends AbstractTestService
         });
         return $sorted;
     }
+
+
 }

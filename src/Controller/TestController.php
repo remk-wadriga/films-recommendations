@@ -27,12 +27,7 @@ class TestController extends AbstractController
         $user8 = $friendshipsService->findUserByID(8);
         $user9 = $friendshipsService->findUserByID(9);
 
-        $userI = $user5;
-
-        $data = [];
-        foreach ($userI->getUsersWithMyInterestsSortedByInterestsCount() as $usersWithCommonInterest) {
-            $data[$usersWithCommonInterest->id] = count($usersWithCommonInterest->getInterestsFrom($userI->interests));
-        }
-        dd($userI->interests, $user3->interests, $data);
+        //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));
+        dd($friendshipsService->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
     }
 }

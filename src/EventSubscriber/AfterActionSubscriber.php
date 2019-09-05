@@ -34,6 +34,8 @@ class AfterActionSubscriber implements EventSubscriberInterface
     public function handleException(ExceptionEvent $event)
     {
         $exception = $event->getException();
+        $file = $exception->getFile();
+        $line = $exception->getLine();
 
         if (!($exception instanceof SymfonyHttpException)) {
             $exception = new HttpException($exception->getMessage(), 0, $exception);
@@ -43,8 +45,8 @@ class AfterActionSubscriber implements EventSubscriberInterface
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
             'data' => [
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
+                'file' => $file,
+                'line' => $line,
                 //'trace' => $exception->getTrace(),
             ],
         ];
