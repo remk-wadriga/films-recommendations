@@ -4,7 +4,15 @@
 namespace App\TestService\UsersFriendships;
 
 use App\TestService\AbstractEntity;
+use App\TestService\UsersFriendshipsService;
+use App\Exception\ServiceException;
 
+/**
+ * Class UserEntity
+ * @package App\TestService\UsersFriendships
+ *
+ * @property UsersFriendshipsService $service
+ */
 class UserEntity extends AbstractEntity
 {
     public $id;
@@ -18,6 +26,9 @@ class UserEntity extends AbstractEntity
     protected $friendsOfMyFriends;
 
     protected $commonFriends = [];
+
+    /** @var UserEntity[] */
+    protected $usersWithMyInterests;
 
     public function addFriend(UserEntity $friend)
     {
@@ -73,5 +84,41 @@ class UserEntity extends AbstractEntity
             }
         }
         return $this->commonFriends[$user->id];
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return array
+     */
+    public function getCommonInterestsWith(UserEntity $user)
+    {
+        return $user === $this ? [] : $user->getInterestsFrom($this->interests);
+    }
+
+    /**
+     * @return UserEntity[]
+     * @throws ServiceException
+     */
+    public function getUsersWithMyInterestsSortedByInterestsCount()
+    {
+        if ($this->usersWithMyInterests !== null) {
+            return $this->usersWithMyInterests;
+        }
+
+        $this->usersWithMyInterests = $this->service->findUsersByInterests($this->interests, $this);
+        usort($this->usersWithMyInterests, function (UserEntity $userI, UserEntity $userJ) {
+            return count($userI->getCommonInterestsWith($this)) > count($userJ->getCommonInterestsWith($this)) ? -1 : 1;
+        });
+
+        return $this->usersWithMyInterests;
+    }
+
+    /**
+     * @param array $interests
+     * @return array
+     */
+    public function getInterestsFrom(array $interests)
+    {
+        return array_intersect($this->interests, $interests);
     }
 }

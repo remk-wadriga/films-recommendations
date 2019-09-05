@@ -49,6 +49,6 @@ abstract class AbstractTestService
             throw new ServiceException(sprintf('Class "%s" is not subclass of %s', $entityClass, AbstractEntity::class), ServiceException::CODE_INVALID_CONFIG);
         }
 
-        return new $entityClass($data);
+        return new $entityClass($data, $this);
     }
 }

@@ -12,6 +12,7 @@ class UsersFriendshipsService extends AbstractTestService
     protected $usersFriendshipsFile = 'users_friendships.json';
     protected $usersInterestsFile = 'users_interests.json';
     protected $users;
+    protected $usersByInterests = [];
 
     /**
      * @return UserEntity[]
@@ -25,7 +26,9 @@ class UsersFriendshipsService extends AbstractTestService
 
         $this->users = [];
         foreach ($this->getFileReader($this->usersFile)->readFile() as $data) {
-            $this->users[] = $this->createObject(UserEntity::class, $data);
+            /** @var UserEntity $user */
+            $user = $this->createObject(UserEntity::class, $data);
+            $this->users[$user->id] = $user;
         }
 
         foreach ($this->getFileReader($this->usersFriendshipsFile)->readFile() as $friendship) {
@@ -50,13 +53,41 @@ class UsersFriendshipsService extends AbstractTestService
 
     public function findUserByID($id): ?UserEntity
     {
+        if ($this->users === null) {
+            $this->getUsers();
+        }
+        return isset($this->users[$id]) ? $this->users[$id] : null;
+    }
+
+    /**
+     * @param array $interests
+     * @param UserEntity $excluding
+     *
+     * @return UserEntity[]
+     * @throws ServiceException
+     */
+    public function findUsersByInterests(array $interests, UserEntity $excluding = null)
+    {
+        $key = implode(':', $interests);
+        if ($excluding !== null) {
+            $key .= ':' . $excluding->id;
+        }
+        if (isset($this->usersByInterests[$key])) {
+            return $this->usersByInterests[$key];
+        }
+
+        $this->usersByInterests[$key] = [];
         foreach ($this->getUsers() as $user) {
-            if ($user->id == $id) {
-                return $user;
+            if ($user === $excluding) {
+                continue;
+            }
+            if (!empty($user->getInterestsFrom($interests))) {
+                $this->usersByInterests[$key][] = $user;
             }
         }
-        return null;
+        return $this->usersByInterests[$key];
     }
+
 
     public function calculateConnectionsCount()
     {

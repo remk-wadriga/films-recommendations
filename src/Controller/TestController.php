@@ -15,12 +15,23 @@ class TestController extends AbstractController
      */
     public function users(UsersFriendshipsService $friendshipsService)
     {
-        $user = $friendshipsService->findUserByID(3);
+        $user0 = $friendshipsService->findUserByID(0);
+        $user1 = $friendshipsService->findUserByID(1);
+        $user2 = $friendshipsService->findUserByID(2);
+        $user3 = $friendshipsService->findUserByID(3);
+        $user4 = $friendshipsService->findUserByID(4);
+        $user5 = $friendshipsService->findUserByID(5);
+        $user6 = $friendshipsService->findUserByID(6);
+        $user7 = $friendshipsService->findUserByID(7);
+        $user8 = $friendshipsService->findUserByID(8);
+        $user9 = $friendshipsService->findUserByID(9);
 
-        $friendsOfFriendsWithCommonFriendsCount = [];
-        foreach ($user->getFriendsOfMyFriends() as $friend) {
-            $friendsOfFriendsWithCommonFriendsCount[$friend->id] = count($user->getCommonFriendsWith($friend));
+        $userI = $user5;
+
+        $data = [];
+        foreach ($userI->getUsersWithMyInterestsSortedByInterestsCount() as $usersWithCommonInterest) {
+            $data[$usersWithCommonInterest->id] = count($usersWithCommonInterest->getInterestsFrom($userI->interests));
         }
-        dd($friendsOfFriendsWithCommonFriendsCount);
+        dd($userI->interests, $user3->interests, $data);
     }
 }
