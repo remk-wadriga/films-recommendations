@@ -11,6 +11,7 @@ class UsersFriendshipsService extends AbstractTestService
     protected $usersFile = 'users.json';
     protected $usersFriendshipsFile = 'users_friendships.json';
     protected $usersInterestsFile = 'users_interests.json';
+    protected $usersSalariesAndTenuresFile = 'users_salaries_and_tenures.json';
     protected $users;
     protected $usersByInterests = [];
 
@@ -24,6 +25,7 @@ class UsersFriendshipsService extends AbstractTestService
             return $this->users;
         }
 
+        // Create users list
         $this->users = [];
         foreach ($this->getFileReader($this->usersFile)->readFile() as $data) {
             /** @var UserEntity $user */
@@ -31,6 +33,7 @@ class UsersFriendshipsService extends AbstractTestService
             $this->users[$user->id] = $user;
         }
 
+        // Set up users friendships
         foreach ($this->getFileReader($this->usersFriendshipsFile)->readFile() as $friendship) {
             list($i, $j) = $friendship;
             $userI = $this->findUserByID($i);
@@ -41,10 +44,20 @@ class UsersFriendshipsService extends AbstractTestService
             $userI->addFriend($userJ);
         }
 
+        // Set up users interests
         foreach ($this->getFileReader($this->usersInterestsFile)->readFile() as $userInterest) {
             $user = $this->findUserByID($userInterest[0]);
             if ($user !== null) {
                 $user->addInterest($userInterest[1]);
+            }
+        }
+
+        // Set up users salaries and tenures
+        foreach ($this->getFileReader($this->usersSalariesAndTenuresFile)->readFile() as $userSandT) {
+            $user = $this->findUserByID($userSandT[0]);
+            if ($user !== null) {
+                $user->salary = $userSandT[1];
+                $user->tenure = $userSandT[2];
             }
         }
 

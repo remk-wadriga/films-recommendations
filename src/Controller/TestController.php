@@ -15,6 +15,7 @@ class TestController extends AbstractController
      */
     public function users(UsersFriendshipsService $friendshipsService)
     {
+
         $user0 = $friendshipsService->findUserByID(0);
         $user1 = $friendshipsService->findUserByID(1);
         $user2 = $friendshipsService->findUserByID(2);
