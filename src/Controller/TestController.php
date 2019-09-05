@@ -15,7 +15,6 @@ class TestController extends AbstractController
      */
     public function users(UsersFriendshipsService $friendshipsService)
     {
-
         $user0 = $friendshipsService->findUserByID(0);
         $user1 = $friendshipsService->findUserByID(1);
         $user2 = $friendshipsService->findUserByID(2);
@@ -26,6 +25,8 @@ class TestController extends AbstractController
         $user7 = $friendshipsService->findUserByID(7);
         $user8 = $friendshipsService->findUserByID(8);
         $user9 = $friendshipsService->findUserByID(9);
+
+        //dd($friendshipsService->getUsersSortedByFiendsCount());
 
         //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));
         dd($friendshipsService->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
