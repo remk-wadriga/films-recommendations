@@ -22,10 +22,22 @@ class UsersFriendshipsService extends AbstractTestService
         if ($this->users !== null) {
             return $this->users;
         }
+
         $this->users = [];
         foreach ($this->getFileReader($this->usersFile)->readFile() as $data) {
             $this->users[] = $this->createObject(UserEntity::class, $data);
         }
+
+        foreach ($this->getFriendships() as $friendship) {
+            list($i, $j) = $friendship;
+            $userI = $this->findUserByID($i);
+            $userJ = $this->findUserByID($j);
+            if ($userI === null || $userJ === null) {
+                continue;
+            }
+            $userI->addFriend($userJ);
+        }
+
         return $this->users;
     }
 
@@ -45,5 +57,34 @@ class UsersFriendshipsService extends AbstractTestService
             }
         }
         return null;
+    }
+
+    public function calculateConnectionsCount()
+    {
+        $totalCount = 0;
+        foreach ($this->getUsers() as $user) {
+            $totalCount += $user->friendsCount;
+        }
+        return $totalCount;
+    }
+
+    public function calculateAverageConnectionsCount()
+    {
+        return $this->calculateConnectionsCount() / count($this->getUsers());
+    }
+
+    /**
+     * Calculate "Degree Centrality": the more user has friends the closer he is to the "centre"
+     *
+     * @return UserEntity[]
+     * @throws ServiceException
+     */
+    public function getUsersSortedByFiendsCount()
+    {
+        $sorted = $this->getUsers();
+        usort($sorted, function (UserEntity $userI, UserEntity $userJ) {
+            return $userI->friendsCount > $userJ->friendsCount ? -1 : 1;
+        });
+        return $sorted;
     }
 }
