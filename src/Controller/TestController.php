@@ -13,24 +13,24 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(UsersStatsService $friendshipsService)
+    public function users(UsersStatsService $service)
     {
-        $user0 = $friendshipsService->findUserByID(0);
-        $user1 = $friendshipsService->findUserByID(1);
-        $user2 = $friendshipsService->findUserByID(2);
-        $user3 = $friendshipsService->findUserByID(3);
-        $user4 = $friendshipsService->findUserByID(4);
-        $user5 = $friendshipsService->findUserByID(5);
-        $user6 = $friendshipsService->findUserByID(6);
-        $user7 = $friendshipsService->findUserByID(7);
-        $user8 = $friendshipsService->findUserByID(8);
-        $user9 = $friendshipsService->findUserByID(9);
+        $user0 = $service->findUserByID(0);
+        $user1 = $service->findUserByID(1);
+        $user2 = $service->findUserByID(2);
+        $user3 = $service->findUserByID(3);
+        $user4 = $service->findUserByID(4);
+        $user5 = $service->findUserByID(5);
+        $user6 = $service->findUserByID(6);
+        $user7 = $service->findUserByID(7);
+        $user8 = $service->findUserByID(8);
+        $user9 = $service->findUserByID(9);
 
 
-        dd($friendshipsService->getInterestsWordsCountsSortedByCount());
+        dd($service->getInterestsWordsCountsSortedByCount());
         //dd($friendshipsService->getUsersSortedByFiendsCount());
 
         //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));
-        dd($friendshipsService->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
+        dd($service->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
     }
 }
