@@ -16,9 +16,9 @@ class FileReaderFactory
         self::EXT_JSON => JsonFileReader::class,
     ];
 
-    public static function createFileReader(string $file): FileReaderInterface
+    public static function createFileReader(string $forFile): FileReaderInterface
     {
-        $ext = FileHelper::getExt($file);
+        $ext = FileHelper::getExt($forFile);
 
         if ($ext === null || !isset(self::$_classesMap[$ext])) {
             throw new FileException(sprintf('Unsupported file format: %s', $ext), FileException::UNSUPPORTED_FORMAT);
@@ -29,6 +29,6 @@ class FileReaderFactory
             throw new ServiceException(sprintf('File reader must instance of %s abstract class, but it does not. Reader class: %s', AbstractFileReader::class, $readerClass), ServiceException::CODE_INVALID_CONFIG);
         }
 
-        return new $readerClass($file, $ext);
+        return new $readerClass($forFile, $ext);
     }
 }

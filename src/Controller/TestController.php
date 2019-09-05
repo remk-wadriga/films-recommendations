@@ -18,8 +18,8 @@ class TestController extends AbstractController
         $user = $friendshipsService->findUserByID(3);
 
         $friendsOfFriendsWithCommonFriendsCount = [];
-        foreach ($friendshipsService->getFriendsOfUserFriends($user) as $friend) {
-            $friendsOfFriendsWithCommonFriendsCount[$friend->id] = count($friend->getCommonFriendsWith($user));
+        foreach ($user->getFriendsOfMyFriends() as $friend) {
+            $friendsOfFriendsWithCommonFriendsCount[$friend->id] = count($user->getCommonFriendsWith($friend));
         }
         dd($friendsOfFriendsWithCommonFriendsCount);
     }

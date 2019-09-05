@@ -18,9 +18,9 @@ class FileCreatorFactory
         self::EXT_PNG => ImageCreator::class,
     ];
 
-    public static function createFileCreator(string $directory, string $name, string $data): FileCreatorInterface
+    public static function createFileCreator(string $directory, string $fileName, string $data): FileCreatorInterface
     {
-        $ext = FileHelper::getExt($name);
+        $ext = FileHelper::getExt($fileName);
 
         if ($ext === null || !isset(self::$_classesMap[$ext])) {
             throw new FileException(sprintf('Unsupported file format: %s', $ext), FileException::UNSUPPORTED_FORMAT);
@@ -31,6 +31,6 @@ class FileCreatorFactory
             throw new ServiceException(sprintf('File creator must instance of %s abstract class, but it does not. Creator class: %s', FileCreatorAbstract::class, $creatorClass), ServiceException::CODE_INVALID_CONFIG);
         }
 
-        return new $creatorClass($directory, $name, $data);
+        return new $creatorClass($directory, $fileName, $data);
     }
 }

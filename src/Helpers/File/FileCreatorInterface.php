@@ -8,7 +8,7 @@ interface FileCreatorInterface
 {
     public function setDir(string $directory);
 
-    public function setName(string $name);
+    public function setFileName(string $fileName);
 
     public function setData(string $data);
 
