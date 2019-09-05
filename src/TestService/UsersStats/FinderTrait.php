@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\TestService\UsersFriendships;
+namespace App\TestService\UsersStats;
 
 /**
  * Trait FinderTrait

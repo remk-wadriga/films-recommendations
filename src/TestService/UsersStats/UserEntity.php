@@ -1,17 +1,17 @@
 <?php
 
 
-namespace App\TestService\UsersFriendships;
+namespace App\TestService\UsersStats;
 
 use App\TestService\AbstractEntity;
-use App\TestService\UsersFriendshipsService;
+use App\TestService\UsersStatsService;
 use App\Exception\ServiceException;
 
 /**
  * Class UserEntity
  * @package App\TestService\UsersFriendships
  *
- * @property UsersFriendshipsService $service
+ * @property UsersStatsService $service
  */
 class UserEntity extends AbstractEntity
 {

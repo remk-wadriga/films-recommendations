@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 
-use App\TestService\UsersFriendshipsService;
+use App\TestService\UsersStatsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
@@ -13,7 +13,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(UsersFriendshipsService $friendshipsService)
+    public function users(UsersStatsService $friendshipsService)
     {
         $user0 = $friendshipsService->findUserByID(0);
         $user1 = $friendshipsService->findUserByID(1);

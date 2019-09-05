@@ -3,13 +3,13 @@
 
 namespace App\TestService;
 
-use App\TestService\UsersFriendships\UserEntity;
+use App\TestService\UsersStats\UserEntity;
 use App\Exception\ServiceException;
-use App\TestService\UsersFriendships\FileReaderTrait;
-use App\TestService\UsersFriendships\DataIndexerTrait;
-use App\TestService\UsersFriendships\FinderTrait;
+use App\TestService\UsersStats\FileReaderTrait;
+use App\TestService\UsersStats\DataIndexerTrait;
+use App\TestService\UsersStats\FinderTrait;
 
-class UsersFriendshipsService extends AbstractTestService
+class UsersStatsService extends AbstractTestService
 {
     use FileReaderTrait;
     use DataIndexerTrait;
