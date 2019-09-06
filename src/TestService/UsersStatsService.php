@@ -55,6 +55,18 @@ class UsersStatsService extends AbstractTestService
      */
     public function getInterestsWordsCountsSortedByCount(array $words = [])
     {
+        $v = [1, 2, 3, 5, 7, 9, 13];
+        $w = [3, 2, 1, 5, 7, 2, 6];
+        $z = [1, 1, 3];
+        //dd($this->calc->vectorsDistance($v, $w));
+
+        $time = microtime(true);
+        for ($i = 0; $i < 9000000; $i++) {
+            $this->calc->vectorsDistance($v, $w);
+        }
+        dd(microtime(true) - $time, $this->calc->vectorsDistance($v, $w));
+
+
         $list = $this->getInterestsWordsCountsIndexedByWords($words);
         uasort($list, function ($countI, $countJ) {
             return $countI > $countJ ? -1 : 1;

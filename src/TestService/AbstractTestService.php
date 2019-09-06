@@ -13,14 +13,16 @@ abstract class AbstractTestService
 {
     protected $em;
     protected $container;
+    protected $calc;
 
     /** @var FileReaderInterface[] */
     protected $fileReaders = [];
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em, ContainerInterface $container, Calculator $calc)
     {
         $this->em = $em;
         $this->container = $container;
+        $this->calc = $calc;
     }
 
     public function getParam($name, $defaultValue = null)
