@@ -48,4 +48,12 @@ class TestController extends AbstractController
         }
         return $this->json($data);
     }
+
+    /**
+     * @Route("/test/users/count-to-friends-count-relation", name="test_users_count_to_friends_count_relation", methods={"GET"})
+     */
+    public function usersCountsToFriendsCountRelation(UsersStatsService $service)
+    {
+        return $this->json($service->getUsersCountSortedByFriendsCount());
+    }
 }

@@ -11,6 +11,7 @@ import FilmUpdate from '@/components/film/Update'
 
 import TestIndex from '@/components/test/TestIndex'
 import UsersFriendsCount from '@/components/test/UsersFriendsCount'
+import UsersCountToFriendsCount from '@/components/test/UsersCountToFriendsCount'
 
 import {
     ROUTE_HOMEPAGE,
@@ -21,7 +22,8 @@ import {
     ROUTE_FILM_VIEW,
     ROUTE_FILM_UPDATE,
     ROUTE_TEST_INDEX,
-    ROUTE_TEST_USERS_FRIENDS_COUNT
+    ROUTE_TEST_USERS_FRIENDS_COUNT,
+    ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT
 } from './routes-list'
 
 Vue.use(Router)
@@ -72,6 +74,11 @@ export default new Router({
             path: '/test/users/friends-count',
             name: ROUTE_TEST_USERS_FRIENDS_COUNT,
             component: UsersFriendsCount
+        },
+        {
+            path: '/test/users/count-to-friends-count-relation',
+            name: ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT,
+            component: UsersCountToFriendsCount
         }
     ]
 })

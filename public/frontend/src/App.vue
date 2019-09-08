@@ -10,11 +10,12 @@
     import { mapMutations } from 'vuex'
     import {
         ROUTE_HOMEPAGE,
-        ROUTE_TEST_INDEX,
-        ROUTE_TEST_USERS_FRIENDS_COUNT,
         ROUTE_LOGIN,
         ROUTE_REGISTRATION,
-        ROUTE_ACCOUNT
+        ROUTE_ACCOUNT,
+        ROUTE_TEST_INDEX,
+        ROUTE_TEST_USERS_FRIENDS_COUNT,
+        ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT
     } from '@/router/routes-list'
     import { UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { LOGOUT_URL } from '@/api/request-urls'
@@ -28,6 +29,7 @@
                 routeHomepage: ROUTE_HOMEPAGE,
                 routeTestPage: ROUTE_TEST_INDEX,
                 routerTestUsersFriendsCountPage: ROUTE_TEST_USERS_FRIENDS_COUNT,
+                routeTestUsersCountTOFriendsCount: ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT,
                 routeLogin: ROUTE_LOGIN,
                 routeRegistration: ROUTE_REGISTRATION,
                 routeAccount: ROUTE_ACCOUNT

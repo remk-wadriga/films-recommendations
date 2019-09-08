@@ -48,3 +48,4 @@ export const PREMIUM_CREATE_URL = 'POST /premium'
 export const PREMIUM_UPDATE_URL = 'PUT /premium/:id'
 
 export const TEST_USERS_FRIENDS_COUNT_URL = 'GET /test/users/friends-count'
+export const TEST_USERS_COUNT_TO_FRIENDS_COUNT_URL = 'GET /test/users/count-to-friends-count-relation'

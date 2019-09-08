@@ -35,16 +35,53 @@ class UsersStatsService extends AbstractTestService
     /**
      * Calculate "Degree Centrality": the more user has friends the closer he is to the "centre"
      *
+     * @param bool $desc
      * @return UserEntity[]
      * @throws ServiceException
      */
-    public function getUsersSortedByFiendsCount()
+    public function getUsersSortedByFiendsCount($desc = false)
     {
         $list = $this->getUsers();
-        usort($list, function (UserEntity $userI, UserEntity $userJ) {
-            return $userI->friendsCount > $userJ->friendsCount ? -1 : 1;
+        usort($list, function (UserEntity $userI, UserEntity $userJ) use ($desc) {
+            $res = $desc ? $userI->friendsCount > $userJ->friendsCount : $userJ->friendsCount > $userI->friendsCount;
+            return $res ? -1 : 1;
         });
         return $list;
+    }
+
+    /**
+     * Calculate users count for each specific friends count (in other words "How much users has 3 friends, 5 friends, 10 friends etc")
+     *    This function will return the array luke that:
+     *    [
+     *       [
+     *          "friends": 3,
+     *          "users": 10,
+     *       ],
+     *       [
+     *          "friends": 7,
+     *          "users": 4,
+     *       ],
+     *       ...
+     *    ]
+     *   The array will be sorted by friends count
+     *
+     * @param bool $desc
+     * @return array
+     * @throws ServiceException
+     */
+    public function getUsersCountSortedByFriendsCount($desc = false)
+    {
+        $data = [];
+        foreach ($this->getUsersSortedByFiendsCount($desc) as $user) {
+            if (!isset($data[$user->friendsCount])) {
+                $data[$user->friendsCount] = [
+                    'friends' => $user->friendsCount,
+                    'users' => 0
+                ];
+            }
+            $data[$user->friendsCount]['users']++;
+        }
+        return array_values($data);
     }
 
     /**
@@ -61,5 +98,6 @@ class UsersStatsService extends AbstractTestService
         });
         return $list;
     }
+
 
 }
