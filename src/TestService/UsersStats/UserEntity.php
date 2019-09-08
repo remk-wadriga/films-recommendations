@@ -32,14 +32,19 @@ class UserEntity extends AbstractEntity
     /** @var UserEntity[] */
     protected $usersWithMyInterests;
 
-    public function addFriend(UserEntity $friend)
+    public function addFriend(UserEntity $user)
     {
-        if ($friend === $this || in_array($friend, $this->friends)) {
+        if (isset($this->friends[$user->id]) || $user === $this) {
             return;
         }
-        $this->friends[] = $friend;
-        $friend->addFriend($this);
+        $this->friends[$user->id] = $user;
+        $user->addFriend($this);
         $this->friendsCount++;
+    }
+
+    public function isFriend(UserEntity $user): bool
+    {
+        return isset($this->friends[$user->id]);
     }
 
     public function addInterest(string $interest)
