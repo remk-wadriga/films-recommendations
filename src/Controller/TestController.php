@@ -42,8 +42,8 @@ class TestController extends AbstractController
         $data = [];
         foreach ($service->getUsers() as $user) {
             $data[] = [
-                'id' => $user->name,
-                'value' => $user->friendsCount,
+                'name' => $user->name,
+                'count' => $user->friendsCount,
             ];
         }
         return $this->json($data);

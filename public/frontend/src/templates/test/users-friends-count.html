@@ -1,3 +1,11 @@
 <b-col id="users_friends_count">
-    <p>{{ data }}</p>
+    <b-row>
+        <div class="chart-container">
+            <BarChart
+                    :labels="chartLabels"
+                    :data="chartData"
+                    :options="chartOptions"
+            />
+        </div>
+    </b-row>
 </b-col>
