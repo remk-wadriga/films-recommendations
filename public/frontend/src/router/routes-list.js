@@ -6,3 +6,6 @@ export const ROUTE_FILM_CREATE = 'film_create'
 export const ROUTE_FILM_VIEW = 'film_view'
 export const ROUTE_FILM_UPDATE = 'film_update'
 export const ROUTE_HOMEPAGE = ROUTE_FILMS_LIST
+
+export const ROUTE_TEST_INDEX = 'test_index'
+export const ROUTE_TEST_USERS_FRIENDS_COUNT = 'test_users_friends_count'

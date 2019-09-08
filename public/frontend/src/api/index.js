@@ -44,20 +44,12 @@ const Api = {
             url = url[0]
         }
 
-        let re1 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+/\\w+)/:(.+)")
-        let re2 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+)/:(.+)")
-        let re3 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+/\\w+)")
-        let re4 = new RegExp("(GET|POST|PUT|DELETE) /(\\w+)")
+        let re1 = new RegExp("(GET|POST|PUT|DELETE) /([[\\w\\-/]+)/:(.+)")
+        let re2 = new RegExp("(GET|POST|PUT|DELETE) /([[\\w\\-/]+)")
 
         let urlData = url.match(re1)
         if (urlData === null) {
             urlData = url.match(re2)
-        }
-        if (urlData === null) {
-            urlData = url.match(re3)
-        }
-        if (urlData === null) {
-            urlData = url.match(re4)
         }
 
         if (urlData === null) {

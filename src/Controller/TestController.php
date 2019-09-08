@@ -33,4 +33,19 @@ class TestController extends AbstractController
         //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));
         dd($service->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
     }
+
+    /**
+     * @Route("/test/users/friends-count", name="test_users_friends_count", methods={"GET"})
+     */
+    public function usersFriendsCount(UsersStatsService $service)
+    {
+        $data = [];
+        foreach ($service->getUsers() as $user) {
+            $data[] = [
+                'id' => $user->name,
+                'value' => $user->friendsCount,
+            ];
+        }
+        return $this->json($data);
+    }
 }
