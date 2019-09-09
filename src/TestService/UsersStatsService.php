@@ -92,6 +92,9 @@ class UsersStatsService extends AbstractTestService
      */
     public function getInterestsWordsCountsSortedByCount(array $words = [])
     {
+        $data = [9, 4, 2, 6, 2, 7, 5, 8, 1, 15, 45, 32, 49, 80, 100];
+        dd($this->calc->interquantileRange($data));
+
         $list = $this->getInterestsWordsCountsIndexedByWords($words);
         uasort($list, function ($countI, $countJ) {
             return $countI > $countJ ? -1 : 1;
