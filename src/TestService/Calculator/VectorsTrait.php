@@ -50,17 +50,17 @@ trait VectorsTrait
     }
 
     /**
-     * Calculate vectors scalar multiply (the same that "vectorsSum" but use operation "*" instead "+")
+     * Calculate vectors multiply (the same that "vectorsSum" but use operation "*" instead "+")
      *
      * @param array $v
      * @param array ...$vectors
-     * @return float|int
+     * @return array
      * @throws ServiceException
      */
-    public function vectorsScalarMultiply(array $v, array ...$vectors)
+    public function vectorsMultiply(array $v, array ...$vectors): array
     {
         $result = [];
-        foreach ($vectors as $i => $w) {
+        foreach ($vectors as $w) {
             $this->checkVectorsLength($v, $w);
             foreach ($v as $index => $value) {
                 $this->checkVectorIndex($w, $index);
@@ -69,6 +69,24 @@ trait VectorsTrait
                 }
                 $result[$index] = $value * $w[$index];
             }
+        }
+        return $result;
+    }
+
+    /**
+     * <<dot>>
+     * Calculate vectors scalar multiply (just a sum of result of vectors multiply)
+     *
+     * @param array $v
+     * @param array ...$vectors
+     * @return float|int
+     * @throws ServiceException
+     */
+    public function vectorsScalarMultiply(array $v, array ...$vectors)
+    {
+        $result = $v;
+        foreach ($vectors as $w) {
+            $result = $this->vectorsMultiply($result, $w);
         }
         return array_sum($result);
     }
@@ -86,7 +104,7 @@ trait VectorsTrait
     }
 
     /**
-     * Calculate the average between vectors (each element of result will be equals to average value of vectors elements with teh same indexes)
+     * Calculate the average between vectors (each element of result will be equals to average value of vectors elements with the same indexes)
      *
      * @param array $v
      * @param array ...$vectors

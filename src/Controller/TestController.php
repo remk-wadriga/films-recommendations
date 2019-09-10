@@ -3,6 +3,8 @@
 
 namespace App\Controller;
 
+use App\TestService\Calculator;
+use App\TestService\UsersStats\UserEntity;
 use App\TestService\UsersStatsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,25 +15,22 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(UsersStatsService $service)
+    public function users(UsersStatsService $service, Calculator $calc)
     {
-        $user0 = $service->findUserByID(0);
-        $user1 = $service->findUserByID(1);
-        $user2 = $service->findUserByID(2);
-        $user3 = $service->findUserByID(3);
-        $user4 = $service->findUserByID(4);
-        $user5 = $service->findUserByID(5);
-        $user6 = $service->findUserByID(6);
-        $user7 = $service->findUserByID(7);
-        $user8 = $service->findUserByID(8);
-        $user9 = $service->findUserByID(9);
+        //$v1 = [1, 2, 3, 4, 5, 6, 7];
+        //$v2 = [13, 45, 15, 12, 3, 0, 19];
+        //$v2 = [12, 23, 34, 43, 55, 60, 71];
+        //$activeMinutes = $friendsCount;
+        $numFriends = $service->getNumFriendsData();
+        $dailyMinutes = $service->getDailyMinutesData();
+        $outlier = array_search(100, $numFriends);
 
+        $numFriendsGood = $numFriends;
+        $dailyMinutesGood = $dailyMinutes;
+        unset($numFriendsGood[$outlier]);
+        unset($dailyMinutesGood[$outlier]);
 
-        dd($service->getInterestsWordsCountsSortedByCount());
-        //dd($friendshipsService->getUsersSortedByFiendsCount());
-
-        //dd($friendshipsService->getSalariesIndexedByTenures(['< 2', '< 5', '> 5']));
-        dd($service->calculateAverageSalariesForTenures(['< 2', '< 5', '> 5']));
+        dd($calc->correlation($numFriendsGood, $dailyMinutesGood));
     }
 
     /**

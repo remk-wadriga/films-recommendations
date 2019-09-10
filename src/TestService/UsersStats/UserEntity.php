@@ -20,6 +20,7 @@ class UserEntity extends AbstractEntity
     public $salary = 0;
     public $tenure = 0;
     public $friendsCount = 0;
+    public $activeMinutes = 0;
     /** @var UserEntity[] */
     public $friends = [];
     public $interests = [];

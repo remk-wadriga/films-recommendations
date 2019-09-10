@@ -19,11 +19,13 @@ trait FileReaderTrait
     protected $usersFriendshipsFile = 'users_friendships.json';
     protected $usersInterestsFile = 'users_interests.json';
     protected $usersSalariesAndTenuresFile = 'users_salaries_and_tenures.json';
+    protected $usersActivitiesFile = 'users_activities.json';
 
     protected $users;
     protected $friendships;
     protected $interests;
     protected $salariesAndTenures;
+    protected $activities;
 
 
     /**
@@ -72,6 +74,14 @@ trait FileReaderTrait
             }
         }
 
+        // Set up users activities (minutes of activity)
+        foreach ($this->getActivities() as $userActivity) {
+            $user = $this->findUserByID($userActivity[0]);
+            if ($user !== null) {
+                $user->activeMinutes = $userActivity[1];
+            }
+        }
+
         return $this->users;
     }
 
@@ -97,5 +107,23 @@ trait FileReaderTrait
             return $this->salariesAndTenures;
         }
         return $this->salariesAndTenures = $this->getFileReader($this->usersSalariesAndTenuresFile)->readFile();
+    }
+
+    public function getActivities()
+    {
+        if ($this->activities !== null) {
+            return $this->activities;
+        }
+        return $this->activities = $this->getFileReader($this->usersActivitiesFile)->readFile();
+    }
+
+
+    public function getNumFriendsData()
+    {
+        return $this->getFileReader('num_friends_data.json')->readFile();
+    }
+    public function getDailyMinutesData()
+    {
+        return $this->getFileReader('daily_minutes_data.json')->readFile();
     }
 }

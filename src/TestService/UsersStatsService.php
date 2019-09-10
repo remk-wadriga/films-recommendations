@@ -39,11 +39,28 @@ class UsersStatsService extends AbstractTestService
      * @return UserEntity[]
      * @throws ServiceException
      */
-    public function getUsersSortedByFiendsCount($desc = false)
+    public function getUsersSortedByFiendsCount(bool $desc = false)
     {
         $list = $this->getUsers();
         usort($list, function (UserEntity $userI, UserEntity $userJ) use ($desc) {
             $res = $desc ? $userI->friendsCount > $userJ->friendsCount : $userJ->friendsCount > $userI->friendsCount;
+            return $res ? -1 : 1;
+        });
+        return $list;
+    }
+
+    /**
+     * Get users list sorted by active minutes
+     *
+     * @param bool $desc
+     * @return UserEntity[]
+     * @throws ServiceException
+     */
+    public function getUsersSortedByActiveMinutes(bool $desc = false)
+    {
+        $list = $this->getUsers();
+        usort($list, function (UserEntity $userI, UserEntity $userJ) use ($desc) {
+            $res = $desc ? $userI->activeMinutes > $userJ->activeMinutes : $userJ->activeMinutes > $userI->activeMinutes;
             return $res ? -1 : 1;
         });
         return $list;
@@ -92,15 +109,10 @@ class UsersStatsService extends AbstractTestService
      */
     public function getInterestsWordsCountsSortedByCount(array $words = [])
     {
-        $data = [9, 4, 2, 6, 2, 7, 5, 8, 1, 15, 45, 32, 49, 80, 100];
-        dd($this->calc->interquantileRange($data));
-
         $list = $this->getInterestsWordsCountsIndexedByWords($words);
         uasort($list, function ($countI, $countJ) {
             return $countI > $countJ ? -1 : 1;
         });
         return $list;
     }
-
-
 }
