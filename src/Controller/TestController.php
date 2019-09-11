@@ -17,7 +17,9 @@ class TestController extends AbstractController
      */
     public function users(UsersStatsService $service, Calculator $calc)
     {
-        dd($calc->normalPDF(3));
+        $x = -5.3;
+        $cdf = $calc->normalCDF($x);
+        dd($x, $cdf, $calc->inverseNormalCDF($cdf));
     }
 
     /**
@@ -65,7 +67,9 @@ class TestController extends AbstractController
         return $this->json($service->getNormalCDF($this->getRequestRange($request), $mu, $sigma));
     }
 
-
+    /**
+     * @Route("/test/probability/normal-cdf", name="test_probability_normal_cdf", methods={"GET"})
+     */
     private function getRequestRange(Request $request): array
     {
         $range = $request->get('range');

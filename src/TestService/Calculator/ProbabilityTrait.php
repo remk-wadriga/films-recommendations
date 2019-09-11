@@ -131,4 +131,41 @@ trait ProbabilityTrait
     {
         return (1 + $this->erf($x - $mu) / sqrt(2) / $sigma) / 2;
     }
+
+    /**
+     * Find the approximate inverse of normal CDF using "binary search"
+     *    * Binary search (https://en.wikipedia.org/wiki/Binary_search_algorithm)
+     *
+     * @param float $p
+     * @param float $mu
+     * @param float $sigma
+     * @param float $tolerance
+     * @return float|int
+     */
+    public function inverseNormalCDF(float $p, float $mu = 0, float $sigma = 1, float $tolerance = 0.00001)
+    {
+        // If this is not a standard distribution - standardize
+        if ($mu != 0 || $sigma != 1) {
+            return $mu + $sigma * $this->inverseNormalCDF($p, 0, 1, $tolerance);
+        }
+
+        list($lowZ, $lowP) = [-10.0, 0]; // normalCDF(-10) is very close to 0
+        list($hiZ, $hiP) = [10.0, 1]; // normalCDF(10) is very close to 1
+
+        $midZ = 0;
+        while ($hiZ - $lowZ > $tolerance) {
+            $midZ = ($hiZ + $lowZ) / 2; // Get the middle
+            $midP = $this->normalCDF($midZ); // adn the "CDF" in of this point
+            if ($midP < $p) {
+                // The value of the middle point is very low, keep searching up...
+                list($lowZ, $lowP) = [$midZ, $midP];
+            } elseif ($midP > $p) {
+                // The value of the middle point is very high, keep searching lower...
+                list($hiZ, $hiP) = [$midZ, $midP];
+            } else {
+                break;
+            }
+        }
+        return $midZ;
+    }
 }
