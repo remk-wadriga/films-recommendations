@@ -116,19 +116,26 @@ class UsersStatsService extends AbstractTestService
         return $list;
     }
 
+    /**
+     * Calculate "normal distribution" for some range of numbers
+     *
+     * @param array $range
+     * @param float $mu
+     * @param float $sigma
+     * @return array
+     */
     public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1)
     {
         if (!isset($range[0])) {
-            $range[0] = -50;
+            $range[0] = -5;
         }
         if (!isset($range[1])) {
-            $range[1] = 50;
+            $range[1] = 5;
         }
 
         $result = [];
         for ($i = $range[0]; $i <= $range[1]; $i++) {
-            $x = $i / 10;
-            $result[] = ['index' => $x, 'value' => $this->calc->normalPDF($x, $mu, $sigma)];
+            $result[] = ['index' => $i, 'value' => $this->calc->normalPDF($i, $mu, $sigma)];
         }
 
         return $result;

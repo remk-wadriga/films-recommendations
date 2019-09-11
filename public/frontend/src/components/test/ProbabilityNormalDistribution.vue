@@ -15,8 +15,8 @@
                 chartLabels: [],
                 chartData: [],
                 chartOptions: null,
-                from: -50,
-                to: 50,
+                from: -5,
+                to: 5,
                 mu: 0,
                 sigma: 1
             }
