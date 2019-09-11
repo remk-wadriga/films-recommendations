@@ -20,24 +20,24 @@
                 from: -5,
                 to: 5,
                 form1: {
-                    mu: 0,
-                    sigma: 1
+                    mu: "0",
+                    sigma: "1"
                 },
                 form2: {
-                    mu: 0,
-                    sigma: 1
+                    mu: "0",
+                    sigma: "1"
                 },
                 form3: {
-                    mu: 0,
-                    sigma: 1
+                    mu: "0",
+                    sigma: "1"
                 },
                 form4: {
-                    mu: 0,
-                    sigma: 1
+                    mu: "0",
+                    sigma: "1"
                 },
                 form5: {
-                    mu: 0,
-                    sigma: 1
+                    mu: "0",
+                    sigma: "1"
                 }
             }
         },
@@ -75,12 +75,9 @@
 
                 // Get data for "normal distribution chart"
                 this.chartLabelsD = []
+                let valuesD1 = []; let valuesD2 = []; let valuesD3 = []; let valuesD4 = []; let valuesD5 = []
+
                 let dataD1 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params1)
-                let valuesD1 = []
-                let valuesD2 = []
-                let valuesD3 = []
-                let valuesD4 = []
-                let valuesD5 = []
                 dataD1.forEach(elem => {
                     this.chartLabelsD.push(elem.index)
                     valuesD1.push(elem.value)
@@ -111,12 +108,9 @@
 
                 // Get data for "CDF" chart
                 this.chartLabelsCDF = []
+                let valuesCDF1 = []; let valuesCDF2 = []; let valuesCDF3 = []; let valuesCDF4 = []; let valuesCDF5 = []
+
                 let dataCDF1 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params1)
-                let valuesCDF1 = []
-                let valuesCDF2 = []
-                let valuesCDF3 = []
-                let valuesCDF4 = []
-                let valuesCDF5 = []
                 dataCDF1.forEach(elem => {
                     this.chartLabelsCDF.push(elem.index)
                     valuesCDF1.push(elem.value)
