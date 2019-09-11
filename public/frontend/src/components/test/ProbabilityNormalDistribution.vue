@@ -77,67 +77,35 @@
                 this.chartLabelsD = []
                 let dataD1 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params1)
                 let valuesD1 = []
+                let valuesD2 = []
+                let valuesD3 = []
+                let valuesD4 = []
+                let valuesD5 = []
                 dataD1.forEach(elem => {
                     this.chartLabelsD.push(elem.index)
                     valuesD1.push(elem.value)
                 })
-                this.chartDataD = [
-                    {
-                        label: 'Normal1',
-                        data: valuesD1
-                    }
-                ]
+                this.chartDataD = [{label: 'Normal1', data: valuesD1}]
+
                 if (this.form2.mu !== this.form1.mu || this.form2.sigma !== this.form1.sigma) {
                     let dataD2 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params2)
-                    let valuesD2 = []
-                    dataD2.forEach(elem => {
-                        valuesD2.push(elem.value)
-                    })
-                    this.chartDataD.push(
-                        {
-                            label: 'Normal2',
-                            data: valuesD2
-                        }
-                    )
+                    dataD2.forEach(elem => { valuesD2.push(elem.value) })
+                    this.chartDataD.push({label: 'Normal2', data: valuesD2})
                 }
                 if (this.form3.mu !== this.form1.mu || this.form3.sigma !== this.form1.sigma) {
                     let dataD3 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params3)
-                    let valuesD3 = []
-                    dataD3.forEach(elem => {
-                        valuesD3.push(elem.value)
-                    })
-                    this.chartDataD.push(
-                        {
-                            label: 'Normal3',
-                            data: valuesD3
-                        }
-                    )
+                    dataD3.forEach(elem => { valuesD3.push(elem.value) })
+                    this.chartDataD.push({label: 'Normal3', data: valuesD3})
                 }
                 if (this.form4.mu !== this.form1.mu || this.form4.sigma !== this.form1.sigma) {
                     let dataD4 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params4)
-                    let valuesD4 = []
-                    dataD4.forEach(elem => {
-                        valuesD4.push(elem.value)
-                    })
-                    this.chartDataD.push(
-                        {
-                            label: 'Normal4',
-                            data: valuesD4
-                        }
-                    )
+                    dataD4.forEach(elem => { valuesD4.push(elem.value) })
+                    this.chartDataD.push({label: 'Normal4', data: valuesD4})
                 }
                 if (this.form5.mu !== this.form1.mu || this.form5.sigma !== this.form1.sigma) {
                     let dataD5 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params5)
-                    let valuesD5 = []
-                    dataD5.forEach(elem => {
-                        valuesD5.push(elem.value)
-                    })
-                    this.chartDataD.push(
-                        {
-                            label: 'Normal5',
-                            data: valuesD5
-                        }
-                    )
+                    dataD5.forEach(elem => { valuesD5.push(elem.value) })
+                    this.chartDataD.push({label: 'Normal5', data: valuesD5})
                 }
 
 
@@ -145,67 +113,35 @@
                 this.chartLabelsCDF = []
                 let dataCDF1 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params1)
                 let valuesCDF1 = []
+                let valuesCDF2 = []
+                let valuesCDF3 = []
+                let valuesCDF4 = []
+                let valuesCDF5 = []
                 dataCDF1.forEach(elem => {
                     this.chartLabelsCDF.push(elem.index)
                     valuesCDF1.push(elem.value)
                 })
-                this.chartDataCDF = [
-                    {
-                        label: 'CDF1',
-                        data: valuesCDF1
-                    }
-                ]
+                this.chartDataCDF = [{label: 'CDF1', data: valuesCDF1}]
+
                 if (this.form2.mu !== this.form1.mu || this.form2.sigma !== this.form1.sigma) {
                     let dataCDF2 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params2)
-                    let valuesCDF2 = []
-                    dataCDF2.forEach(elem => {
-                        valuesCDF2.push(elem.value)
-                    })
-                    this.chartDataCDF.push(
-                        {
-                            label: 'CDF2',
-                            data: valuesCDF2
-                        }
-                    )
+                    dataCDF2.forEach(elem => { valuesCDF2.push(elem.value) })
+                    this.chartDataCDF.push({label: 'CDF2', data: valuesCDF2})
                 }
                 if (this.form3.mu !== this.form1.mu || this.form3.sigma !== this.form1.sigma) {
                     let dataCDF3 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params3)
-                    let valuesCDF3 = []
-                    dataCDF3.forEach(elem => {
-                        valuesCDF3.push(elem.value)
-                    })
-                    this.chartDataCDF.push(
-                        {
-                            label: 'CDF3',
-                            data: valuesCDF3
-                        }
-                    )
+                    dataCDF3.forEach(elem => { valuesCDF3.push(elem.value) })
+                    this.chartDataCDF.push({label: 'CDF3', data: valuesCDF3})
                 }
                 if (this.form4.mu !== this.form1.mu || this.form4.sigma !== this.form1.sigma) {
                     let dataCDF4 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params4)
-                    let valuesCDF4 = []
-                    dataCDF4.forEach(elem => {
-                        valuesCDF4.push(elem.value)
-                    })
-                    this.chartDataCDF.push(
-                        {
-                            label: 'CDF4',
-                            data: valuesCDF4
-                        }
-                    )
+                    dataCDF4.forEach(elem => { valuesCDF4.push(elem.value) })
+                    this.chartDataCDF.push({label: 'CDF4', data: valuesCDF4})
                 }
                 if (this.form5.mu !== this.form1.mu || this.form5.sigma !== this.form1.sigma) {
                     let dataCDF5 = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params5)
-                    let valuesCDF5 = []
-                    dataCDF5.forEach(elem => {
-                        valuesCDF5.push(elem.value)
-                    })
-                    this.chartDataCDF.push(
-                        {
-                            label: 'CDF5',
-                            data: valuesCDF5
-                        }
-                    )
+                    dataCDF5.forEach(elem => { valuesCDF5.push(elem.value) })
+                    this.chartDataCDF.push({label: 'CDF5', data: valuesCDF5})
                 }
             }
         },
