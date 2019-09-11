@@ -49,3 +49,4 @@ export const PREMIUM_UPDATE_URL = 'PUT /premium/:id'
 
 export const TEST_USERS_FRIENDS_COUNT_URL = 'GET /test/users/friends-count'
 export const TEST_USERS_COUNT_TO_FRIENDS_COUNT_URL = 'GET /test/users/count-to-friends-count-relation'
+export const TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL = 'GET /test/probability/normal-distribution'

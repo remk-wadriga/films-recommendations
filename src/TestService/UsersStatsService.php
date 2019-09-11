@@ -115,4 +115,22 @@ class UsersStatsService extends AbstractTestService
         });
         return $list;
     }
+
+    public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1)
+    {
+        if (!isset($range[0])) {
+            $range[0] = -50;
+        }
+        if (!isset($range[1])) {
+            $range[1] = 50;
+        }
+
+        $result = [];
+        for ($i = $range[0]; $i <= $range[1]; $i++) {
+            $x = $i / 10;
+            $result[] = ['index' => $x, 'value' => $this->calc->normalPDF($x, $mu, $sigma)];
+        }
+
+        return $result;
+    }
 }

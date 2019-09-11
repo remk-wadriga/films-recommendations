@@ -17,20 +17,7 @@ class TestController extends AbstractController
      */
     public function users(UsersStatsService $service, Calculator $calc)
     {
-        //$v1 = [1, 2, 3, 4, 5, 6, 7];
-        //$v2 = [13, 45, 15, 12, 3, 0, 19];
-        //$v2 = [12, 23, 34, 43, 55, 60, 71];
-        //$activeMinutes = $friendsCount;
-        $numFriends = $service->getNumFriendsData();
-        $dailyMinutes = $service->getDailyMinutesData();
-        $outlier = array_search(100, $numFriends);
-
-        $numFriendsGood = $numFriends;
-        $dailyMinutesGood = $dailyMinutes;
-        unset($numFriendsGood[$outlier]);
-        unset($dailyMinutesGood[$outlier]);
-
-        dd($calc->correlation($numFriendsGood, $dailyMinutesGood));
+        dd($calc->normalPDF(3));
     }
 
     /**
@@ -54,5 +41,22 @@ class TestController extends AbstractController
     public function usersCountsToFriendsCountRelation(UsersStatsService $service)
     {
         return $this->json($service->getUsersCountSortedByFriendsCount());
+    }
+
+    /**
+     * @Route("/test/probability/normal-distribution", name="test_probability_normal_distribution", methods={"GET"})
+     */
+    public function normalDistribution(Request $request, UsersStatsService $service)
+    {
+        $range = $request->get('range');
+        if (!empty($range) && preg_match("/^([\d-]+)-(\d+)$/", $range, $matches)) {
+            $range = [floatval($matches[1]), floatval($matches[2])];
+        } else {
+            $range = [];
+        }
+        $mu = floatval($request->get('mu', 0));
+        $sigma = floatval($request->get('sigma', 1));
+
+        return $this->json($service->getNormalDistribution($range, $mu, $sigma));
     }
 }
