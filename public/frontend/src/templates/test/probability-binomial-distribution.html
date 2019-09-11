@@ -1,0 +1,96 @@
+<b-col id="test_probability_binomial_distribution">
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="N:"
+                    label-for="n_input">
+                <b-form-input id="n_input"
+                      type="text"
+                      v-model="n"
+                      required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="P1:"
+                    label-for="form1_p_input">
+                <b-form-input id="form1_p_input"
+                          type="text"
+                          v-model="form1.p"
+                          required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="P2:"
+                    label-for="form2_p_input">
+                <b-form-input id="form2_p_input"
+                          type="text"
+                          v-model="form2.p"
+                          required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="P3:"
+                    label-for="form3_p_input">
+                <b-form-input id="form3_p_input"
+                          type="text"
+                          v-model="form3.p"
+                          required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="P4:"
+                    label-for="form4_p_input">
+                <b-form-input id="form4_p_input"
+                          type="text"
+                          v-model="form4.p"
+                          required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="P5:"
+                    label-for="form5_p_input">
+                <b-form-input id="form5_p_input"
+                          type="text"
+                          v-model="form5.p"
+                          required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+
+    <b-row>
+        <b-button @click="setUpChart" type="submit" variant="primary">Set</b-button>
+    </b-row>
+
+    <br />
+    <b-row>
+        <h4>Binomial distribution:</h4>
+        <div class="chart-container">
+            <LineChart
+                :labels="chartLabels"
+                :data="chartData"
+                :options="chartOptions"
+            />
+        </div>
+    </b-row>
+</b-col>

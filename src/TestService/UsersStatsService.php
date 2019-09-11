@@ -169,4 +169,38 @@ class UsersStatsService extends AbstractTestService
 
         return $result;
     }
+
+    public function getBinomialDistribution(float $p = 0.5, int $n = 100, array $range = [])
+    {
+        if ($p <= 0 || $p >= 1) {
+            throw new ServiceException('Param "p" for binomial distribution must be a flat between 0 and 1', ServiceException::CODE_INVALID_PARAMS);
+        }
+
+        if (!isset($range[0])) {
+            $range[0] = 0;
+        }
+        if (!isset($range[1])) {
+            $range[1] = 1000;
+        }
+
+        $data = [];
+        for ($i = $range[0]; $i <= $range[1]; $i++) {
+            //$data[] = ['index' => $i, 'value' => $this->calc->binomial($n, $p)];
+            $data[] = $this->calc->binomial($n, $p);
+        }
+
+        list($min, $max) = [min($data), max($data) + 1];
+        $mu = $p * $n;
+        $sigma = sqrt($n * $p * (1 - $p));
+
+        $result = [];
+        for ($i = $min; $i < $max; $i++) {
+            $result[] = [
+                'index' => $i,
+                'value' => $this->calc->normalCDF($i + 0.5, $mu, $sigma) - $this->calc->normalCDF($i - 0.5, $mu, $sigma),
+            ];
+        }
+
+        return $result;
+    }
 }

@@ -168,4 +168,33 @@ trait ProbabilityTrait
         }
         return $midZ;
     }
+
+    /**
+     * Calculate "bernoulli variance" for some number between 0 and 1
+     *  * Bernoulli variance (https://en.wikipedia.org/wiki/Bernoulli_trial)
+     *
+     * @param float $p
+     * @return int
+     */
+    public function bernoulliTrial(float $p): int
+    {
+        return $p > (rand(0, 10000000) / 10000000) ? 1 : 0;
+    }
+
+    /**
+     * Calculate "binomial distribution" for number $p (between 0 and 1) in range $n
+     *    * Binomial distribution (https://en.wikipedia.org/wiki/Binomial_distribution)
+     *
+     * @param int $n
+     * @param float $p
+     * @return int
+     */
+    public function binomial(int $n, float $p): int
+    {
+        $res = 0;
+        for ($i = 0; $i < $n; $i++) {
+            $res += $this->bernoulliTrial($p);
+        }
+        return $res;
+    }
 }

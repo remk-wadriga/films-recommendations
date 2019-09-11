@@ -17,9 +17,7 @@ class TestController extends AbstractController
      */
     public function users(UsersStatsService $service, Calculator $calc)
     {
-        $x = -5.3;
-        $cdf = $calc->normalCDF($x);
-        dd($x, $cdf, $calc->inverseNormalCDF($cdf));
+        dd($service->getBinomialDistribution(0.5));
     }
 
     /**
@@ -68,8 +66,15 @@ class TestController extends AbstractController
     }
 
     /**
-     * @Route("/test/probability/normal-cdf", name="test_probability_normal_cdf", methods={"GET"})
+     * @Route("/test/probability/binomial-distribution", name="test_probability_binomial_distribution", methods={"GET"})
      */
+    public function binomialDistribution(Request $request, UsersStatsService $service)
+    {
+        $p = floatval($request->get('p', 0.5));
+        $n = intval($request->get('n', 100));
+        return $this->json($service->getBinomialDistribution($p, $n));
+    }
+
     private function getRequestRange(Request $request): array
     {
         $range = $request->get('range');

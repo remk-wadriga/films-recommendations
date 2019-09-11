@@ -13,6 +13,7 @@ import TestIndex from '@/components/test/TestIndex'
 import UsersFriendsCount from '@/components/test/UsersFriendsCount'
 import UsersCountToFriendsCount from '@/components/test/UsersCountToFriendsCount'
 import ProbabilityNormalDistribution from '@/components/test/ProbabilityNormalDistribution'
+import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomialDistribution'
 
 import {
     ROUTE_HOMEPAGE,
@@ -25,7 +26,8 @@ import {
     ROUTE_TEST_INDEX,
     ROUTE_TEST_USERS_FRIENDS_COUNT,
     ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT,
-    ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION
+    ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
+    ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION
 } from './routes-list'
 
 Vue.use(Router)
@@ -86,6 +88,11 @@ export default new Router({
             path: '/test/probability/normal-distribution',
             name: ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
             component: ProbabilityNormalDistribution
+        },
+        {
+            path: '/test/probability/binomial-distribution',
+            name: ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
+            component: ProbabilityBinomialDistribution
         }
     ]
 })
