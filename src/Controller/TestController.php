@@ -48,15 +48,32 @@ class TestController extends AbstractController
      */
     public function normalDistribution(Request $request, UsersStatsService $service)
     {
+        $mu = floatval($request->get('mu', 0));
+        $sigma = floatval($request->get('sigma', 1));
+
+        return $this->json($service->getNormalDistribution($this->getRequestRange($request), $mu, $sigma));
+    }
+
+    /**
+     * @Route("/test/probability/normal-cdf", name="test_probability_normal_cdf", methods={"GET"})
+     */
+    public function normalCdf(Request $request, UsersStatsService $service)
+    {
+        $mu = floatval($request->get('mu', 0));
+        $sigma = floatval($request->get('sigma', 1));
+
+        return $this->json($service->getNormalCDF($this->getRequestRange($request), $mu, $sigma));
+    }
+
+
+    private function getRequestRange(Request $request): array
+    {
         $range = $request->get('range');
         if (!empty($range) && preg_match("/^([\d-]+)-(\d+)$/", $range, $matches)) {
             $range = [floatval($matches[1]), floatval($matches[2])];
         } else {
             $range = [];
         }
-        $mu = floatval($request->get('mu', 0));
-        $sigma = floatval($request->get('sigma', 1));
-
-        return $this->json($service->getNormalDistribution($range, $mu, $sigma));
+        return $range;
     }
 }

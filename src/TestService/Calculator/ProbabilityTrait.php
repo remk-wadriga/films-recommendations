@@ -70,6 +70,41 @@ trait ProbabilityTrait
     }
 
     /**
+     * Calculate "sgn" of number
+     *    * Signum function (https://en.wikipedia.org/wiki/Sgn)
+     *
+     * @param float $x
+     * @return int
+     */
+    public function sgn(float $x): int
+    {
+        if ($x > 0) {
+            return 1;
+        } elseif ($x == 0) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Calculate "erf" of number
+     *    * Error function (https://en.wikipedia.org/wiki/Error_function)
+     *
+     * @param float $x
+     * @return float
+     */
+    public function erf(float $x): float
+    {
+        $pi = pi();
+        $a = (8 * ($pi - 3)) / (3 * $pi * (4 - $pi));
+        $px = pow($x, 2);
+        $apx = $a * $px;
+
+        return $this->sgn($x) * sqrt(1 - exp(-$px * (4 / $pi + $apx) / (1 + $apx)));
+    }
+
+    /**
      * Calculate normal distribution for number
      *
      * @param float $x
@@ -81,5 +116,19 @@ trait ProbabilityTrait
     {
         $sqrt2pi = sqrt(2 * pi());
         return (exp(-pow($x - $mu, 2) / (2 * $sigma))) / ($sqrt2pi * $sigma);
+    }
+
+    /**
+     * Calculate "CDF" for normal distribution of number
+     *    * Cumulative distribution function (https://en.wikipedia.org/wiki/Cumulative_distribution_function)
+     *
+     * @param float $x
+     * @param float $mu
+     * @param float $sigma
+     * @return float;
+     */
+    public function normalCDF(float $x, float $mu = 0, float $sigma = 1)
+    {
+        return (1 + $this->erf($x - $mu) / sqrt(2) / $sigma) / 2;
     }
 }

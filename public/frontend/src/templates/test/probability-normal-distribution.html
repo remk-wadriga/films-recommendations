@@ -45,11 +45,26 @@
             <b-button type="submit" variant="primary">Set</b-button>
         </b-form>
     </b-row>
+
+    <br />
     <b-row>
+        <h4>Normal distribution:</h4>
         <div class="chart-container">
             <LineChart
-                :labels="chartLabels"
-                :data="chartData"
+                :labels="chartLabelsD"
+                :data="chartDataD"
+                :options="chartOptions"
+            />
+        </div>
+    </b-row>
+
+    <br />
+    <b-row>
+        <h4>CDF:</h4>
+        <div class="chart-container">
+            <LineChart
+                :labels="chartLabelsCDF"
+                :data="chartDataCDF"
                 :options="chartOptions"
             />
         </div>

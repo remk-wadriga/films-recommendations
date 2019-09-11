@@ -86,7 +86,6 @@
                         data.backgroundColor = gradient
                     }
                 })
-
                 this.renderChart({
                     labels: this.labels,
                     datasets: this.data

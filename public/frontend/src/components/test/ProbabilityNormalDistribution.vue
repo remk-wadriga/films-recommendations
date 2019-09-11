@@ -4,7 +4,7 @@
     import Vue from 'vue'
     import { mapMutations } from 'vuex'
     import { SET_PAGE_TITLE_MUTATION, SET_TOP_BUTTONS_MUTATION } from '@/store/mutation-types'
-    import { TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL } from '@/api/request-urls'
+    import { TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, TEST_PROBABILITY_NORMAL_CDF_URL } from '@/api/request-urls'
     import LineChart from '@/components/charts/LineChart'
 
     export default {
@@ -12,8 +12,10 @@
         components: { LineChart },
         data () {
             return {
-                chartLabels: [],
-                chartData: [],
+                chartLabelsD: [],
+                chartDataD: [],
+                chartLabelsCDF: [],
+                chartDataCDF: [],
                 chartOptions: null,
                 from: -5,
                 to: 5,
@@ -27,27 +29,39 @@
                 setTopButtons: SET_TOP_BUTTONS_MUTATION
             }),
             async setUpChart () {
-                this.chartLabels = []
-                this.chartData = []
-
                 let params = {
                     range: this.from + '-' + this.to,
                     mu: this.mu,
                     sigma: this.sigma
                 }
 
-                let data = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params)
-                let values = []
-
-                data.forEach(elem => {
-                    this.chartLabels.push(elem.index)
-                    values.push(elem.value)
+                // Get data for "normal distribution chart"
+                this.chartLabelsD = []
+                let dataD = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params)
+                let valuesD1 = []
+                dataD.forEach(elem => {
+                    this.chartLabelsD.push(elem.index)
+                    valuesD1.push(elem.value)
                 })
+                this.chartDataD = [
+                    {
+                        label: 'Value1',
+                        data: valuesD1
+                    }
+                ]
 
-                this.chartData = [
+                // Get data for "CDF" chart
+                this.chartLabelsCDF = []
+                let dataCDF = await Vue.api.request(TEST_PROBABILITY_NORMAL_CDF_URL, params)
+                let valuesCDF = []
+                dataCDF.forEach(elem => {
+                    this.chartLabelsCDF.push(elem.index)
+                    valuesCDF.push(elem.value)
+                })
+                this.chartDataCDF = [
                     {
                         label: 'Value',
-                        data: values
+                        data: valuesCDF
                     }
                 ]
             }

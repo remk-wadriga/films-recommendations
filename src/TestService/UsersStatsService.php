@@ -124,7 +124,7 @@ class UsersStatsService extends AbstractTestService
      * @param float $sigma
      * @return array
      */
-    public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1)
+    public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1):array
     {
         if (!isset($range[0])) {
             $range[0] = -5;
@@ -132,10 +132,39 @@ class UsersStatsService extends AbstractTestService
         if (!isset($range[1])) {
             $range[1] = 5;
         }
+        list($from, $to) = [$range[0] * 10, $range[1] * 10];
 
         $result = [];
-        for ($i = $range[0]; $i <= $range[1]; $i++) {
-            $result[] = ['index' => $i, 'value' => $this->calc->normalPDF($i, $mu, $sigma)];
+        for ($i = $from; $i <= $to; $i++) {
+            $x = $i / 10;
+            $result[] = ['index' => $x, 'value' => $this->calc->normalPDF($x, $mu, $sigma)];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Calculate "CDF" for normal distribution of some range of numbers
+     *
+     * @param array $range
+     * @param float $mu
+     * @param float $sigma
+     * @return array
+     */
+    public function getNormalCDF(array $range = [], float $mu = 0, float $sigma = 1):array
+    {
+        if (!isset($range[0])) {
+            $range[0] = -5;
+        }
+        if (!isset($range[1])) {
+            $range[1] = 5;
+        }
+        list($from, $to) = [$range[0] * 10, $range[1] * 10];
+
+        $result = [];
+        for ($i = $from; $i <= $to; $i++) {
+            $x = $i / 10;
+            $result[] = ['index' => $x, 'value' => $this->calc->normalCDF($x, $mu, $sigma)];
         }
 
         return $result;
