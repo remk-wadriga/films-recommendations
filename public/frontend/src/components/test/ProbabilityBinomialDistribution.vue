@@ -15,21 +15,25 @@
                 chartLabels: [],
                 chartData: [],
                 chartOptions: null,
-                n: "100",
                 form1: {
-                    p: "0.5"
+                    p: "0.5",
+                    n: "20"
                 },
                 form2: {
-                    p: "0.5"
+                    p: "0.5",
+                    n: "20"
                 },
                 form3: {
-                    p: "0.5"
+                    p: "0.5",
+                    n: "20"
                 },
                 form4: {
-                    p: "0.5"
+                    p: "0.5",
+                    n: "20"
                 },
                 form5: {
-                    p: "0.5"
+                    p: "0.5",
+                    n: "20"
                 }
             }
         },
@@ -40,24 +44,24 @@
             }),
             async setUpChart () {
                 let params1 = {
-                    n: this.n,
-                    p: this.form1.p
+                    p: this.form1.p,
+                    n: this.form1.n
                 }
                 let params2 = {
-                    n: this.n,
-                    p: this.form2.p
+                    p: this.form2.p,
+                    n: this.form2.n
                 }
                 let params3 = {
-                    n: this.n,
-                    p: this.form3.p
+                    p: this.form3.p,
+                    n: this.form3.n
                 }
                 let params4 = {
-                    n: this.n,
-                    p: this.form4.p
+                    p: this.form4.p,
+                    n: this.form4.n
                 }
                 let params5 = {
-                    n: this.n,
-                    p: this.form5.p
+                    p: this.form4.p,
+                    n: this.form4.n
                 }
 
                 this.chartLabels = []
@@ -70,22 +74,22 @@
                 })
                 this.chartData = [{label: 'Binomial1', data: values1}]
 
-                if (this.form2.p !== this.form1.p) {
+                if (this.form2.p !== this.form1.p || this.form2.n !== this.form1.n) {
                     let data2 = await Vue.api.request(TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL, params2)
                     data2.forEach(elem => { values2.push(elem.value) })
                     this.chartData.push({label: 'Binomial2', data: values2})
                 }
-                if (this.form3.p !== this.form1.p) {
+                if (this.form3.p !== this.form1.p || this.form3.n !== this.form1.n) {
                     let data3 = await Vue.api.request(TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL, params3)
                     data3.forEach(elem => { values3.push(elem.value) })
                     this.chartData.push({label: 'Binomial3', data: values3})
                 }
-                if (this.form4.p !== this.form1.p) {
+                if (this.form4.p !== this.form1.p || this.form4.n !== this.form1.n) {
                     let data4 = await Vue.api.request(TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL, params4)
                     data4.forEach(elem => { values4.push(elem.value) })
                     this.chartData.push({label: 'Binomial4', data: values4})
                 }
-                if (this.form5.p !== this.form1.p) {
+                if (this.form5.p !== this.form1.p || this.form5.n !== this.form1.n) {
                     let data5 = await Vue.api.request(TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL, params5)
                     data5.forEach(elem => { values5.push(elem.value) })
                     this.chartData.push({label: 'Binomial5', data: values5})

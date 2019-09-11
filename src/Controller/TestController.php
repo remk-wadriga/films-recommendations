@@ -4,8 +4,8 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
-use App\TestService\UsersStats\UserEntity;
-use App\TestService\UsersStatsService;
+use App\TestService\Stats\UserEntity;
+use App\TestService\StatsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Psr\Log\LoggerInterface;
@@ -15,7 +15,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(UsersStatsService $service, Calculator $calc)
+    public function users(StatsService $service, Calculator $calc)
     {
         dd($service->getBinomialDistribution(0.5));
     }
@@ -23,7 +23,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users/friends-count", name="test_users_friends_count", methods={"GET"})
      */
-    public function usersFriendsCount(UsersStatsService $service)
+    public function usersFriendsCount(StatsService $service)
     {
         $data = [];
         foreach ($service->getUsers() as $user) {
@@ -38,7 +38,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users/count-to-friends-count-relation", name="test_users_count_to_friends_count_relation", methods={"GET"})
      */
-    public function usersCountsToFriendsCountRelation(UsersStatsService $service)
+    public function usersCountsToFriendsCountRelation(StatsService $service)
     {
         return $this->json($service->getUsersCountSortedByFriendsCount());
     }
@@ -46,7 +46,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/probability/normal-distribution", name="test_probability_normal_distribution", methods={"GET"})
      */
-    public function normalDistribution(Request $request, UsersStatsService $service)
+    public function normalDistribution(Request $request, StatsService $service)
     {
         $mu = floatval($request->get('mu', 0));
         $sigma = floatval($request->get('sigma', 1));
@@ -57,7 +57,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/probability/normal-cdf", name="test_probability_normal_cdf", methods={"GET"})
      */
-    public function normalCdf(Request $request, UsersStatsService $service)
+    public function normalCdf(Request $request, StatsService $service)
     {
         $mu = floatval($request->get('mu', 0));
         $sigma = floatval($request->get('sigma', 1));
@@ -68,7 +68,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/probability/binomial-distribution", name="test_probability_binomial_distribution", methods={"GET"})
      */
-    public function binomialDistribution(Request $request, UsersStatsService $service)
+    public function binomialDistribution(Request $request, StatsService $service)
     {
         $p = floatval($request->get('p', 0.5));
         $n = intval($request->get('n', 100));

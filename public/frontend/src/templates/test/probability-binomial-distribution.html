@@ -2,25 +2,21 @@
     <b-row>
         <b-form @submit="setUpChart" inline>
             <b-form-group
-                    label="N:"
-                    label-for="n_input">
-                <b-form-input id="n_input"
-                      type="text"
-                      v-model="n"
-                      required>
-                </b-form-input>
-            </b-form-group>
-        </b-form>
-    </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
-            <b-form-group
                     label="P1:"
                     label-for="form1_p_input">
                 <b-form-input id="form1_p_input"
-                          type="text"
-                          v-model="form1.p"
-                          required>
+                      type="text"
+                      v-model="form1.p"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="N1:"
+                    label-for="form1_n_input">
+                <b-form-input id="form1_n_input"
+                      type="text"
+                      v-model="form1.n"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
@@ -31,8 +27,17 @@
                     label="P2:"
                     label-for="form2_p_input">
                 <b-form-input id="form2_p_input"
+                      type="text"
+                      v-model="form2.p"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="N2:"
+                    label-for="form2_n_input">
+                <b-form-input id="form2_n_input"
                           type="text"
-                          v-model="form2.p"
+                          v-model="form2.n"
                           required>
                 </b-form-input>
             </b-form-group>
@@ -44,9 +49,18 @@
                     label="P3:"
                     label-for="form3_p_input">
                 <b-form-input id="form3_p_input"
-                          type="text"
-                          v-model="form3.p"
-                          required>
+                      type="text"
+                      v-model="form3.p"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="N3:"
+                    label-for="form3_n_input">
+                <b-form-input id="form3_n_input"
+                      type="text"
+                      v-model="form3.n"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
@@ -57,9 +71,18 @@
                     label="P4:"
                     label-for="form4_p_input">
                 <b-form-input id="form4_p_input"
-                          type="text"
-                          v-model="form4.p"
-                          required>
+                      type="text"
+                      v-model="form4.p"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="N4:"
+                    label-for="form4_n_input">
+                <b-form-input id="form4_n_input"
+                      type="text"
+                      v-model="form4.n"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
@@ -70,9 +93,18 @@
                     label="P5:"
                     label-for="form5_p_input">
                 <b-form-input id="form5_p_input"
-                          type="text"
-                          v-model="form5.p"
-                          required>
+                      type="text"
+                      v-model="form5.p"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="N5:"
+                    label-for="form5_n_input">
+                <b-form-input id="form5_n_input"
+                      type="text"
+                      v-model="form5.n"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>

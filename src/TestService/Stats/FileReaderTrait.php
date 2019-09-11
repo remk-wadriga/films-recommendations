@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\TestService\UsersStats;
+namespace App\TestService\Stats;
 
 use App\Exception\ServiceException;
 use App\Helpers\File\FileReaderInterface;

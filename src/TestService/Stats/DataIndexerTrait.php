@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\TestService\UsersStats;
+namespace App\TestService\Stats;
 
 trait DataIndexerTrait
 {

@@ -3,13 +3,13 @@
 
 namespace App\TestService;
 
-use App\TestService\UsersStats\UserEntity;
+use App\TestService\Stats\UserEntity;
 use App\Exception\ServiceException;
-use App\TestService\UsersStats\FileReaderTrait;
-use App\TestService\UsersStats\DataIndexerTrait;
-use App\TestService\UsersStats\FinderTrait;
+use App\TestService\Stats\FileReaderTrait;
+use App\TestService\Stats\DataIndexerTrait;
+use App\TestService\Stats\FinderTrait;
 
-class UsersStatsService extends AbstractTestService
+class StatsService extends AbstractTestService
 {
     use FileReaderTrait;
     use DataIndexerTrait;
@@ -170,6 +170,16 @@ class UsersStatsService extends AbstractTestService
         return $result;
     }
 
+    /**
+     * Calculate "binomial distribution" of some range of numbers
+     *    * Binomial distribution (https://en.wikipedia.org/wiki/Binomial_distribution)
+     *
+     * @param float $p
+     * @param int $n
+     * @param array $range
+     * @return array
+     * @throws ServiceException
+     */
     public function getBinomialDistribution(float $p = 0.5, int $n = 100, array $range = [])
     {
         if ($p <= 0 || $p >= 1) {
@@ -185,7 +195,6 @@ class UsersStatsService extends AbstractTestService
 
         $data = [];
         for ($i = $range[0]; $i <= $range[1]; $i++) {
-            //$data[] = ['index' => $i, 'value' => $this->calc->binomial($n, $p)];
             $data[] = $this->calc->binomial($n, $p);
         }
 
