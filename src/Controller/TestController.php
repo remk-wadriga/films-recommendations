@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
+use App\TestService\Examples\StatisticsExamples;
 use App\TestService\Stats\UserEntity;
 use App\TestService\StatsService;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,8 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $calc->illustrateFindingConfidentialInterval();
+        $example = new StatisticsExamples();
+        $example->illustrateABTesting();
         dd('OK');
     }
 
