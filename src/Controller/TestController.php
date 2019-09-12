@@ -17,7 +17,7 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $calc->illustrateCoinBalanceCheckAlternative();
+        $calc->illustrateFindingConfidentialInterval();
         dd('OK');
     }
 
