@@ -17,7 +17,8 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        dd($service->getBinomialDistribution(0.5));
+        $calc->illustrateCoinBalanceCheckAlternative();
+        dd('OK');
     }
 
     /**
