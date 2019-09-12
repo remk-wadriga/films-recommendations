@@ -1,4 +1,4 @@
-<b-col id="test_probability_binomial_distribution">
+<b-col id="test_probability_beta_distribution">
 
     <b-row>
         <b-form @submit="setUpChart" inline>
@@ -17,64 +17,20 @@
     <b-row>
         <b-form @submit="setUpChart" inline>
             <b-form-group
-                    label="P1:"
-                    label-for="form1_p_input">
-                <b-form-input id="form1_p_input"
+                    label="Alpha1:"
+                    label-for="form1_alpha_input">
+                <b-form-input id="form1_alpha_input"
                       type="text"
-                      v-model="form1.p"
+                      v-model="form1.alpha"
                       required>
                 </b-form-input>
             </b-form-group>
             <b-form-group
-                    label="N1:"
-                    label-for="form1_n_input">
-                <b-form-input id="form1_n_input"
+                    label="Beta1:"
+                    label-for="form1_beta_input">
+                <b-form-input id="form1_beta_input"
                       type="text"
-                      v-model="form1.n"
-                      required>
-                </b-form-input>
-            </b-form-group>
-        </b-form>
-    </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
-            <b-form-group
-                    label="P2:"
-                    label-for="form2_p_input">
-                <b-form-input id="form2_p_input"
-                      type="text"
-                      v-model="form2.p"
-                      required>
-                </b-form-input>
-            </b-form-group>
-            <b-form-group
-                    label="N2:"
-                    label-for="form2_n_input">
-                <b-form-input id="form2_n_input"
-                          type="text"
-                          v-model="form2.n"
-                          required>
-                </b-form-input>
-            </b-form-group>
-        </b-form>
-    </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
-            <b-form-group
-                    label="P3:"
-                    label-for="form3_p_input">
-                <b-form-input id="form3_p_input"
-                      type="text"
-                      v-model="form3.p"
-                      required>
-                </b-form-input>
-            </b-form-group>
-            <b-form-group
-                    label="N3:"
-                    label-for="form3_n_input">
-                <b-form-input id="form3_n_input"
-                      type="text"
-                      v-model="form3.n"
+                      v-model="form1.beta"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -83,20 +39,20 @@
     <b-row>
         <b-form @submit="setUpChart" inline>
             <b-form-group
-                    label="P4:"
-                    label-for="form4_p_input">
-                <b-form-input id="form4_p_input"
+                    label="Alpha2:"
+                    label-for="form2_alpha_input">
+                <b-form-input id="form1_alpha_input"
                       type="text"
-                      v-model="form4.p"
+                      v-model="form2.alpha"
                       required>
                 </b-form-input>
             </b-form-group>
             <b-form-group
-                    label="N4:"
-                    label-for="form4_n_input">
-                <b-form-input id="form4_n_input"
+                    label="Beta2:"
+                    label-for="form2_beta_input">
+                <b-form-input id="form2_beta_input"
                       type="text"
-                      v-model="form4.n"
+                      v-model="form2.beta"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -105,20 +61,64 @@
     <b-row>
         <b-form @submit="setUpChart" inline>
             <b-form-group
-                    label="P5:"
-                    label-for="form5_p_input">
-                <b-form-input id="form5_p_input"
+                    label="Alpha3:"
+                    label-for="form3_alpha_input">
+                <b-form-input id="form3_alpha_input"
                       type="text"
-                      v-model="form5.p"
+                      v-model="form3.alpha"
                       required>
                 </b-form-input>
             </b-form-group>
             <b-form-group
-                    label="N5:"
-                    label-for="form5_n_input">
-                <b-form-input id="form5_n_input"
+                    label="Beta3:"
+                    label-for="form3_beta_input">
+                <b-form-input id="form3_beta_input"
                       type="text"
-                      v-model="form5.n"
+                      v-model="form3.beta"
+                      required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="Alpha4:"
+                    label-for="form4_alpha_input">
+                <b-form-input id="form4_alpha_input"
+                      type="text"
+                      v-model="form4.alpha"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="Beta4:"
+                    label-for="form4_beta_input">
+                <b-form-input id="form4_beta_input"
+                      type="text"
+                      v-model="form4.beta"
+                      required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <b-row>
+        <b-form @submit="setUpChart" inline>
+            <b-form-group
+                    label="Alpha5:"
+                    label-for="form5_alpha_input">
+                <b-form-input id="form5_alpha_input"
+                      type="text"
+                      v-model="form5.alpha"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="Beta5:"
+                    label-for="form5_beta_input">
+                <b-form-input id="form5_beta_input"
+                      type="text"
+                      v-model="form5.beta"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -131,7 +131,7 @@
 
     <br />
     <b-row>
-        <h4>Binomial distribution:</h4>
+        <h4>Beta distribution:</h4>
         <div class="chart-container">
             <LineChart
                 :labels="chartLabels"
@@ -140,4 +140,5 @@
             />
         </div>
     </b-row>
+
 </b-col>

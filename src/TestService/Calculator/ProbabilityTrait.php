@@ -3,6 +3,8 @@
 
 namespace App\TestService\Calculator;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+
 trait ProbabilityTrait
 {
     /**
@@ -65,6 +67,21 @@ trait ProbabilityTrait
         $px = pow($x, 2);
         $apx = $a * $px;
         return $this->sgn($x) * sqrt(1 - exp(-$px * (4 / $pi + $apx) / (1 + $apx)));
+    }
+
+    /**
+     * Calculate "gamma" for number
+     *
+     * @param float $x
+     * @return float|int
+     */
+    public function gamma(float $x)
+    {
+        $gamma = 1;
+        for($i = 1; $i < $x-1; $i++) {
+            $gamma += $i * $gamma;
+        }
+        return $gamma;
     }
 
     /**
@@ -321,5 +338,20 @@ trait ProbabilityTrait
     public function twoSidedPValue(float $x, float $mu = 0, float $sigma = 1)
     {
         return $x >= $mu ? 2 * $this->normalProbabilityAbove($x, $mu, $sigma) : 2 * $this->normalProbabilityBelow($x, $mu, $sigma);
+    }
+
+    public function getBetaPDF(float $x, float $alpha = 0, float $beta = 1)
+    {
+        if ($x < 0 || $x > 1) {
+            return 0;
+        }
+
+        return pow($x, $alpha - 1) * pow(1 - $x, $beta - 1) / $this->getBetaNormalizationConstant($alpha, $beta);
+    }
+
+
+    private function getBetaNormalizationConstant(float $alpha = 0, float $beta = 1)
+    {
+        return $this->gamma($alpha) * $this->gamma($beta) / $this->gamma($alpha + $beta);
     }
 }

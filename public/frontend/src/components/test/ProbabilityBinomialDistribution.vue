@@ -15,6 +15,7 @@
                 chartLabels: [],
                 chartData: [],
                 chartOptions: null,
+                step: "0.3",
                 form1: {
                     p: "0.5",
                     n: "20"
@@ -44,22 +45,27 @@
             }),
             async setUpChart () {
                 let params1 = {
+                    step: this.step,
                     p: this.form1.p,
                     n: this.form1.n
                 }
                 let params2 = {
+                    step: this.step,
                     p: this.form2.p,
                     n: this.form2.n
                 }
                 let params3 = {
+                    step: this.step,
                     p: this.form3.p,
                     n: this.form3.n
                 }
                 let params4 = {
+                    step: this.step,
                     p: this.form4.p,
                     n: this.form4.n
                 }
                 let params5 = {
+                    step: this.step,
                     p: this.form4.p,
                     n: this.form4.n
                 }

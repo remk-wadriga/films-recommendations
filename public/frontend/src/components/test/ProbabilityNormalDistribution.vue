@@ -19,6 +19,7 @@
                 chartOptions: null,
                 from: -5,
                 to: 5,
+                step: "0.2",
                 form1: {
                     mu: "0",
                     sigma: "1"
@@ -49,26 +50,31 @@
             async setUpChart () {
                 let params1 = {
                     range: this.from + '-' + this.to,
+                    step: this.step,
                     mu: this.form1.mu,
                     sigma: this.form1.sigma
                 }
                 let params2 = {
                     range: this.from + '-' + this.to,
+                    step: this.step,
                     mu: this.form2.mu,
                     sigma: this.form2.sigma
                 }
                 let params3 = {
                     range: this.from + '-' + this.to,
+                    step: this.step,
                     mu: this.form3.mu,
                     sigma: this.form3.sigma
                 }
                 let params4 = {
+                    step: this.step,
                     range: this.from + '-' + this.to,
                     mu: this.form4.mu,
                     sigma: this.form4.sigma
                 }
                 let params5 = {
                     range: this.from + '-' + this.to,
+                    step: this.step,
                     mu: this.form5.mu,
                     sigma: this.form5.sigma
                 }

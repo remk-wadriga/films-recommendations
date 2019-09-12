@@ -122,24 +122,28 @@ class StatsService extends AbstractTestService
      * @param array $range
      * @param float $mu
      * @param float $sigma
+     * @param float $step
      * @return array
+     * @throws ServiceException
      */
-    public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1):array
+    public function getNormalDistribution(array $range = [], float $mu = 0, float $sigma = 1, float $step = 0.2): array
     {
+        if ($step <= 0) {
+            throw new ServiceException('Param "step" must be bigger than 0', ServiceException::CODE_INVALID_PARAMS);
+        }
         if (!isset($range[0])) {
             $range[0] = -5;
         }
         if (!isset($range[1])) {
             $range[1] = 5;
         }
-        list($from, $to) = [$range[0] * 10, $range[1] * 10];
+        list($from, $to) = [$range[0], $range[1]];
 
         $result = [];
-        for ($i = $from; $i <= $to; $i++) {
-            $x = $i / 10;
-            $result[] = ['index' => $x, 'value' => $this->calc->normalPDF($x, $mu, $sigma)];
+        for ($i = $from; $i <= $to; $i += $step) {
+            $i = floatval(number_format($i, 2));
+            $result[] = ['index' => $i, 'value' => $this->calc->normalPDF($i, $mu, $sigma)];
         }
-
         return $result;
     }
 
@@ -149,22 +153,27 @@ class StatsService extends AbstractTestService
      * @param array $range
      * @param float $mu
      * @param float $sigma
+     * @param float $step
      * @return array
+     * @throws ServiceException
      */
-    public function getNormalCDF(array $range = [], float $mu = 0, float $sigma = 1):array
+    public function getNormalCDF(array $range = [], float $mu = 0, float $sigma = 1, float $step = 0.2): array
     {
+        if ($step <= 0) {
+            throw new ServiceException('Param "step" must be bigger than 0', ServiceException::CODE_INVALID_PARAMS);
+        }
         if (!isset($range[0])) {
             $range[0] = -5;
         }
         if (!isset($range[1])) {
             $range[1] = 5;
         }
-        list($from, $to) = [$range[0] * 10, $range[1] * 10];
+        list($from, $to) = [$range[0], $range[1]];
 
         $result = [];
-        for ($i = $from; $i <= $to; $i++) {
-            $x = $i / 10;
-            $result[] = ['index' => $x, 'value' => $this->calc->normalCDF($x, $mu, $sigma)];
+        for ($i = $from; $i <= $to; $i += $step) {
+            $i = floatval(number_format($i, 2));
+            $result[] = ['index' => $i, 'value' => $this->calc->normalCDF($i, $mu, $sigma)];
         }
 
         return $result;
@@ -176,12 +185,16 @@ class StatsService extends AbstractTestService
      *
      * @param float $p
      * @param int $n
+     * @param float $step
      * @param array $range
      * @return array
      * @throws ServiceException
      */
-    public function getBinomialDistribution(float $p = 0.5, int $n = 100, array $range = [])
+    public function getBinomialDistribution(float $p = 0.5, int $n = 100, float $step = 0.3, array $range = [])
     {
+        if ($step <= 0) {
+            throw new ServiceException('Param "step" must be bigger than 0', ServiceException::CODE_INVALID_PARAMS);
+        }
         if ($p <= 0 || $p >= 1) {
             throw new ServiceException('Param "p" for binomial distribution must be a flat between 0 and 1', ServiceException::CODE_INVALID_PARAMS);
         }
@@ -203,7 +216,8 @@ class StatsService extends AbstractTestService
         $sigma = sqrt($n * $p * (1 - $p));
 
         $result = [];
-        for ($i = $min; $i < $max; $i++) {
+        for ($i = $min; $i < $max; $i += $step) {
+            $i = floatval(number_format($i, 2));
             $result[] = [
                 'index' => $i,
                 'value' => $this->calc->normalCDF($i + 0.5, $mu, $sigma) - $this->calc->normalCDF($i - 0.5, $mu, $sigma),
@@ -211,5 +225,32 @@ class StatsService extends AbstractTestService
         }
 
         return $result;
+    }
+
+    /**
+     * Calculate "Beta distribution" for some range of numbers
+     *    * Beta distribution (https://en.wikipedia.org/wiki/Beta_distribution)
+     *
+     * @param float $alpha
+     * @param float $beta
+     * @param float $step
+     * @return array
+     * @throws ServiceException
+     */
+    public function getBetaDistribution(float $alpha = 1, float $beta = 1, float $step = 0.2)
+    {
+        if ($step <= 0 || $step >= 1) {
+            throw new ServiceException('Param "step" must be between 0 and 1', ServiceException::CODE_INVALID_PARAMS);
+        }
+
+        $data = [];
+        for ($i = 0; $i <= 1; $i += $step) {
+            $i = floatval(number_format($i, 2));
+            $data[] = [
+                'index' => $i,
+                'value' => $this->calc->getBetaPDF($i, $alpha, $beta),
+            ];
+        }
+        return $data;
     }
 }

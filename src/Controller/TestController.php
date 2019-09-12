@@ -19,7 +19,9 @@ class TestController extends AbstractController
     public function users(StatsService $service, Calculator $calc)
     {
         $example = new StatisticsExamples();
-        $example->illustrateABTesting();
+
+        dd($calc->getBetaPDF(0.01, 10, 10));
+
         dd('OK');
     }
 
@@ -53,8 +55,9 @@ class TestController extends AbstractController
     {
         $mu = floatval($request->get('mu', 0));
         $sigma = floatval($request->get('sigma', 1));
+        $step = floatval($request->get('step', 0.2));
 
-        return $this->json($service->getNormalDistribution($this->getRequestRange($request), $mu, $sigma));
+        return $this->json($service->getNormalDistribution($this->getRequestRange($request), $mu, $sigma, $step));
     }
 
     /**
@@ -64,8 +67,9 @@ class TestController extends AbstractController
     {
         $mu = floatval($request->get('mu', 0));
         $sigma = floatval($request->get('sigma', 1));
+        $step = floatval($request->get('step', 0.2));
 
-        return $this->json($service->getNormalCDF($this->getRequestRange($request), $mu, $sigma));
+        return $this->json($service->getNormalCDF($this->getRequestRange($request), $mu, $sigma, $step));
     }
 
     /**
@@ -75,7 +79,20 @@ class TestController extends AbstractController
     {
         $p = floatval($request->get('p', 0.5));
         $n = intval($request->get('n', 100));
-        return $this->json($service->getBinomialDistribution($p, $n));
+        $step = floatval($request->get('step', 0.3));
+
+        return $this->json($service->getBinomialDistribution($p, $n, $step));
+    }
+
+    /**
+     * @Route("/test/probability/beta-distribution", name="test_probability_beta_distribution", methods={"GET"})
+     */
+    public function betaDistribution(Request $request, StatsService $service)
+    {
+        $alpha = floatval($request->get('alpha', 1));
+        $beta = floatval($request->get('beta', 1));
+        $step = floatval($request->get('step', 0.02));
+        return $this->json($service->getBetaDistribution($alpha, $beta, $step));
     }
 
     private function getRequestRange(Request $request): array

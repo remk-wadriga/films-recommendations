@@ -1,10 +1,11 @@
 <b-col id="test_probability_normal_distribution">
+
     <b-row>
         <b-form @submit="setUpChart" inline>
             <b-form-group
                     label="From:"
-                    label-for="form1_from_input">
-                <b-form-input id="form1_from_input"
+                    label-for="from_input">
+                <b-form-input id="from_input"
                       type="text"
                       v-model="from"
                       required>
@@ -13,10 +14,19 @@
 
             <b-form-group
                     label="To:"
-                    label-for="form1_to_input">
-                <b-form-input id="form1_to_input"
+                    label-for="to_input">
+                <b-form-input id="to_input"
                       type="text"
                       v-model="to"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="Step:"
+                    label-for="step_input">
+                <b-form-input id="step_input"
+                      type="text"
+                      v-model="step"
                       required>
                 </b-form-input>
             </b-form-group>
