@@ -244,11 +244,21 @@ class StatsService extends AbstractTestService
         }
 
         $data = [];
+        $maxVal = 0;
         for ($i = 0; $i <= 1; $i += $step) {
             $i = floatval(number_format($i, 2));
+            $value = $this->calc->getBetaPDF($i, $alpha, $beta);
+            if (is_nan($value)) {
+                $value = 0;
+            } elseif (is_infinite($value)) {
+                $value = $maxVal;
+            }
+            if ($value > $maxVal) {
+                $maxVal = $value;
+            }
             $data[] = [
                 'index' => $i,
-                'value' => $this->calc->getBetaPDF($i, $alpha, $beta),
+                'value' => $value,
             ];
         }
         return $data;

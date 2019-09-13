@@ -352,7 +352,8 @@ trait ProbabilityTrait
         if ($x < 0 || $x > 1) {
             return 0;
         }
-        return pow($x, $alpha - 1) * pow(1 - $x, $beta - 1) / $this->getBetaNormalizationConstant($alpha, $beta);
+        $normalizationConstant = $this->getBetaNormalizationConstant($alpha, $beta);
+        return $normalizationConstant != 0 ? pow($x, $alpha - 1) * pow(1 - $x, $beta - 1) / $normalizationConstant : 0;
     }
 
 
