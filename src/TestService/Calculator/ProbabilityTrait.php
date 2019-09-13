@@ -3,8 +3,6 @@
 
 namespace App\TestService\Calculator;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-
 trait ProbabilityTrait
 {
     /**
@@ -340,17 +338,25 @@ trait ProbabilityTrait
         return $x >= $mu ? 2 * $this->normalProbabilityAbove($x, $mu, $sigma) : 2 * $this->normalProbabilityBelow($x, $mu, $sigma);
     }
 
+    /**
+     * Calculate "PDF" for "beta-distribution"
+     *    * Beta-distribution (https://en.wikipedia.org/wiki/Beta_distribution)
+     *
+     * @param float $x
+     * @param float $alpha
+     * @param float $beta
+     * @return float|int
+     */
     public function getBetaPDF(float $x, float $alpha = 0, float $beta = 1)
     {
         if ($x < 0 || $x > 1) {
             return 0;
         }
-
         return pow($x, $alpha - 1) * pow(1 - $x, $beta - 1) / $this->getBetaNormalizationConstant($alpha, $beta);
     }
 
 
-    private function getBetaNormalizationConstant(float $alpha = 0, float $beta = 1)
+    public function getBetaNormalizationConstant(float $alpha = 0, float $beta = 1)
     {
         return $this->gamma($alpha) * $this->gamma($beta) / $this->gamma($alpha + $beta);
     }

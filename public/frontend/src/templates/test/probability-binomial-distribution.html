@@ -1,13 +1,14 @@
 <b-col id="test_probability_binomial_distribution">
 
     <b-row>
-        <b-form @submit="setUpChart" inline>
+        <b-form inline>
             <b-form-group
                     label="Step:"
                     label-for="step_input">
                 <b-form-input id="step_input"
                       type="text"
                       v-model="step"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -15,13 +16,14 @@
     </b-row>
 
     <b-row>
-        <b-form @submit="setUpChart" inline>
+        <b-form inline>
             <b-form-group
                     label="P1:"
                     label-for="form1_p_input">
                 <b-form-input id="form1_p_input"
                       type="text"
                       v-model="form1.p"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -31,19 +33,21 @@
                 <b-form-input id="form1_n_input"
                       type="text"
                       v-model="form1.n"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 1">
+        <b-form inline>
             <b-form-group
                     label="P2:"
                     label-for="form2_p_input">
                 <b-form-input id="form2_p_input"
                       type="text"
                       v-model="form2.p"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -51,21 +55,23 @@
                     label="N2:"
                     label-for="form2_n_input">
                 <b-form-input id="form2_n_input"
-                          type="text"
-                          v-model="form2.n"
-                          required>
+                      type="text"
+                      v-model="form2.n"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 2">
+        <b-form inline>
             <b-form-group
                     label="P3:"
                     label-for="form3_p_input">
                 <b-form-input id="form3_p_input"
                       type="text"
                       v-model="form3.p"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -75,19 +81,21 @@
                 <b-form-input id="form3_n_input"
                       type="text"
                       v-model="form3.n"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 3">
+        <b-form inline>
             <b-form-group
                     label="P4:"
                     label-for="form4_p_input">
                 <b-form-input id="form4_p_input"
                       type="text"
                       v-model="form4.p"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -97,19 +105,21 @@
                 <b-form-input id="form4_n_input"
                       type="text"
                       v-model="form4.n"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 5">
+        <b-form inline>
             <b-form-group
                     label="P5:"
                     label-for="form5_p_input">
                 <b-form-input id="form5_p_input"
                       type="text"
                       v-model="form5.p"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -119,6 +129,7 @@
                 <b-form-input id="form5_n_input"
                       type="text"
                       v-model="form5.n"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -126,7 +137,8 @@
     </b-row>
 
     <b-row>
-        <b-button @click="setUpChart" type="submit" variant="primary">Set</b-button>
+        <b-button @click="addChart" variant="success" v-if="enabledCharts < 5">+</b-button>
+        <b-button @click="removeChart" variant="danger" v-if="enabledCharts > 1">-</b-button>
     </b-row>
 
     <br />

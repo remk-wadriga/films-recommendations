@@ -20,6 +20,7 @@
                 from: -5,
                 to: 5,
                 step: "0.2",
+                enabledCharts: 1,
                 form1: {
                     mu: "0",
                     sigma: "1"
@@ -48,6 +49,10 @@
                 setTopButtons: SET_TOP_BUTTONS_MUTATION
             }),
             async setUpChart () {
+                if (parseFloat(this.step) <= 0) {
+                    return
+                }
+
                 let params1 = {
                     range: this.from + '-' + this.to,
                     step: this.step,
@@ -90,22 +95,22 @@
                 })
                 this.chartDataD = [{label: 'Normal1', data: valuesD1}]
 
-                if (this.form2.mu !== this.form1.mu || this.form2.sigma !== this.form1.sigma) {
+                if (this.enabledCharts > 1 && (this.form2.mu !== this.form1.mu || this.form2.sigma !== this.form1.sigma)) {
                     let dataD2 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params2)
                     dataD2.forEach(elem => { valuesD2.push(elem.value) })
                     this.chartDataD.push({label: 'Normal2', data: valuesD2})
                 }
-                if (this.form3.mu !== this.form1.mu || this.form3.sigma !== this.form1.sigma) {
+                if (this.enabledCharts > 2 && (this.form3.mu !== this.form1.mu || this.form3.sigma !== this.form1.sigma)) {
                     let dataD3 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params3)
                     dataD3.forEach(elem => { valuesD3.push(elem.value) })
                     this.chartDataD.push({label: 'Normal3', data: valuesD3})
                 }
-                if (this.form4.mu !== this.form1.mu || this.form4.sigma !== this.form1.sigma) {
+                if (this.enabledCharts > 3 && (this.form4.mu !== this.form1.mu || this.form4.sigma !== this.form1.sigma)) {
                     let dataD4 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params4)
                     dataD4.forEach(elem => { valuesD4.push(elem.value) })
                     this.chartDataD.push({label: 'Normal4', data: valuesD4})
                 }
-                if (this.form5.mu !== this.form1.mu || this.form5.sigma !== this.form1.sigma) {
+                if (this.enabledCharts > 4 && (this.form5.mu !== this.form1.mu || this.form5.sigma !== this.form1.sigma)) {
                     let dataD5 = await Vue.api.request(TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL, params5)
                     dataD5.forEach(elem => { valuesD5.push(elem.value) })
                     this.chartDataD.push({label: 'Normal5', data: valuesD5})
@@ -143,6 +148,14 @@
                     dataCDF5.forEach(elem => { valuesCDF5.push(elem.value) })
                     this.chartDataCDF.push({label: 'CDF5', data: valuesCDF5})
                 }
+            },
+            addChart () {
+                this.enabledCharts++
+                this.setUpChart()
+            },
+            removeChart () {
+                this.enabledCharts--
+                this.setUpChart()
             }
         },
         mounted () {

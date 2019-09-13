@@ -1,13 +1,14 @@
 <b-col id="test_probability_normal_distribution">
 
     <b-row>
-        <b-form @submit="setUpChart" inline>
+        <b-form inline>
             <b-form-group
                     label="From:"
                     label-for="from_input">
                 <b-form-input id="from_input"
                       type="text"
                       v-model="from"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -18,6 +19,7 @@
                 <b-form-input id="to_input"
                       type="text"
                       v-model="to"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -27,6 +29,7 @@
                 <b-form-input id="step_input"
                       type="text"
                       v-model="step"
+                      @change="setUpChart"
                       required>
                 </b-form-input>
             </b-form-group>
@@ -34,128 +37,129 @@
     </b-row>
 
     <b-row>
-        <b-form @submit="setUpChart" inline>
+        <b-form inline>
             <b-form-group
                     label="Mu 1:"
                     label-for="form1_mu_input">
                 <b-form-input id="form1_mu_input"
-                              type="text"
-                              v-model="form1.mu"
-                              required>
+                      type="text"
+                      v-model="form1.mu"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
             <b-form-group
                     label="Sigma 1:"
                     label-for="form1_sigma_input">
                 <b-form-input id="form1_sigma_input"
-                              type="text"
-                              v-model="form1.sigma"
-                              required>
+                      type="text"
+                      v-model="form1.sigma"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 1">
+        <b-form inline>
             <b-form-group
                     label="Mu 2:"
                     label-for="form2_mu_input">
                 <b-form-input id="form2_mu_input"
-                              type="text"
-                              v-model="form2.mu"
-                              required>
+                      type="text"
+                      v-model="form2.mu"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
             <b-form-group
                     label="Sigma 2:"
                     label-for="form2_sigma_input">
                 <b-form-input id="form2_sigma_input"
-                              type="text"
-                              v-model="form2.sigma"
-                              required>
+                      type="text"
+                      v-model="form2.sigma"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 2">
+        <b-form inline>
             <b-form-group
                     label="Mu 3:"
                     label-for="form3_mu_input">
                 <b-form-input id="form3_mu_input"
-                              type="text"
-                              v-model="form3.mu"
-                              required>
+                      type="text"
+                      v-model="form3.mu"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
             <b-form-group
                     label="Sigma 3:"
                     label-for="form3_sigma_input">
                 <b-form-input id="form3_sigma_input"
-                              type="text"
-                              v-model="form3.sigma"
-                              required>
+                      type="text"
+                      v-model="form3.sigma"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 3">
+        <b-form inline>
             <b-form-group
                     label="Mu 4:"
                     label-for="form4_mu_input">
                 <b-form-input id="form4_mu_input"
-                              type="text"
-                              v-model="form4.mu"
-                              required>
+                      type="text"
+                      v-model="form4.mu"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
             <b-form-group
                     label="Sigma 4:"
                     label-for="form4_sigma_input">
                 <b-form-input id="form4_sigma_input"
-                              type="text"
-                              v-model="form4.sigma"
-                              required>
+                      type="text"
+                      v-model="form4.sigma"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
         </b-form>
     </b-row>
-
-    <b-row>
-        <b-form @submit="setUpChart" inline>
+    <b-row v-if="enabledCharts > 4">
+        <b-form inline>
             <b-form-group
                     label="Mu 5:"
                     label-for="form5_mu_input">
                 <b-form-input id="form5_mu_input"
-                              type="text"
-                              v-model="form5.mu"
-                              required>
+                      type="text"
+                      v-model="form5.mu"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
             <b-form-group
                     label="Sigma 5:"
                     label-for="form5_sigma_input">
                 <b-form-input id="form5_sigma_input"
-                              type="text"
-                              v-model="form5.sigma"
-                              required>
+                      type="text"
+                      v-model="form5.sigma"
+                      @change="setUpChart"
+                      required>
                 </b-form-input>
             </b-form-group>
-
         </b-form>
     </b-row>
 
     <b-row>
-        <b-button @click="setUpChart" type="submit" variant="primary">Set</b-button>
+        <b-button @click="addChart" variant="success" v-if="enabledCharts < 5">+</b-button>
+        <b-button @click="removeChart" variant="danger" v-if="enabledCharts > 1">-</b-button>
     </b-row>
 
     <br />

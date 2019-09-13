@@ -20,7 +20,7 @@ class TestController extends AbstractController
     {
         $example = new StatisticsExamples();
 
-        dd($calc->getBetaPDF(0.01, 10, 10));
+        $example->illustrateABTesting();
 
         dd('OK');
     }
