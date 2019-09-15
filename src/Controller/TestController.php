@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
+use App\TestService\Examples\GradientDescent;
 use App\TestService\Examples\StatisticsExamples;
 use App\TestService\Stats\UserEntity;
 use App\TestService\StatsService;
@@ -18,11 +19,11 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $example = new StatisticsExamples();
-
-        $example->illustrateABTesting();
-
-        dd('OK');
+       $n = 7;
+       for ($i = 1; $i <= $n; $i++) {
+           echo str_repeat('&nbsp;', $n - $i), str_repeat('*', $i), '<br />';
+       }
+       exit();
     }
 
     /**
