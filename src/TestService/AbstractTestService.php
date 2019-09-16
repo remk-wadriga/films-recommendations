@@ -6,6 +6,8 @@ namespace App\TestService;
 use App\Exception\ServiceException;
 use App\Helpers\File\FileReaderFactory;
 use App\Helpers\File\FileReaderInterface;
+use App\Helpers\Web\WebReaderFactory;
+use App\Helpers\Web\WebReaderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,6 +19,9 @@ abstract class AbstractTestService
 
     /** @var FileReaderInterface[] */
     protected $fileReaders = [];
+
+    /** @var WebReaderInterface[] */
+    protected $webReaders = [];
 
     public function __construct(EntityManagerInterface $em, ContainerInterface $container, Calculator $calc)
     {
@@ -40,6 +45,17 @@ abstract class AbstractTestService
         }
         $forFile = $this->getParam('files_dir') . DIRECTORY_SEPARATOR . 'test_service' . DIRECTORY_SEPARATOR . $forFile;
         return $this->fileReaders[$forFile] = FileReaderFactory::createFileReader($forFile);
+    }
+
+    public function getWebReader(string $type = null, array $config = []): WebReaderInterface
+    {
+        if ($type === null) {
+            $type = WebReaderFactory::TYPE_HTML;
+        }
+        if (isset($this->webReaders[$type])) {
+            return $this->webReaders[$type];
+        }
+        return $this->webReaders[$type] = WebReaderFactory::createWebReader($type, $config);
     }
 
     protected function createObject(string $entityClass, array $data): AbstractEntity

@@ -19,11 +19,17 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-       $n = 7;
-       for ($i = 1; $i <= $n; $i++) {
-           echo str_repeat('&nbsp;', $n - $i), str_repeat('*', $i), '<br />';
-       }
-       exit();
+        /*$webReader = $service->getWebReader();
+        $url = 'http://shop.oreilly.com/category/browse-subjects/data.do?sortby=publicationDate&page=1';
+        $url = 'http://api.github.com/users/joelgrus/repos';
+        $data = $webReader->read($url);
+        dd($data);*/
+
+        $n = 7;
+        for ($i = 1; $i <= $n; $i++) {
+            echo str_repeat('&nbsp;', $n - $i), str_repeat('*', $i), '<br />';
+        }
+        exit();
     }
 
     /**
