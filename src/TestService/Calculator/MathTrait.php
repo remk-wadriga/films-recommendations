@@ -271,4 +271,16 @@ trait MathTrait
         }
         return $res;
     }
+
+    /**
+     * Round to the next smallest multiple interval with size "bucketSize"
+     *
+     * @param float $point
+     * @param int $bucketSize
+     * @return int
+     */
+    public function bucketize(float $point, int $bucketSize): int
+    {
+        return $bucketSize * floor($point / $bucketSize);
+    }
 }

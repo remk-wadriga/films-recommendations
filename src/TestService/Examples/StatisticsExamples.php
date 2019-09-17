@@ -3,12 +3,15 @@
 
 namespace App\TestService\Examples;
 
-
 use App\TestService\Calculator\ProbabilityTrait;
+use App\TestService\Stats\DataGeneratorTrait;
+use App\TestService\Stats\DataIndexerTrait;
 
 class StatisticsExamples
 {
     use ProbabilityTrait;
+    use DataIndexerTrait;
+    use DataGeneratorTrait;
 
     private function getRandomKid()
     {
@@ -189,6 +192,34 @@ class StatisticsExamples
         echo '<br />';
         echo sprintf($textPattern, $AClicks2, $BClicks2, $views, $PVal1ue2);
         exit();
+    }
+
+    public function generateUniformAndNormalDistributedData()
+    {
+        $uniform = [];
+        $normal = [];
+        for ($i = 0; $i < 10000; $i++) {
+            $uniform[] = rand(-100, 100);
+            $normal[] = 57 * $this->inverseNormalCDF(rand(0, 1000000) / 1000000);
+        }
+
+        $countedUniform = [];
+        $countedNormal = [];
+        foreach ($this->makeHistogram($uniform, 10) as $value => $count) {
+            $countedUniform[] = ['name' => $value, 'count' => $count];
+        }
+        foreach ($this->makeHistogram($normal, 10) as $value => $count) {
+            $countedNormal[] = ['name' => $value, 'count' => $count];
+        }
+
+        usort($countedUniform, function ($val1, $val2) {
+            return $val2['name'] > $val1['name'] ? -1 : 1;
+        });
+        usort($countedNormal, function ($val1, $val2) {
+            return $val2['name'] > $val1['name'] ? -1 : 1;
+        });
+
+        dd($countedUniform, $countedNormal);
     }
 
 

@@ -109,6 +109,25 @@ trait MatrixTrait
         }, $rowsNum, $colsNum);
     }
 
+    /**
+     * Find the "matrix correlation", the correlation between each matrix columns
+     *
+     * @param array $matrix
+     * @return array
+     * @throws ServiceException
+     */
+    public function findMatrixCorrelation(array $matrix): array
+    {
+        $this->checkMatrix($matrix);
+        list($rowsCount, $numsCount) = $this->matrixShape($matrix);
+
+        $matrixEntry = function (int $i, int $j) use ($matrix) {
+            return $this->correlation($this->getMatrixCol($matrix, $i), $this->getMatrixCol($matrix, $j));
+        };
+
+        return $this->createMatrix($matrixEntry, $numsCount, $numsCount);
+    }
+
 
     /**
      * Check the matrix format - it must be and array of arrays

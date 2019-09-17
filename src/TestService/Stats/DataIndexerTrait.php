@@ -7,6 +7,7 @@ trait DataIndexerTrait
 {
     protected $salariesByTenures = [];
     protected $interestsWordsCountsIndexedByWords = [];
+    protected $cacheData = [];
 
     /**
      * @param array $tenures
@@ -108,5 +109,47 @@ trait DataIndexerTrait
         }
 
         return $this->interestsWordsCountsIndexedByWords[$key];
+    }
+
+    /**
+     * Group points and count the number in the interval
+     *
+     * @param array $points
+     * @param int $bucketSize
+     * @param string $indexKey
+     * @return array
+     */
+    public function makeHistogram(array $points, int $bucketSize, string $indexKey = null): array
+    {
+        if ($indexKey === null) {
+            $indexKey = md5(implode(':', $points) . '_' . $bucketSize);
+        }
+        $result = $this->getCache($indexKey);
+        if ($result !== null) {
+            return $result;
+        }
+
+        $result = [];
+        foreach ($points as $point) {
+            $index = $bucketSize * floor($point / $bucketSize);
+            if (!isset($result[$index])) {
+                $result[$index] = 0;
+            }
+            $result[$index]++;
+        }
+
+        $this->setCache($indexKey, $result);
+        return $result;
+    }
+
+
+    protected function setCache($key, $data)
+    {
+        $this->cacheData[$key] = serialize($data);
+    }
+
+    protected function getCache($key)
+    {
+        return isset($this->cacheData[$key]) ? unserialize($this->cacheData[$key]) : null;
     }
 }
