@@ -9,7 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class CompanyFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    protected $isEnabled = true;
+    protected $isEnabled = false;
 
     public function loadData(ObjectManager $manager)
     {

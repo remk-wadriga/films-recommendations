@@ -168,7 +168,7 @@ trait StatisticsTrait
      * @param array $data
      * @return float
      */
-    public function standardDeviation(array $data)
+    public function standardDeviation(array $data): float
     {
         return sqrt($this->variance($data));
     }

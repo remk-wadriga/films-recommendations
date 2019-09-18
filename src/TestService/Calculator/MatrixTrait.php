@@ -16,12 +16,13 @@ trait MatrixTrait
      *   [3, 4] where 3 - rows count, 4 - columns count
      *
      * @param array $matrix
+     * @param bool $needToCheck
      * @return array
      * @throws ServiceException
      */
-    public function matrixShape(array &$matrix): array
+    public function matrixShape(array &$matrix, bool $needToCheck = true): array
     {
-        $rowsNum = $this->checkMatrix($matrix);
+        $rowsNum = $needToCheck ? $this->checkMatrix($matrix) : count($matrix);
         $colsNum = $rowsNum > 0 ? count($matrix[0]) : 0;
         return [$rowsNum, $colsNum];
     }
@@ -31,12 +32,13 @@ trait MatrixTrait
      *
      * @param array $matrix
      * @param int $row
+     * @param bool $needToCheck
      * @return array
      * @throws ServiceException
      */
-    public function getMatrixRow(array &$matrix, int $row): array
+    public function getMatrixRow(array &$matrix, int $row, bool $needToCheck = true): array
     {
-        $rowsNum = $this->checkMatrix($matrix);
+        $rowsNum = $needToCheck ? $this->checkMatrix($matrix) : count($matrix);
         if ($row >= $rowsNum) {
             throw new ServiceException(sprintf('This matrix has no row #%s', $row), ServiceException::CODE_INVALID_PARAMS);
         }
@@ -48,17 +50,20 @@ trait MatrixTrait
      *
      * @param array $matrix
      * @param int $col
+     * @param bool $needToCheck
      * @return array
      * @throws ServiceException
      */
-    public function getMatrixCol(array &$matrix, int $col): array
+    public function getMatrixCol(array &$matrix, int $col, bool $needToCheck = true): array
     {
-        list(, $colsNum) = $this->matrixShape($matrix);
+        list(, $colsNum) = $this->matrixShape($matrix, $needToCheck);
         if ($col >= $colsNum) {
             throw new ServiceException(sprintf('This matrix has no col #%s', $col), ServiceException::CODE_INVALID_PARAMS);
         }
-        return array_map(function ($row) use ($colsNum, $col) {
-            $this->checkMatrixRow($row, $colsNum);
+        return array_map(function ($row) use ($colsNum, $col, $needToCheck) {
+            if ($needToCheck) {
+                $this->checkMatrixRow($row, $colsNum);
+            }
             return $row[$col];
         }, $matrix);
     }
@@ -80,7 +85,7 @@ trait MatrixTrait
         for ($row = 0; $row < $rowsNum; $row++) {
             $matrix[$row] = [];
             for ($col = 0; $col < $colsNum; $col++) {
-                $matrix[$row][$col]  = $factory($row, $col, $matrix);
+                $matrix[$row][$col] = $factory($row, $col, $matrix);
             }
         }
         return $matrix;
@@ -119,13 +124,54 @@ trait MatrixTrait
     public function findMatrixCorrelation(array $matrix): array
     {
         $this->checkMatrix($matrix);
-        list($rowsCount, $numsCount) = $this->matrixShape($matrix);
+        list($rowsCount, $numsCount) = $this->matrixShape($matrix, false);
 
         $matrixEntry = function (int $i, int $j) use ($matrix) {
-            return $this->correlation($this->getMatrixCol($matrix, $i), $this->getMatrixCol($matrix, $j));
+            return $this->correlation($this->getMatrixCol($matrix, $i, false), $this->getMatrixCol($matrix, $j, false));
         };
 
         return $this->createMatrix($matrixEntry, $numsCount, $numsCount);
+    }
+
+    /**
+     * Get means and standard deviations for each matrix column
+     *
+     * @param array $matrix
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function scaleMatrix(array &$matrix, bool $needToCheck = true): array
+    {
+        list($rowsNum, $colsNum) = $this->matrixShape($matrix, $needToCheck);
+        $means = []; // Means for each column
+        $stDevs = []; // Standard deviations for each column
+        for ($i = 0; $i < $colsNum; $i++) {
+            $column = $this->getMatrixCol($matrix, $i, false);
+            $means[] = $this->mean($column);
+            $stDevs[] = $this->standardDeviation($column);
+        }
+        return [$means, $stDevs];
+    }
+
+    /**
+     * "Rescale matrix" - make a new matrix with scaled values. For example it's used when we need to skip the measure
+     *
+     * @param array $matrix
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function rescaleMatrix(array &$matrix, bool $needToCheck = true): array
+    {
+        list($means, $stDevs) = $this->scaleMatrix($matrix, $needToCheck);
+        list($rowsNum, $colsNum) = $this->matrixShape($matrix, false);
+
+        $rescaled = function (int $i, int $j) use ($matrix, $means, $stDevs) {
+            return $stDevs[$j] > 0 ? ($matrix[$i][$j] - $means[$j]) / $stDevs[$j] : $matrix[$i][$j];
+        };
+
+        return $this->createMatrix($rescaled, $rowsNum, $colsNum);
     }
 
 
@@ -145,7 +191,11 @@ trait MatrixTrait
         if (!array_key_exists(0, $matrix)) {
             $matrix = array_values($matrix);
         }
-        $this->checkMatrixRow($matrix[0]);
+        $rowLength = count($matrix[0]);
+        foreach ($matrix as $index => $row) {
+            $this->checkMatrixRow($row, $rowLength);
+            $matrix[$index] = $row;
+        }
         return count($matrix);
     }
 
