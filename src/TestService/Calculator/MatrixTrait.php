@@ -145,13 +145,13 @@ trait MatrixTrait
     {
         list($rowsNum, $colsNum) = $this->matrixShape($matrix, $needToCheck);
         $means = []; // Means for each column
-        $stDevs = []; // Standard deviations for each column
+        $stDeviations = []; // Standard deviations for each column
         for ($i = 0; $i < $colsNum; $i++) {
             $column = $this->getMatrixCol($matrix, $i, false);
             $means[] = $this->mean($column);
-            $stDevs[] = $this->standardDeviation($column);
+            $stDeviations[] = $this->standardDeviation($column);
         }
-        return [$means, $stDevs];
+        return [$means, $stDeviations];
     }
 
     /**
@@ -164,14 +164,196 @@ trait MatrixTrait
      */
     public function rescaleMatrix(array &$matrix, bool $needToCheck = true): array
     {
-        list($means, $stDevs) = $this->scaleMatrix($matrix, $needToCheck);
+        list($means, $stDeviations) = $this->scaleMatrix($matrix, $needToCheck);
         list($rowsNum, $colsNum) = $this->matrixShape($matrix, false);
 
-        $rescaled = function (int $i, int $j) use ($matrix, $means, $stDevs) {
-            return $stDevs[$j] > 0 ? ($matrix[$i][$j] - $means[$j]) / $stDevs[$j] : $matrix[$i][$j];
+        $rescaled = function (int $i, int $j) use ($matrix, $means, $stDeviations) {
+            return $stDeviations[$j] > 0 ? ($matrix[$i][$j] - $means[$j]) / $stDeviations[$j] : $matrix[$i][$j];
         };
 
         return $this->createMatrix($rescaled, $rowsNum, $colsNum);
+    }
+
+    /**
+     * Center the matrix, i.e. subtract the average
+     *
+     * @param array $matrix
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function deMeanMatrix(array &$matrix, bool $needToCheck = true): array
+    {
+        list($rowsNum, $colsNum) = $this->matrixShape($matrix, $needToCheck);
+        list($means, $deviations) = $this->scaleMatrix($matrix, false);
+        return $this->createMatrix(function ($i, $j) use ($matrix, $means) {
+            return $matrix[$i][$j] - $means[$j];
+        }, $rowsNum, $colsNum);
+    }
+
+    /**
+     * Find the variance of data in the direction "direction"
+     *
+     * @param array $v
+     * @param array $direction
+     * @param bool $needToCheck
+     * @return float
+     * @throws ServiceException
+     */
+    public function matrixDirectionalVariance(array $v, array $direction, bool $needToCheck = true): float
+    {
+        if ($needToCheck) {
+            $this->checkMatrix($v);
+        }
+        $result = 0;
+        foreach ($v as $row) {
+            $result += pow($this->vectorsScalarMultiply($row, $this->vectorDirection($direction)), 2);
+        }
+        return $result;
+    }
+
+    /**
+     * Find the gradient of directional data variance
+     *
+     * @param array $v
+     * @param array $direction
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function matrixDirectionalVarianceGradient(array $v, array $direction, bool $needToCheck = true): array
+    {
+        if (empty($v)) {
+            return [];
+        }
+
+        $dLength = count($direction);
+        list($rowsNum, $colsNum) = $this->matrixShape($v, $needToCheck);
+        if ($dLength !== $colsNum) {
+            throw new ServiceException('Vector "direction" must have the same length that the length of matrix row to calculate the gradient of directional data variance', ServiceException::CODE_INVALID_PARAMS);
+        }
+
+        $result = [];
+
+        $WDir = $this->vectorDirection($direction);
+        for ($i = 0; $i < $dLength; $i++) {
+            if (!is_numeric($i)) {
+                throw new ServiceException('Vector "direction" must be an array of numbers to calculate the gradient of directional data variance', ServiceException::CODE_INVALID_PARAMS);
+            }
+            if (!isset($result[$i])) {
+                $result[$i] = 0;
+            }
+            foreach ($v as $row) {
+                if (!isset($row[$i])) {
+                    continue;
+                }
+                $result[$i] += 2 * $this->vectorsScalarMultiply($row, $WDir) * $row[$i];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Find the "First principal component"
+     *    "First principal component" - direction that maximizes the function of directional dispersion (https://en.wikipedia.org/wiki/Principal_component_analysis)
+     *
+     * @param array $v
+     * @param int $n
+     * @param float $stepSIze
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function firstPrincipalComponent(array &$v, int $n = 100, float $stepSIze = 0.1, bool $needToCheck = true): array
+    {
+        if (empty($v)) {
+            return [];
+        }
+        list($rowsNum, $colsNum) = $this->matrixShape($v, $needToCheck);
+
+        // Start with a random guess
+        $guess = [];
+        for ($i = 0; $i < $colsNum; $i++) {
+            $guess[] = 1;
+        }
+
+        for ($i = 0; $i < $n; $i++) {
+            $gradient = $this->matrixDirectionalVarianceGradient($v, $guess, false);
+            $guess = $this->step($guess, $gradient, $stepSIze);
+        }
+
+        return $this->vectorDirection($guess);
+    }
+
+    /**
+     * Remove projection from data
+     *
+     * @param array $matrix
+     * @param array $projection
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function removeProjection(array &$matrix, array $projection, bool $needToCheck = true): array
+    {
+        list($rowsNum, $colsNum) = $this->matrixShape($matrix, $needToCheck);
+        if ($colsNum !== count($projection)) {
+            throw new ServiceException('The length of vector "projection" must be equals to length of matrix row to remove the direction from matrix', ServiceException::CODE_INVALID_PARAMS);
+        }
+
+        $result = [];
+        foreach ($matrix as $row) {
+            $result[] = $this->removeProjectionFromVector($row, $projection);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Find the "numComponents" count of "principal component" for data "matrix"
+     *
+     * @param array $matrix
+     * @param int $numComponents
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function principalComponentAnalysis(array &$matrix, int $numComponents, bool $needToCheck = true): array
+    {
+        if ($needToCheck) {
+            $this->checkMatrix($matrix);
+        }
+        $data = $matrix;
+        $components = [];
+        for ($i = 0; $i < $numComponents; $i++) {
+            $component = $this->firstPrincipalComponent($data, 100, 0.1, false);
+            $components[] = $component;
+            $data = $this->removeProjection($data, $component);
+        }
+        unset($data);
+        return $components;
+    }
+
+    /**
+     * Transform data "matrix" to space covered by smaller components
+     *
+     * @param array $matrix
+     * @param array $components
+     * @param bool $needToCheck
+     * @return array
+     * @throws ServiceException
+     */
+    public function transformMatrix(array &$matrix, array $components, bool $needToCheck = true): array
+    {
+        if ($needToCheck) {
+            $this->checkMatrix($matrix);
+        }
+        $result = [];
+        foreach ($matrix as $row) {
+            $result[] = $this->transformVector($row, $components);
+        }
+        return $result;
     }
 
 
@@ -183,7 +365,7 @@ trait MatrixTrait
      * @return int
      * @throws ServiceException
      */
-    protected function checkMatrix(array &$matrix): int
+    private function checkMatrix(array &$matrix): int
     {
         if (empty($matrix)) {
             return 0;
@@ -208,7 +390,7 @@ trait MatrixTrait
      * @param int|null $len
      * @throws ServiceException
      */
-    protected function checkMatrixRow(&$row, int $len = null)
+    private function checkMatrixRow(&$row, int $len = null)
     {
         if (!is_array($row)) {
             throw new ServiceException('Each row of matrix mas be an array', ServiceException::CODE_INVALID_PARAMS);

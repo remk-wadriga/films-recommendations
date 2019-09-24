@@ -92,6 +92,7 @@ trait VectorsTrait
     }
 
     /**
+     * <<scalar_multiply>>
      * Calculate the multiplication of vector and some scalar: float or integer (each element of result will be equals to multiplication of element of input vector and scalar)
      *
      * @param array $vector
@@ -140,7 +141,7 @@ trait VectorsTrait
      * @return float
      * @throws ServiceException
      */
-    public function vectorMagnitude(array $vector)
+    public function vectorMagnitude(array $vector): float
     {
         return sqrt($this->vectorSumOfSquares($vector));
     }
@@ -182,6 +183,63 @@ trait VectorsTrait
             $subtract = $this->vectorsSubtract($subtract, array_shift($vectors));
         }
         return $this->vectorMagnitude($subtract);
+    }
+
+    /**
+     * Get vector that means the direction of input vector
+     *
+     * @param array $v
+     * @return array
+     * @throws ServiceException
+     */
+    public function vectorDirection(array $v): array
+    {
+        $magnitude = $this->vectorMagnitude($v);
+        return array_map(function ($val) use ($magnitude) { return $val / $magnitude; }, $v);
+    }
+
+    /**
+     * Project vector "v" onto vector "direction"
+     *
+     * @param array $v
+     * @param array $direction
+     * @return array
+     * @throws ServiceException
+     */
+    public function vectorProject(array $v, array $direction): array
+    {
+        $projectionLength = $this->vectorsScalarMultiply($v, $direction);
+        return $this->vectorMultiplyByScalar($direction, $projectionLength);
+    }
+
+    /**
+     * Remove projection from vector
+     *
+     * @param array $v
+     * @param array $projection
+     * @return array
+     * @throws ServiceException
+     */
+    public function removeProjectionFromVector(array $v, array $projection): array
+    {
+        return $this->vectorsSubtract($v, $this->vectorProject($v, $projection));
+    }
+
+    /**
+     * Transform vector "v" by components
+     *
+     * @param array $v
+     * @param array $components
+     * @return array
+     * @throws ServiceException
+     */
+    public function transformVector(array $v, array $components): array
+    {
+        $result = [];
+        foreach ($components as $component) {
+            $result[] = $this->vectorsScalarMultiply($v, $component);
+        }
+        return $result;
     }
 
 
