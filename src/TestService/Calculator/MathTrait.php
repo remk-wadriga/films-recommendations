@@ -283,4 +283,105 @@ trait MathTrait
     {
         return $bucketSize * floor($point / $bucketSize);
     }
+
+    /**
+     * Split data for two arrays
+     *
+     * @param array $data
+     * @param float $prob
+     * @return array
+     */
+    public function splitData(array $data, float $prob): array
+    {
+        $result = [[], []];
+        foreach ($data as $key => $row) {
+            $index = rand(0, 1000) / 1000 < $prob ? 0 : 1;
+            $result[$index][$key] = $row;
+        }
+        return $result;
+    }
+
+    /**
+     * Split data to "test" and "control" couples
+     *
+     * @param array $x
+     * @param array $y
+     * @param float $testPct
+     * @return array
+     * @throws ServiceException
+     */
+    public function trainTestSplitData(array $x, array $y, float $testPct)
+    {
+        if (count($x) !== count($y)) {
+            throw new ServiceException('The count of arrays "x" and "y" must be equals to split them to the "train" and "test" data', ServiceException::CODE_INVALID_PARAMS);
+        }
+        $data = array_combine($x, $y);
+        list($train, $test) = $this->splitData($data, 1 - $testPct);
+        list($xTrain, $yTrain) = [array_keys($train), array_values($train)];
+        list($xTest, $yTest) = [array_keys($test), array_values($test)];
+        return [$xTrain, $yTrain, $xTest, $yTest];
+    }
+
+    /**
+     * Calculate the results accuracy:
+     *   "tp" - true positive, "fp" - false positive, "fn" - false negative, "tn" - true negative
+     *
+     * @param float $tp
+     * @param float $fp
+     * @param float $fn
+     * @param float $tn
+     * @return float
+     */
+    public function accuracy(float $tp, float $fp, float $fn, float $tn): float
+    {
+        $correct = $tp + $tn;
+        return $correct / ($correct + $fp + $fn);
+    }
+
+    /**
+     * Calculate the accuracy (as the degree of positive forecast values)
+     *    "tp" - true positive, "fp" - false positive, "fn" - false negative, "tn" - true negative
+     *
+     * @param float $tp
+     * @param float $fp
+     * @param float $fn
+     * @param float $tn
+     * @return float
+     */
+    public function precision(float $tp, float $fp, float $fn, float $tn): float
+    {
+        return $tp / ($tp + $fp);
+    }
+
+    /**
+     * Calculate the recall (the proportion of positive predicted that the model identified)
+     *
+     * @param float $tp
+     * @param float $fp
+     * @param float $fn
+     * @param float $tn
+     * @return float
+     */
+    public function recall(float $tp, float $fp, float $fn, float $tn): float
+    {
+        return $tp / ($tp + $fn);
+    }
+
+    /**
+     * Calculate the "F1 metric" (the combination of precision and recall)
+     *    "tp" - true positive, "fp" - false positive, "fn" - false negative, "tn" - true negative
+     *    * https://en.wikipedia.org/wiki/Harmonic_mean
+     *
+     * @param float $tp
+     * @param float $fp
+     * @param float $fn
+     * @param float $tn
+     * @return float
+     */
+    public function F1Score(float $tp, float $fp, float $fn, float $tn): float
+    {
+        $precision = $this->precision($tp, $fp, $fn, $tn);
+        $recall = $this->recall($tp, $fp, $fn, $tn);
+        return (2 * $precision * $recall) / ($precision + $recall);
+    }
 }
