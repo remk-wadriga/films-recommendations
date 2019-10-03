@@ -263,26 +263,4 @@ class StatsService extends AbstractTestService
         }
         return $data;
     }
-
-    public function transferUsers()
-    {
-        $reader = $this->getFileReader('altstadtbuchhandlung_users.csv');
-        $transferedUsers = $reader->readFile();
-
-        $newReader = $this->getFileReader('altstadtbuchhandlung_users_transfer.csv');
-        $newReader->writeData([
-            [
-                "email" => "pia-72@bluewin.ch",
-                "last_user_id" => "ABM||pia-72@bluewin.ch",
-                "current_user_id" => "bpm,WYR||pia-72@bluewin.ch",
-                "current_shop_id" => "bpm,WYR",
-            ],
-            [
-                "email" => "pia-72@bluewin.ch",
-                "last_user_id" => "ABM||pia-73@bluewin.ch",
-                "current_user_id" => "bpm,WYR||pia-73@bluewin.ch",
-                "current_shop_id" => "bpm,WYR",
-            ],
-        ]);
-    }
 }

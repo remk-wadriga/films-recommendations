@@ -21,16 +21,7 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $service->transferUsers();
-
-        $test = new DataExamples();
-        $test->illustrateScaling();
-
-        $n = 7;
-        for ($i = 1; $i <= $n; $i++) {
-            echo str_repeat('&nbsp;', $n - $i), str_repeat('*', $i), '<br />';
-        }
-        exit();
+        dd($service->getUsers());
     }
 
     /**
