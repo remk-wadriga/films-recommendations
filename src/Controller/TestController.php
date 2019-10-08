@@ -4,9 +4,12 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
+use App\TestService\Entities\LabeledPointEntity;
+use App\TestService\Entities\ListEntity;
 use App\TestService\Examples\DataExamples;
 use App\TestService\Examples\GradientDescent;
 use App\TestService\Examples\StatisticsExamples;
+use App\TestService\Models\NearestNeighbors;
 use App\TestService\Stats\UserEntity;
 use App\TestService\StatsService;
 use SebastianBergmann\CodeCoverage\Report\Xml\Tests;
@@ -21,7 +24,26 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        dd($service->getUsers());
+        $neighbors = new NearestNeighbors();
+        $data = new ListEntity(['b', 'g', 'a', 'g', 'd', 'g', 'b', 'c', 'b', 'd', 'b', 'g', 'd', 'f', 'd']);
+
+        $data = new ListEntity();
+
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_1');
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_1');
+
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_3');
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_3');
+
+        for ($i = 0; $i <= 4; $i++) {
+            $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_' . $i);
+        }
+
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
+        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
+
+        dd($data, $neighbors->knnClassify(3, $data, $neighbors->randomPoint(3)));
     }
 
     /**
