@@ -36,6 +36,11 @@ abstract class AbstractController extends JsonController
         return $date->format($format);
     }
 
+    public function formatNumber(float $number, int $decimals = 2)
+    {
+        return number_format($number, $decimals, '.', '');
+    }
+
     /**
      * @param ListedEntityInterface[] $items
      * @return array

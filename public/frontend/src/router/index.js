@@ -15,7 +15,7 @@ import UsersCountToFriendsCount from '@/components/test/UsersCountToFriendsCount
 import ProbabilityNormalDistribution from '@/components/test/ProbabilityNormalDistribution'
 import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomialDistribution'
 import ProbabilityBetaDistribution from '@/components/test/ProbabilityBetaDistribution'
-import LanguagesGeography from '@/components/models/LanguagesGeography'
+import LanguagesGeography from '@/components/data/LanguagesGeography'
 
 import {
     ROUTE_HOMEPAGE,

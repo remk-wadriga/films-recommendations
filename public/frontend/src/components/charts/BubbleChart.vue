@@ -69,23 +69,37 @@
                     this.data = []
                 }
 
-                if (this.tooltipTitleCallback || this.tooltipLabelCallback) {
-                    if (options.tooltips === undefined) {
-                        options.tooltips = {
-                            callbacks: {}
-                        }
+                /*this.chartTooltipLabelCallback = item => {
+                    let label = labels[item.index]
+                    let string = ' ' + label
+                    if (values[label] !== undefined && values[label].data[item.index] !== undefined) {
+                        let coordinates = values[label].data[item.index]
+                        string += ' (' + coordinates.x + ', ' + coordinates.y + ')'
                     }
-                    if (this.tooltipTitleCallback) {
-                        options.tooltips.callbacks.title = this.tooltipTitleCallback
+                    return string
+                }*/
+
+                if (options.tooltips === undefined) {
+                    options.tooltips = {
+                        callbacks: {}
                     }
-                    if (this.tooltipLabelCallback) {
-                        options.tooltips.callbacks.label = this.tooltipLabelCallback
+                }
+                if (this.tooltipTitleCallback) {
+                    options.tooltips.callbacks.title = this.tooltipTitleCallback
+                }
+                if (this.tooltipLabelCallback) {
+                    options.tooltips.callbacks.label = this.tooltipLabelCallback
+                } else {
+                    options.tooltips.callbacks.label = item => {
+                        let option = this.data[item.datasetIndex]
+                        let data = option.data[item.index]
+                        return ' ' + option.label + ' (' + data.x + ', ' + data.y + ')'
                     }
                 }
 
                 this.data.forEach(data => {
                     if (data.backgroundColor === undefined) {
-                        data.backgroundColor = this.backgroundColor ? this.backgroundColor : this.getBackgroundColor(data.label)
+                        data.backgroundColor = this.getBackgroundColor(data.label)
                     }
                     if (data.pointBackgroundColor === undefined) {
                         data.pointBackgroundColor = 'white'
@@ -98,8 +112,14 @@
                     }
 
                     data.data.forEach(point => {
+                        if (point.x === undefined && point[0] !== undefined) {
+                            point.x = point[0]
+                        }
+                        if (point.y === undefined && point[1] !== undefined) {
+                            point.y = point[1]
+                        }
                         if (point.r === undefined) {
-                            point.r = 3
+                            point.r = point[2] !== undefined ? point[2] : 3
                         }
                     })
                 })
@@ -111,7 +131,7 @@
             }
         },
         mounted () {
-            this.render()
+            //this.render()
         }
     }
 </script>

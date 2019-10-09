@@ -104,9 +104,13 @@ class TestController extends AbstractController
     {
         $data = [];
         foreach ($service->getLanguagesGeography() as $lang) {
+            $point = $lang->point->toArray();
             $data[] = [
                 'index' => $lang->label,
-                'value' => $lang->point->toArray(),
+                'value' => [
+                    $this->formatNumber($point[0]),
+                    $this->formatNumber($point[1]),
+                ],
             ];
         }
         return $this->json($data);
