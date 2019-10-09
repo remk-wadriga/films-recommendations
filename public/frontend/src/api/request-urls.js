@@ -55,3 +55,4 @@ export const TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL = 'GET /test/probability
 export const TEST_PROBABILITY_BETA_DISTRIBUTION_URL = 'GET /test/probability/beta-distribution'
 
 export const TEST_DATA_LANGUAGES_GEOGRAPHY_URL = 'GET /test/data/languages-geography'
+export const TEST_DATA_LANGUAGES_GEOGRAPHY_KNN_PREDICTIONS_URL = 'GET /test/data/languages-geography-knn-predictions'

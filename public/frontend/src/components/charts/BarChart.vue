@@ -98,7 +98,7 @@
             }
         },
         mounted () {
-            this.render()
+            //this.render()
         }
     }
 </script>

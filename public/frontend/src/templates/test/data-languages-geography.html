@@ -1,11 +1,49 @@
 <b-col id="test_data_languages_geography">
+
+    <b-row>
+        <b-form inline>
+            <b-form-group
+                    label="From:"
+                    label-for="form_from_input">
+                <b-form-input id="form_from_input"
+                      type="number"
+                      v-model="form.from"
+                      @change="setUpCharts"
+                      required>
+                </b-form-input>
+            </b-form-group>
+            <b-form-group
+                    label="To:"
+                    label-for="form_to_input">
+                <b-form-input id="form_to_input"
+                      type="number"
+                      v-model="form.to"
+                      @change="setUpCharts"
+                      required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+
     <b-row class="width-sixty-presents">
         <div class="chart-container">
             <BubbleChart
-                :labels="chartLabels"
-                :data="chartData"
-                :options="chartOptions"
+                :data="languagesChartData"
+                :options="languagesChartOptions"
             />
         </div>
     </b-row>
+
+    <b-row class="width-sixty-presents">
+        <div class="chart-container">
+            <BarChart
+                :labels="predictionsChartLabels"
+                :data="predictionsChartData"
+                :options="predictionsChartOptions"
+                :tooltipLabelCallback="predictionsChartTooltipLabelCallback"
+            />
+        </div>
+    </b-row>
+
+
 </b-col>

@@ -3,9 +3,6 @@
 
 namespace App\TestService;
 
-use App\TestService\Entities\LabeledPointEntity;
-use App\TestService\Entities\ListEntity;
-use App\TestService\Entities\VectorEntity;
 use App\TestService\Stats\UserEntity;
 use App\Exception\ServiceException;
 use App\TestService\Stats\FileReaderTrait;

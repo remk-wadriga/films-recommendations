@@ -6,9 +6,11 @@ namespace App\Controller;
 use App\TestService\Calculator;
 use App\TestService\Entities\LabeledPointEntity;
 use App\TestService\Entities\ListEntity;
+use App\TestService\Entities\VectorEntity;
 use App\TestService\Examples\DataExamples;
 use App\TestService\Examples\GradientDescent;
 use App\TestService\Examples\StatisticsExamples;
+use App\TestService\LanguagesService;
 use App\TestService\Models\NearestNeighbors;
 use App\TestService\Stats\UserEntity;
 use App\TestService\StatsService;
@@ -22,9 +24,14 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(StatsService $service, Calculator $calc)
+    public function users(LanguagesService $service, Calculator $calc)
     {
-        dd($service->getLanguagesPopularity());
+        $pointP = $service->findLanguageByCoordinates([-122.66666666667, 45.533333333333]);
+        $pointR = $service->findLanguageByCoordinates([-121.5, 38.516666666667]);
+        $pointJ = $service->findLanguageByCoordinates([-82.533333333333, 27.966666666667]);
+
+        //dd($pointP, $pointR, $pointJ);
+        dd($service->predictPointLanguageByKnn($pointP, 7));
     }
 
     /**
@@ -100,7 +107,7 @@ class TestController extends AbstractController
     /**
      * @Route("/test/data/languages-geography", name="test_data_languages_geography", methods={"GET"})
      */
-    public function languagesGeography(Request $request, StatsService $service)
+    public function languagesGeography(Request $request, LanguagesService $service)
     {
         $data = [];
         foreach ($service->getLanguagesGeography() as $lang) {
@@ -112,6 +119,19 @@ class TestController extends AbstractController
                     $this->formatNumber($point[1]),
                 ],
             ];
+        }
+        return $this->json($data);
+    }
+
+    /**
+     * @Route("/test/data/languages-geography-knn-predictions", name="test_data_languages_geography_knn_preditions", methods={"GET"})
+     */
+    public function languagesGeographyPredictions(Request $request, LanguagesService $service)
+    {
+        $results = $service->getLanguagesKnnPredictions($this->getRequestRange($request));
+        $data = [];
+        foreach ($results as $result) {
+            $data[] = $result->toArray(2);
         }
         return $this->json($data);
     }

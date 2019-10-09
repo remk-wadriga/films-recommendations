@@ -3,10 +3,14 @@
 
 namespace App\TestService\Stats;
 
+use App\TestService\Entities\LabeledPointEntity;
+use App\TestService\Entities\VectorEntity;
+
 trait DataIndexerTrait
 {
     protected $salariesByTenures = [];
     protected $interestsWordsCountsIndexedByWords = [];
+    protected $languagesIndexedByPoints;
     protected $cacheData = [];
 
     /**
@@ -140,6 +144,19 @@ trait DataIndexerTrait
 
         $this->setCache($indexKey, $result);
         return $result;
+    }
+
+    public function findLanguageByPoint(VectorEntity $point): LabeledPointEntity
+    {
+        if (empty($this->languagesIndexedByPoints)) {
+            $this->languagesIndexedByPoints = [];
+            foreach ($this->getLanguagesGeography() as $lang) {
+                $this->languagesIndexedByPoints[implode(':', $lang->point->toArray())] = $lang;
+            }
+        }
+
+        $key = implode(':', $point->toArray());
+        return isset($this->languagesIndexedByPoints[$key]) ? $this->languagesIndexedByPoints[$key] : null;
     }
 
 
