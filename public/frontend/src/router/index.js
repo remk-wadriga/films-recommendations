@@ -15,6 +15,7 @@ import UsersCountToFriendsCount from '@/components/test/UsersCountToFriendsCount
 import ProbabilityNormalDistribution from '@/components/test/ProbabilityNormalDistribution'
 import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomialDistribution'
 import ProbabilityBetaDistribution from '@/components/test/ProbabilityBetaDistribution'
+import NearestNeighbors from '@/components/models/NearestNeighbors'
 
 import {
     ROUTE_HOMEPAGE,
@@ -29,7 +30,8 @@ import {
     ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT,
     ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
-    ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION
+    ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
+    ROUTE_TEST_MODELS_NEAREST_NEIGHBORS
 } from './routes-list'
 
 Vue.use(Router)
@@ -100,6 +102,11 @@ export default new Router({
             path: '/test/probability/beta-distribution',
             name: ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
             component: ProbabilityBetaDistribution
+        },
+        {
+            path: '/test/models/nearest-neighbors',
+            name: ROUTE_TEST_MODELS_NEAREST_NEIGHBORS,
+            component: NearestNeighbors
         }
     ]
 })

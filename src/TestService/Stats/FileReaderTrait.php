@@ -5,6 +5,7 @@ namespace App\TestService\Stats;
 
 use App\Exception\ServiceException;
 use App\Helpers\File\FileReaderInterface;
+use Faker\Factory;
 
 /**
  * Trait FileReaderTrait
@@ -20,12 +21,14 @@ trait FileReaderTrait
     protected $usersInterestsFile = 'users_interests.json';
     protected $usersSalariesAndTenuresFile = 'users_salaries_and_tenures.json';
     protected $usersActivitiesFile = 'users_activities.json';
+    protected $randomPointsFile = 'random_points.json';
 
     protected $users;
     protected $friendships;
     protected $interests;
     protected $salariesAndTenures;
     protected $activities;
+    protected $randomPoints;
 
 
     /**
@@ -115,6 +118,14 @@ trait FileReaderTrait
             return $this->activities;
         }
         return $this->activities = $this->getFileReader($this->usersActivitiesFile)->readFile();
+    }
+
+    public function getRandomPoints()
+    {
+        if ($this->randomPoints !== null) {
+            return $this->randomPoints;
+        }
+        return $this->randomPoints = $this->getFileReader($this->randomPointsFile)->readFile();
     }
 
 

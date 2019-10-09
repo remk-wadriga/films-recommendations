@@ -100,4 +100,18 @@ class ListEntity implements \ArrayAccess, \Countable, \Iterator
     {
         return $this->container;
     }
+
+    public function delete($elem): ListEntity
+    {
+        if (($index = $this->getIndex($elem)) !== null) {
+            unset($this[$index]);
+        }
+        return $this;
+    }
+
+    public function getIndex($elem)
+    {
+        $index = array_search($elem, $this->container);
+        return $index !== false ? $index : null;
+    }
 }

@@ -3,6 +3,9 @@
 
 namespace App\TestService;
 
+use App\TestService\Entities\LabeledPointEntity;
+use App\TestService\Entities\ListEntity;
+use App\TestService\Entities\VectorEntity;
 use App\TestService\Stats\UserEntity;
 use App\Exception\ServiceException;
 use App\TestService\Stats\FileReaderTrait;
@@ -262,5 +265,19 @@ class StatsService extends AbstractTestService
             ];
         }
         return $data;
+    }
+
+    /**
+     * Get list of random points with labels
+     *
+     * @return LabeledPointEntity[]
+     */
+    public function getLabeledPoints()
+    {
+        $points = [];
+        foreach ($this->getRandomPoints() as $index => $point) {
+            $points[] = new LabeledPointEntity(new VectorEntity([$index, $point['value']]), $point['label']);
+        }
+        return $points;
     }
 }

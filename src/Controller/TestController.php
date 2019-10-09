@@ -24,26 +24,18 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $neighbors = new NearestNeighbors();
-        $data = new ListEntity(['b', 'g', 'a', 'g', 'd', 'g', 'b', 'c', 'b', 'd', 'b', 'g', 'd', 'f', 'd']);
-
-        $data = new ListEntity();
-
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_1');
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_1');
-
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_3');
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_3');
-
-        for ($i = 0; $i <= 4; $i++) {
-            $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_' . $i);
+        $controlPoint = null;
+        foreach ($service->getLabeledPoints() as $point) {
+            if ($point->label == 'Shane') {
+                $controlPoint = $point;
+                break;
+            }
         }
 
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
-        $data[] = new LabeledPointEntity($neighbors->randomPoint(3), 'point_test_2');
+        $nn = new NearestNeighbors();
 
-        dd($data, $neighbors->knnClassify(3, $data, $neighbors->randomPoint(3)));
+        dd($nn->knnClassify(3, new ListEntity($service->getLabeledPoints()), $controlPoint->point));
+
     }
 
     /**
@@ -114,6 +106,21 @@ class TestController extends AbstractController
         $beta = floatval($request->get('beta', 1));
         $step = floatval($request->get('step', 0.02));
         return $this->json($service->getBetaDistribution($alpha, $beta, $step));
+    }
+
+    /**
+     * @Route("/test/models/nearest-neighbors", name="test_models_nearest_neighbors", methods={"GET"})
+     */
+    public function nearestNeighbors(Request $request, StatsService $service)
+    {
+        $data = [];
+        foreach ($service->getLabeledPoints() as $point) {
+            $data[] = [
+                'index' => $point->label,
+                'value' => $point->point->toArray(),
+            ];
+        }
+        return $this->json($data);
     }
 
     private function getRequestRange(Request $request): array

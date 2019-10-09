@@ -67,6 +67,14 @@ class NearestNeighbors
      */
     public function knnClassify(int $k, ListEntity $labeledPoints, VectorEntity $newPoint): ?string
     {
+        // Delete control point from points collection
+        foreach ($labeledPoints as $index => $point) {
+            if ($point->point == $newPoint) {
+                unset($labeledPoints[$index]);
+                break;
+            }
+        }
+
         // Order the labeled points from nearest to farthest
         $sortedByDistance = $labeledPoints->toArray();
         usort($sortedByDistance, function (LabeledPointEntity $v1, LabeledPointEntity $v2) use ($newPoint) {

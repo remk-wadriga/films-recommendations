@@ -18,7 +18,8 @@
         ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT,
         ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
         ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
-        ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION
+        ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
+        ROUTE_TEST_MODELS_NEAREST_NEIGHBORS
     } from '@/router/routes-list'
     import { UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { LOGOUT_URL } from '@/api/request-urls'
@@ -36,6 +37,7 @@
                 routeTestProbabilityNormalDistribution: ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
                 routeTestProbabilityBinomialDistribution: ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
                 routeTestProbabilityBetaDistribution: ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
+                routeTestModelsNearestNeighbors: ROUTE_TEST_MODELS_NEAREST_NEIGHBORS,
                 routeLogin: ROUTE_LOGIN,
                 routeRegistration: ROUTE_REGISTRATION,
                 routeAccount: ROUTE_ACCOUNT
