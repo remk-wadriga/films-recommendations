@@ -24,18 +24,7 @@ class TestController extends AbstractController
      */
     public function users(StatsService $service, Calculator $calc)
     {
-        $controlPoint = null;
-        foreach ($service->getLabeledPoints() as $point) {
-            if ($point->label == 'Shane') {
-                $controlPoint = $point;
-                break;
-            }
-        }
-
-        $nn = new NearestNeighbors();
-
-        dd($nn->knnClassify(3, new ListEntity($service->getLabeledPoints()), $controlPoint->point));
-
+        dd($service->getLanguagesPopularity());
     }
 
     /**
@@ -109,15 +98,15 @@ class TestController extends AbstractController
     }
 
     /**
-     * @Route("/test/models/nearest-neighbors", name="test_models_nearest_neighbors", methods={"GET"})
+     * @Route("/test/data/languages-geography", name="test_data_languages_geography", methods={"GET"})
      */
-    public function nearestNeighbors(Request $request, StatsService $service)
+    public function languagesGeography(Request $request, StatsService $service)
     {
         $data = [];
-        foreach ($service->getLabeledPoints() as $point) {
+        foreach ($service->getLanguagesGeography() as $lang) {
             $data[] = [
-                'index' => $point->label,
-                'value' => $point->point->toArray(),
+                'index' => $lang->label,
+                'value' => $lang->point->toArray(),
             ];
         }
         return $this->json($data);

@@ -266,18 +266,4 @@ class StatsService extends AbstractTestService
         }
         return $data;
     }
-
-    /**
-     * Get list of random points with labels
-     *
-     * @return LabeledPointEntity[]
-     */
-    public function getLabeledPoints()
-    {
-        $points = [];
-        foreach ($this->getRandomPoints() as $index => $point) {
-            $points[] = new LabeledPointEntity(new VectorEntity([$index, $point['value']]), $point['label']);
-        }
-        return $points;
-    }
 }

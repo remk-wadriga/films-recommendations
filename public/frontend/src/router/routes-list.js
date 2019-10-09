@@ -14,4 +14,4 @@ export const ROUTE_TEST_USERS_COUNT_TO_FRIENDS_COUNT = 'test_users_count_to_frie
 export const ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION = 'test_probability_normal_distribution'
 export const ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION = 'test_probability_binomial_distribution'
 export const ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION = 'test_probability_beta_distribution'
-export const ROUTE_TEST_MODELS_NEAREST_NEIGHBORS = 'test_models_nearest_neighbors'
+export const ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY = 'test_data_languages_geography'

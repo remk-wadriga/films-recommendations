@@ -5,6 +5,8 @@ namespace App\TestService\Stats;
 
 use App\Exception\ServiceException;
 use App\Helpers\File\FileReaderInterface;
+use App\TestService\Entities\LabeledPointEntity;
+use App\TestService\Entities\VectorEntity;
 use Faker\Factory;
 
 /**
@@ -21,14 +23,14 @@ trait FileReaderTrait
     protected $usersInterestsFile = 'users_interests.json';
     protected $usersSalariesAndTenuresFile = 'users_salaries_and_tenures.json';
     protected $usersActivitiesFile = 'users_activities.json';
-    protected $randomPointsFile = 'random_points.json';
+    protected $languagesGeographyFile = 'languages_geography.json';
 
     protected $users;
     protected $friendships;
     protected $interests;
     protected $salariesAndTenures;
     protected $activities;
-    protected $randomPoints;
+    protected $languagesGeography;
 
 
     /**
@@ -126,6 +128,21 @@ trait FileReaderTrait
             return $this->randomPoints;
         }
         return $this->randomPoints = $this->getFileReader($this->randomPointsFile)->readFile();
+    }
+
+    /**
+     * @return LabeledPointEntity[]
+     */
+    public function getLanguagesGeography()
+    {
+        if ($this->languagesGeography !== null) {
+            return $this->languagesGeography;
+        }
+        $this->languagesGeography = [];
+        foreach ($this->getFileReader($this->languagesGeographyFile)->readFile() as $language) {
+            $this->languagesGeography[] = new LabeledPointEntity(new VectorEntity($language[0]), $language[1]);
+        }
+        return $this->languagesGeography;
     }
 
 

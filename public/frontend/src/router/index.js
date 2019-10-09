@@ -15,7 +15,7 @@ import UsersCountToFriendsCount from '@/components/test/UsersCountToFriendsCount
 import ProbabilityNormalDistribution from '@/components/test/ProbabilityNormalDistribution'
 import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomialDistribution'
 import ProbabilityBetaDistribution from '@/components/test/ProbabilityBetaDistribution'
-import NearestNeighbors from '@/components/models/NearestNeighbors'
+import LanguagesGeography from '@/components/models/LanguagesGeography'
 
 import {
     ROUTE_HOMEPAGE,
@@ -31,7 +31,7 @@ import {
     ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
-    ROUTE_TEST_MODELS_NEAREST_NEIGHBORS
+    ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY
 } from './routes-list'
 
 Vue.use(Router)
@@ -104,9 +104,9 @@ export default new Router({
             component: ProbabilityBetaDistribution
         },
         {
-            path: '/test/models/nearest-neighbors',
-            name: ROUTE_TEST_MODELS_NEAREST_NEIGHBORS,
-            component: NearestNeighbors
+            path: '/test/data/languages-geography',
+            name: ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
+            component: LanguagesGeography
         }
     ]
 })

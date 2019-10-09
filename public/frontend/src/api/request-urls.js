@@ -54,4 +54,4 @@ export const TEST_PROBABILITY_NORMAL_CDF_URL = 'GET /test/probability/normal-cdf
 export const TEST_PROBABILITY_BINOMIAL_DISTRIBUTION_URL = 'GET /test/probability/binomial-distribution'
 export const TEST_PROBABILITY_BETA_DISTRIBUTION_URL = 'GET /test/probability/beta-distribution'
 
-export const TEST_MODELS_NEAREST_NEIGHBORS_URL = 'GET /test/models/nearest-neighbors'
+export const TEST_DATA_LANGUAGES_GEOGRAPHY_URL = 'GET /test/data/languages-geography'

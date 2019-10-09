@@ -13,7 +13,14 @@
         },
         data () {
             return {
-                borderColors: ['#FC2525', '#05CBE1'],
+                borderColors: [
+                    '#BF0422',
+                    '#9CBF05',
+                    '#08BFB7',
+                    '#085BBF',
+                    '#BF9A01',
+                    '#021BBF'
+                ],
                 backgroundColors: [
                     ['rgba(255, 0,0, 0.5)', 'rgba(255, 0, 0, 0.25)', 'rgba(255, 0, 0, 0)'],
                     ['rgba(0, 231, 255, 0.9)', 'rgba(0, 231, 255, 0.25)', 'rgba(0, 231, 255, 0)']
