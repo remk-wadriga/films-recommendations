@@ -69,16 +69,6 @@
                     this.data = []
                 }
 
-                /*this.chartTooltipLabelCallback = item => {
-                    let label = labels[item.index]
-                    let string = ' ' + label
-                    if (values[label] !== undefined && values[label].data[item.index] !== undefined) {
-                        let coordinates = values[label].data[item.index]
-                        string += ' (' + coordinates.x + ', ' + coordinates.y + ')'
-                    }
-                    return string
-                }*/
-
                 if (options.tooltips === undefined) {
                     options.tooltips = {
                         callbacks: {}
