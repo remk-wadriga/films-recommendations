@@ -2,14 +2,25 @@
 
 namespace App\TestService\Models;
 
+use App\TestService\Calculator\StatisticsTrait;
 use App\TestService\Calculator\VectorsTrait;
 use App\TestService\Entities\LabeledPointEntity;
 use App\TestService\Entities\ListEntity;
 use App\TestService\Entities\VectorEntity;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\CacheItem;
 
 class NearestNeighbors
 {
     use VectorsTrait;
+    use StatisticsTrait;
+
+    private $cache;
+
+    public function __construct()
+    {
+        $this->cache = new FilesystemAdapter();
+    }
 
     /**
      * Calculate elements count in array and return the most common element
@@ -88,6 +99,25 @@ class NearestNeighbors
         return $this->majorityVote(new ListEntity(array_slice($kNearestLabels, 0, $k)));
     }
 
+    public function getDistancesForDimension(array $range, int $numPoints = 1000)
+    {
+        if (empty($range)) {
+            $range = [1, 100];
+        }
+        $cacheKey = sprintf('distances_for_dimensions_%s_%s_%s', $range[0], $range[1], $numPoints);
+        return $this->cache->get($cacheKey, function (CacheItem $item) use ($range, $numPoints) {
+            $res = [];
+            for ($i = $range[0]; $i <= $range[1]; $i++) {
+                $distances = $this->randomDistances($i, $numPoints)->toArray();
+                $res[] = [
+                    'index' => $i,
+                    'min' => number_format(min($distances), 2, '.', ''),
+                    'avg' => number_format($this->mean($distances), 2, '.', ''),
+                ];
+            }
+            return $res;
+        });
+    }
 
     public function randomPoint(int $dim): VectorEntity
     {

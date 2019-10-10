@@ -4,20 +4,11 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
-use App\TestService\Entities\LabeledPointEntity;
-use App\TestService\Entities\ListEntity;
-use App\TestService\Entities\VectorEntity;
-use App\TestService\Examples\DataExamples;
-use App\TestService\Examples\GradientDescent;
-use App\TestService\Examples\StatisticsExamples;
 use App\TestService\LanguagesService;
 use App\TestService\Models\NearestNeighbors;
-use App\TestService\Stats\UserEntity;
 use App\TestService\StatsService;
-use SebastianBergmann\CodeCoverage\Report\Xml\Tests;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Psr\Log\LoggerInterface;
 
 class TestController extends AbstractController
 {
@@ -121,6 +112,15 @@ class TestController extends AbstractController
             ];
         }
         return $this->json($data);
+    }
+
+    /**
+     * @Route("/test/data/distances-for-dimensions", name="test_data_distances_for_dimensions", methods={"GET"})
+     */
+    public function randomDistances(Request $request, NearestNeighbors $service)
+    {
+        set_time_limit(360);
+        return $this->json($service->getDistancesForDimension($this->getRequestRange($request)));
     }
 
     /**

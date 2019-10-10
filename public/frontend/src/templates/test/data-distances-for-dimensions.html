@@ -1,4 +1,4 @@
-<b-col id="test_data_languages_geography">
+<b-col id="test_data_distances_for_dimensions">
     <b-row>
         <b-form inline>
             <b-form-group
@@ -23,23 +23,25 @@
             </b-form-group>
         </b-form>
     </b-row>
+    <br />
 
-    <b-row class="width-sixty-presents">
+    <b-row>
+        <h4>Distances</h4>
         <div class="chart-container">
-            <BubbleChart
-                :data="languagesChartData"
-                :options="languagesChartOptions"
+            <LineChart
+                :data="distancesChartData"
+                :labels="distancesChartLabels"
             />
         </div>
     </b-row>
+    <br />
 
-    <b-row class="width-sixty-presents">
+    <b-row>
+        <h4>Min / Avg</h4>
         <div class="chart-container">
-            <BarChart
-                :labels="predictionsChartLabels"
-                :data="predictionsChartData"
-                :options="predictionsChartOptions"
-                :tooltipLabelCallback="predictionsChartTooltipLabelCallback"
+            <LineChart
+                :data="ratioChartData"
+                :labels="ratioChartLabels"
             />
         </div>
     </b-row>

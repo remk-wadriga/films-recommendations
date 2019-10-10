@@ -15,3 +15,4 @@ export const ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION = 'test_probability_norm
 export const ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION = 'test_probability_binomial_distribution'
 export const ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION = 'test_probability_beta_distribution'
 export const ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY = 'test_data_languages_geography'
+export const ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS = 'test_data_distances_for_dimensions'

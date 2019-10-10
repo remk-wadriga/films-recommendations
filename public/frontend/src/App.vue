@@ -19,7 +19,8 @@
         ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
         ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
         ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
-        ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY
+        ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
+        ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS
     } from '@/router/routes-list'
     import { UNSET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
     import { LOGOUT_URL } from '@/api/request-urls'
@@ -38,6 +39,7 @@
                 routeTestProbabilityBinomialDistribution: ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
                 routeTestProbabilityBetaDistribution: ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
                 routeTestDataLanguagesGeography: ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
+                routeTestDataDistancesForDimensions: ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS,
                 routeLogin: ROUTE_LOGIN,
                 routeRegistration: ROUTE_REGISTRATION,
                 routeAccount: ROUTE_ACCOUNT

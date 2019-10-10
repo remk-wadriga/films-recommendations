@@ -16,6 +16,7 @@ import ProbabilityNormalDistribution from '@/components/test/ProbabilityNormalDi
 import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomialDistribution'
 import ProbabilityBetaDistribution from '@/components/test/ProbabilityBetaDistribution'
 import LanguagesGeography from '@/components/data/LanguagesGeography'
+import DistancesForDimensions from '@/components/data/DistancesForDimensions'
 
 import {
     ROUTE_HOMEPAGE,
@@ -31,7 +32,8 @@ import {
     ROUTE_TEST_PROBABILITY_NORMAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
-    ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY
+    ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
+    ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS
 } from './routes-list'
 
 Vue.use(Router)
@@ -107,6 +109,11 @@ export default new Router({
             path: '/test/data/languages-geography',
             name: ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
             component: LanguagesGeography
+        },
+        {
+            path: '/test/data/distances-for-dimensions',
+            name: ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS,
+            component: DistancesForDimensions
         }
     ]
 })
