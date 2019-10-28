@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\TestService\Calculator;
+use App\TestService\Examples\SpamFilterExample;
 use App\TestService\LanguagesService;
 use App\TestService\Models\NearestNeighbors;
 use App\TestService\StatsService;
@@ -15,14 +16,9 @@ class TestController extends AbstractController
     /**
      * @Route("/test/users", name="test_users_list", methods={"GET"})
      */
-    public function users(LanguagesService $service, Calculator $calc)
+    public function users(Calculator $calc, SpamFilterExample $spamFilter)
     {
-        $pointP = $service->findLanguageByCoordinates([-122.66666666667, 45.533333333333]);
-        $pointR = $service->findLanguageByCoordinates([-121.5, 38.516666666667]);
-        $pointJ = $service->findLanguageByCoordinates([-82.533333333333, 27.966666666667]);
-
-        //dd($pointP, $pointR, $pointJ);
-        dd($service->predictPointLanguageByKnn($pointP, 7));
+        $spamFilter->run();
     }
 
     /**

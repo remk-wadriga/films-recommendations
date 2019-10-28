@@ -10,10 +10,12 @@ class FileReaderFactory
 {
     const EXT_CSV = 'csv';
     const EXT_JSON = 'json';
+    const EXT_CACHE = 'cache';
 
     private static $_classesMap = [
         self::EXT_CSV => CsvFileReader::class,
         self::EXT_JSON => JsonFileReader::class,
+        self::EXT_CACHE => CacheFileReader::class,
     ];
 
     public static function createFileReader(string $forFile): FileReaderInterface

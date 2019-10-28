@@ -114,4 +114,11 @@ class ListEntity implements \ArrayAccess, \Countable, \Iterator
         $index = array_search($elem, $this->container);
         return $index !== false ? $index : null;
     }
+
+    public function split(float $k): array
+    {
+        $count = $this->count();
+        $data = $this->toArray();
+        return [array_splice($data, 0, round($count * $k)), $data];
+    }
 }
