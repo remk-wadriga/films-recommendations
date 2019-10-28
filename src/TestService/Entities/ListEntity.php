@@ -121,4 +121,22 @@ class ListEntity implements \ArrayAccess, \Countable, \Iterator
         $data = $this->toArray();
         return [array_splice($data, 0, round($count * $k)), $data];
     }
+
+    public function randomize(bool $saveKeys = false): array
+    {
+        $data = $this->toArray();
+        $keys = array_keys($data);
+        $randomData = [];
+        while(($count = count($keys)) > 0) {
+            $index = rand(0, $count - 1);
+            if ($saveKeys) {
+                $randomData[$keys[$index]] = $data[$keys[$index]];
+            } else {
+                $randomData[] = $data[$keys[$index]];
+            }
+            unset($keys[$index]);
+            $keys = array_values($keys);
+        }
+        return $randomData;
+    }
 }

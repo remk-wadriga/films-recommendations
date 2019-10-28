@@ -7,6 +7,7 @@ namespace App\TestService\Examples;
 use App\TestService\AbstractTestService;
 use App\TestService\Calculator;
 use App\TestService\Entities\ListEntity;
+use App\TestService\Entities\PredictionResultEntity;
 use App\TestService\Models\NaiveBayesClassifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,7 +35,7 @@ class SpamFilterExample extends AbstractTestService
         list($trainingSet, $testData) = $data->split(0.75);
 
         // Train the classifier
-        $this->classifier->train($trainingSet);
+        $this->classifier->train($trainingSet, 0.5);
 
         // Get classified data (something like this: [$message, $realIsSpam, $calculatedIsSpamProbability])
         $classified = [];
@@ -55,7 +56,7 @@ class SpamFilterExample extends AbstractTestService
         }
 
         // Calculate the accuracy and completeness of predictions
-        list($tp, $fp, $tf, $ff) = [0, 0, 0, 0];
+        list($tp, $fp, $tn, $fn) = [0, 0, 0, 0];
         foreach ($counts as $results) {
             list($real, $predicted) = $results;
             if ($real === true && $predicted === true) {
@@ -63,15 +64,18 @@ class SpamFilterExample extends AbstractTestService
             } elseif ($real === false && $predicted === true) {
                 $fp++;
             } elseif ($real === false && $predicted === false) {
-                $tf++;
+                $tn++;
             } elseif ($real === true && $predicted === false) {
-                $ff++;
+                $fn++;
             }
         }
-        $accuracy = $tp * 100 / ($tp + $fp); // ~92.75
-        $completeness = $tp * 100 / ($tp + $ff); // ~68.08
+        list($correct, $incorrect) = [$tp + $tn, $fp + $fn];
+        $accuracy = $tp * 100 / ($tp + $fp); // ~93.33
+        $completeness = $tp * 100 / ($tp + $fn); // ~54.68
 
-        dd(['Accuracy' => $accuracy, 'Completeness' => $completeness]);
+        $predictionResults = new PredictionResultEntity($correct, $incorrect);
+
+        dd(['Total' => $predictionResults->getTotal(), 'Correct' => $predictionResults->getCorrectString(), 'Accuracy' => $accuracy, 'Completeness' => $completeness]);
     }
 
     public function getDataFromCache()
@@ -112,23 +116,13 @@ class SpamFilterExample extends AbstractTestService
         };
 
         $totalData = [];
-        foreach (['mail/spam.cache', 'mail/easy_ham.cache', 'mail/hard_ham.cache'] as $fileName) {
+        foreach (['spam.cache', 'easy_ham.cache', 'hard_ham.cache'] as $fileName) {
             $data = $readDir($path . '/' . str_replace('.cache', '', $fileName));
-            $this->getFileReader($fileName)->writeData($data);
+            $this->getFileReader('mail/' . $fileName)->writeData($data);
             $totalData = array_merge($totalData, $data);
         }
 
-        $randomData = [];
-        for ($i = 0; $i < count($totalData); $i++) {
-            $hasItem = false;
-            $index = $i;
-            while (!$hasItem) {
-                $index = rand(0, count($totalData));
-                $hasItem = isset($totalData[$index]);
-            }
-            $randomData[] = $totalData[$index];
-        }
-
-        $this->getFileReader($this->dataCacheFile)->writeData($randomData);
+        $data = new ListEntity($totalData);
+        $this->getFileReader($this->dataCacheFile)->writeData($data->randomize());
     }
 }
