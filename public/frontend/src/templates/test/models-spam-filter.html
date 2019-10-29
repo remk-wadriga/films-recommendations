@@ -1,0 +1,40 @@
+<b-col id="test_models_spam_filter">
+
+    <b-row>
+        <b-form inline>
+            <b-form-group
+                    label="Data coefficient:"
+                    label-for="form_k_input">
+                <b-form-input id="form_k_input"
+                      type="string"
+                      v-model="form.k"
+                      @change="setUpCharts"
+                      required>
+                </b-form-input>
+            </b-form-group>
+        </b-form>
+    </b-row>
+    <br />
+
+    <b-row>
+        <h4>Accuracy and completeness</h4>
+        <div class="chart-container">
+            <LineChart
+                :data="accuracyChartData"
+                :labels="accuracyChartLabels"
+            />
+        </div>
+    </b-row>
+    <br />
+
+    <b-row>
+        <h4>Results</h4>
+        <div class="chart-container">
+            <LineChart
+                :data="resultsChartData"
+                :labels="resultsChartLabels"
+            />
+        </div>
+    </b-row>
+
+</b-col>

@@ -57,3 +57,5 @@ export const TEST_PROBABILITY_BETA_DISTRIBUTION_URL = 'GET /test/probability/bet
 export const TEST_DATA_LANGUAGES_GEOGRAPHY_URL = 'GET /test/data/languages-geography'
 export const TEST_DATA_LANGUAGES_GEOGRAPHY_KNN_PREDICTIONS_URL = 'GET /test/data/languages-geography-knn-predictions'
 export const TEST_DATA_DISTANCES_FOR_DIMENSIONS_URL = 'GET /test/data/distances-for-dimensions'
+
+export const TEST_MODELS_SPAM_FILTER_URL = 'GET /test/models/spam-filter'

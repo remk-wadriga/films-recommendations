@@ -17,6 +17,7 @@ import ProbabilityBinomialDistribution from '@/components/test/ProbabilityBinomi
 import ProbabilityBetaDistribution from '@/components/test/ProbabilityBetaDistribution'
 import LanguagesGeography from '@/components/data/LanguagesGeography'
 import DistancesForDimensions from '@/components/data/DistancesForDimensions'
+import SpamFilter from '@/components/models/SpamFilter'
 
 import {
     ROUTE_HOMEPAGE,
@@ -33,7 +34,8 @@ import {
     ROUTE_TEST_PROBABILITY_BINOMIAL_DISTRIBUTION,
     ROUTE_TEST_PROBABILITY_BETA_DISTRIBUTION,
     ROUTE_TEST_DATA_LANGUAGES_GEOGRAPHY,
-    ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS
+    ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS,
+    ROUTE_TEST_MODELS_SPAM_FILTER
 } from './routes-list'
 
 Vue.use(Router)
@@ -114,6 +116,11 @@ export default new Router({
             path: '/test/data/distances-for-dimensions',
             name: ROUTE_TEST_DATA_DISTANCES_FOR_DIMENSIONS,
             component: DistancesForDimensions
+        },
+        {
+            path: '/test/models/spam-filter',
+            name: ROUTE_TEST_MODELS_SPAM_FILTER,
+            component: SpamFilter
         }
     ]
 })

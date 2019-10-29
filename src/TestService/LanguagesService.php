@@ -56,7 +56,10 @@ class LanguagesService extends AbstractTestService
                     $incorrectPredictions++;
                 }
             }
-            $results[] = new PredictionResultEntity($correctPredictions, $incorrectPredictions, $i);
+            $result = new PredictionResultEntity();
+            $result->correct = $correctPredictions;
+            $result->incorrect = $incorrectPredictions;
+            $results[] = $result;
         }
         return $results;
     }

@@ -18,7 +18,7 @@ class TestController extends AbstractController
      */
     public function users(Calculator $calc, SpamFilterExample $spamFilter)
     {
-        $spamFilter->run();
+        dd($spamFilter->run()->toArray(2));
     }
 
     /**
@@ -131,6 +131,16 @@ class TestController extends AbstractController
         }
         return $this->json($data);
     }
+
+
+    /**
+     * @Route("/test/models/spam-filter", name="test_models_spam_filter", methods={"GET"})
+     */
+    public function spamFilter(Request $request, SpamFilterExample $spamFilter)
+    {
+        return $this->json($spamFilter->run($request->get('k')));
+    }
+
 
     private function getRequestRange(Request $request): array
     {

@@ -10,72 +10,57 @@ use App\TestService\Entities\ListEntity;
 use App\TestService\Entities\PredictionResultEntity;
 use App\TestService\Models\NaiveBayesClassifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SpamFilterExample extends AbstractTestService
 {
     private $classifier;
     private $dataCacheFile = 'naive_bayes_data.cache';
+    private $cache;
 
     public function __construct(EntityManagerInterface $em, ContainerInterface $container, Calculator $calc, NaiveBayesClassifier $classifier)
     {
         parent::__construct($em, $container, $calc);
         $this->classifier = $classifier;
+        $this->cache = new FilesystemAdapter();
     }
 
-    public function run()
+    public function run(float $k = 0.75): array
     {
+        $cacheKey = 'predictions_of_spam_filter_for_coefficient_' . $k;
+
         // Create test data cache from letters backup
+        //$this->cache->delete($cacheKey);
         //$this->createDataCache();
 
-        // Get test data from cache
-        $data = new ListEntity($this->getDataFromCache());
+        return $this->cache->get($cacheKey, function (CacheItem $item) use ($k) {
+            // Get test data from cache
+            $data = new ListEntity($this->getDataFromCache());
 
-        // Split the data to "training" and "check" pieces
-        list($trainingSet, $testData) = $data->split(0.75);
+            // Split the data to "training" and "check" pieces
+            list($trainingSet, $testData) = $data->split($k);
 
-        // Train the classifier
-        $this->classifier->train($trainingSet, 0.5);
+            // Train the classifier
+            $this->classifier->train($trainingSet);
 
-        // Get classified data (something like this: [$message, $realIsSpam, $calculatedIsSpamProbability])
-        $classified = [];
-        foreach ($testData as $messageIsSpam) {
-            list($message, $isSpam) = $messageIsSpam;
-            $classified[] = [
-                $message,
-                $isSpam,
-                $this->classifier->classify($message),
-            ];
-        }
-
-        // If $calculatedIsSpamProbability > 0.5 - then classification for message was correct
-        $counts = new ListEntity;
-        foreach ($classified as $messageIsSpam) {
-            list($isSpam, $probability) = array_slice($messageIsSpam, 1, 2);
-            $counts[] = [$isSpam, $probability > 0.5];
-        }
-
-        // Calculate the accuracy and completeness of predictions
-        list($tp, $fp, $tn, $fn) = [0, 0, 0, 0];
-        foreach ($counts as $results) {
-            list($real, $predicted) = $results;
-            if ($real === true && $predicted === true) {
-                $tp++;
-            } elseif ($real === false && $predicted === true) {
-                $fp++;
-            } elseif ($real === false && $predicted === false) {
-                $tn++;
-            } elseif ($real === true && $predicted === false) {
-                $fn++;
+            $results = [];
+            for ($i = 1; $i < 10; $i++) {
+                $result = new PredictionResultEntity($testData, function ($data) use ($i) {
+                    list($message, $isSpam) = $data;
+                    return[$isSpam, $this->classifier->classify($message) > $i / 10];
+                });
+                $results[] = [
+                    'limit' => $i / 10,
+                    'correct' => $result->getCorrectPercent(2),
+                    'incorrect' => $result->getIncorrectPercent(2),
+                    'accuracy' => $result->getAccuracy(2),
+                    'completeness' => $result->getCompleteness(2),
+                ];
             }
-        }
-        list($correct, $incorrect) = [$tp + $tn, $fp + $fn];
-        $accuracy = $tp * 100 / ($tp + $fp); // ~93.33
-        $completeness = $tp * 100 / ($tp + $fn); // ~54.68
-
-        $predictionResults = new PredictionResultEntity($correct, $incorrect);
-
-        dd(['Total' => $predictionResults->getTotal(), 'Correct' => $predictionResults->getCorrectString(), 'Accuracy' => $accuracy, 'Completeness' => $completeness]);
+            return $results;
+        });
     }
 
     public function getDataFromCache()
