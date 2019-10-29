@@ -16,6 +16,8 @@
                 accuracyChartLabels: [],
                 resultsChartData: [],
                 resultsChartLabels: [],
+                accuracyChartTooltipLabelCallback: null,
+                resultsChartTooltipLabelCallback: null,
                 form: {
                     k: 0.75
                 }
@@ -35,14 +37,14 @@
                 let predictions = await Vue.api.request(TEST_MODELS_SPAM_FILTER_URL, {k: this.form.k})
                 let accuracyValues = []
                 let completenessValues = []
-                let accuracyLebels = []
+                let accuracyLabels = []
                 let resultsCorrectValues = []
                 let resultsIncorrectValues = []
                 let resultsLabels = []
 
 
                 predictions.forEach(elem => {
-                    accuracyLebels.push(elem.limit)
+                    accuracyLabels.push(elem.limit)
                     resultsLabels.push(elem.limit)
 
                     accuracyValues.push(elem.accuracy)
@@ -54,26 +56,30 @@
 
                 this.accuracyChartData = [
                     {
-                        label: 'Accuracy (%)',
+                        label: 'Accuracy',
                         data: accuracyValues
                     },
                     {
-                        label: 'Completeness (%)',
+                        label: 'Completeness',
                         data: completenessValues
                     }
                 ]
                 this.resultsChartData = [
                     {
-                        label: 'Correct (%)',
+                        label: 'Correct',
                         data: resultsCorrectValues
                     },
                     {
-                        label: 'Incorrect (%)',
+                        label: 'Incorrect',
                         data: resultsIncorrectValues
                     }
                 ]
-                this.accuracyChartLabels = accuracyLebels
+                this.accuracyChartLabels = accuracyLabels
                 this.resultsChartLabels = resultsLabels
+
+                this.accuracyChartTooltipLabelCallback = this.resultsChartTooltipLabelCallback = item => {
+                    item[0].value = item[0].value + '%'
+                }
             }
         },
         mounted () {

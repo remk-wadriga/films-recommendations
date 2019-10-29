@@ -138,7 +138,7 @@ class TestController extends AbstractController
      */
     public function spamFilter(Request $request, SpamFilterExample $spamFilter)
     {
-        return $this->json($spamFilter->run($request->get('k')));
+        return $this->json($spamFilter->run($request->get('k', 0.75)));
     }
 
 

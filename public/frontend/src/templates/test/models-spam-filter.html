@@ -6,7 +6,7 @@
                     label="Data coefficient:"
                     label-for="form_k_input">
                 <b-form-input id="form_k_input"
-                      type="string"
+                      type="text"
                       v-model="form.k"
                       @change="setUpCharts"
                       required>
@@ -22,6 +22,7 @@
             <LineChart
                 :data="accuracyChartData"
                 :labels="accuracyChartLabels"
+                :tooltipTitleCallback="accuracyChartTooltipLabelCallback"
             />
         </div>
     </b-row>
@@ -33,6 +34,7 @@
             <LineChart
                 :data="resultsChartData"
                 :labels="resultsChartLabels"
+                :tooltipTitleCallback="resultsChartTooltipLabelCallback"
             />
         </div>
     </b-row>
