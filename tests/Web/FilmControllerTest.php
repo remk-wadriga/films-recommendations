@@ -7,6 +7,7 @@ use App\Entity\Company;
 use App\Entity\Director;
 use App\Entity\Film;
 use App\Entity\Genre;
+use App\Entity\Language;
 use App\Entity\Premium;
 use App\Entity\Producer;
 use App\Entity\User;
@@ -123,6 +124,7 @@ class FilmControllerTest extends AbstractWebTestCase
         $responseData['producers'] = array_map(function ($item) { return $item['id']; }, $responseData['producers']);
         $responseData['writers'] = array_map(function ($item) { return $item['id']; }, $responseData['writers']);
         $responseData['premiums'] = array_map(function ($item) { return $item['id']; }, $responseData['premiums']);
+        $responseData['languages'] = array_map(function ($item) { return $item['id']; }, $responseData['languages']);
 
         $this->assertEquals($responseData, $newFilmParams, sprintf('Test case "%s" failed: the response params are not equals to request data', $testKeysID));
 
@@ -336,14 +338,20 @@ class FilmControllerTest extends AbstractWebTestCase
             $params['sales'] = $this->faker->numberBetween(100, 100000000);
         }
         if (!isset($params['languages']) && !in_array('languages', $skipAttributes)) {
-            $codes = array_map(function ($item) { return $item['code']; }, $this->getLanguages());
-            $params['languages'] = $this->faker->randomElements($codes, $this->faker->numberBetween(1, 3));
+            $items = $this->getRandomEntities(Language::class, $this->faker->numberBetween(1, 4), $this->faker->numberBetween(0, 18));
+            $params['languages'] = array_map(function (Language $item) { return $item->getId(); }, $items);
         }
         if (!isset($params['date']) && !in_array('date', $skipAttributes)) {
             $params['date'] = $this->faker->date();
         }
         if (!isset($params['duration']) && !in_array('duration', $skipAttributes)) {
             $params['duration'] = $this->faker->numberBetween(60, 340);
+        }
+        if (!isset($params['slogan']) && !in_array('slogan', $skipAttributes)) {
+            $params['slogan'] = $this->faker->text(230);
+        }
+        if (!isset($params['rating']) && !in_array('rating', $skipAttributes)) {
+            $params['rating'] = $this->faker->randomFloat(1, 0, 10);
         }
 
         return $params;
@@ -370,6 +378,8 @@ class FilmControllerTest extends AbstractWebTestCase
             'date' => 'string',
             'duration' => 'integer',
             'isMy' => 'boolean',
+            'slogan' => ['string', 'null'],
+            'rating' => ['float', 'integer'],
         ];
     }
 
@@ -388,6 +398,7 @@ class FilmControllerTest extends AbstractWebTestCase
         $responseDataProducers = array_map(function ($item) { return $item['id']; }, $responseData['producers']);
         $responseDataWriters = array_map(function ($item) { return $item['id']; }, $responseData['writers']);
         $responseDataPremiums = array_map(function ($item) { return $item['id']; }, $responseData['premiums']);
+        $responseDataLanguages = array_map(function ($item) { return $item['id']; }, $responseData['languages']);
 
         $dbDataGenres = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getGenres()->toArray());
         $dbDataCompanies = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getCompanies()->toArray());
@@ -396,6 +407,7 @@ class FilmControllerTest extends AbstractWebTestCase
         $dbDataProducers = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getProducers()->toArray());
         $dbDataWriters = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getWriters()->toArray());
         $dbDataPremiums = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getPremiums()->toArray());
+        $dbDataLanguages = array_map(function (ListedEntityInterface $item) { return $item->getId(); }, $film->getLanguages()->toArray());
 
         $this->assertEquals($responseDataGenres, array_values($dbDataGenres), sprintf('Test case "%s" failed: the response genres are not equals to DB genres', $testKeysID));
         $this->assertEquals($responseDataCompanies, array_values($dbDataCompanies), sprintf('Test case "%s" failed: the response companies are not equals to DB companies', $testKeysID));
@@ -404,6 +416,7 @@ class FilmControllerTest extends AbstractWebTestCase
         $this->assertEquals($responseDataProducers, array_values($dbDataProducers), sprintf('Test case "%s" failed: the response producers are not equals to DB producers', $testKeysID));
         $this->assertEquals($responseDataWriters, array_values($dbDataWriters), sprintf('Test case "%s" failed: the response writers are not equals to DB writers', $testKeysID));
         $this->assertEquals($responseDataPremiums, array_values($dbDataPremiums), sprintf('Test case "%s" failed: the response premiums are not equals to DB premiums', $testKeysID));
+        $this->assertEquals($responseDataLanguages, array_values($dbDataLanguages), sprintf('Test case "%s" failed: the response languages are not equals to DB languages', $testKeysID));
 
         $this->assertEquals($responseData['id'], $film->getId(), sprintf('Test case "%s" failed: the response id is not equals to DB id', $testKeysID));
         $this->assertEquals($responseData['name'], $film->getName(), sprintf('Test case "%s" failed: the response name is not equals to DB name', $testKeysID));
@@ -412,7 +425,6 @@ class FilmControllerTest extends AbstractWebTestCase
         $this->assertEquals($responseData['budget'], $film->getBudget(), sprintf('Test case "%s" failed: the response budget is not equals to DB budget', $testKeysID));
         $this->assertEquals($responseData['sales'], $film->getSales(), sprintf('Test case "%s" failed: the response sales is not equals to DB sales', $testKeysID));
         $this->assertEquals($responseData['date'], $this->formatDate($film->getDate()), sprintf('Test case "%s" failed: the response date is not equals to DB date', $testKeysID));
-        $this->assertEquals($responseData['languages'], $film->getLanguages(), sprintf('Test case "%s" failed: the response languages are not equals to DB languages', $testKeysID));
     }
 
     private function makeIncorrectRequest($url, $filmParams, $method)

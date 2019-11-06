@@ -8,6 +8,7 @@ use App\Entity\Company;
 use App\Entity\Director;
 use App\Entity\Film;
 use App\Entity\Genre;
+use App\Entity\Language;
 use App\Entity\Premium;
 use App\Entity\Producer;
 use App\Entity\User;
@@ -123,15 +124,23 @@ class FilmService extends AbstractService
         foreach ($film->getPremiums() as $premium) {
             $film->removePremium($premium);
         }
+        foreach ($film->getLanguages() as $language) {
+            $film->removeLanguage($language);
+        }
 
         // Set film attributes
         $film->setName($params['name']);
         $film->setDescription($params['description']);
         $film->setBudget($params['budget']);
         $film->setSales($params['sales']);
-        $film->setLanguages($params['languages']);
         $film->setDate($params['date']);
         $film->setDuration($params['duration']);
+        if (!empty($params['slogan'])) {
+            $film->setSlogan(mb_substr($params['slogan'], 0, 254));
+        }
+        if (!empty($params['rating'])) {
+            $film->setRating(floatval($params['rating']));
+        }
 
         // Set film related entities
         foreach ($params['genres'] as $id) {
@@ -191,6 +200,14 @@ class FilmService extends AbstractService
                 }
                 $film->addPremium($premium);
             }
+        }
+        foreach ($params['languages'] as $id) {
+            $language = $this->em->getRepository(Language::class)->findOneById($id);
+            if (empty($language)) {
+                $errors[] = sprintf('Language #%s not found', $id);
+                continue;
+            }
+            $film->addLanguage($language);
         }
 
         // To create the image files for film posters we need specified directory for them

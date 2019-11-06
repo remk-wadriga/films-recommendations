@@ -85,9 +85,9 @@ class Film
     private $sales;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Language")
      */
-    private $languages = [];
+    private $languages;
 
     /**
      * @ORM\Column(type="date")
@@ -99,6 +99,16 @@ class Film
      */
     private $duration;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $slogan;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $rating;
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
@@ -108,6 +118,7 @@ class Film
         $this->producers = new ArrayCollection();
         $this->writers = new ArrayCollection();
         $this->premiums = new ArrayCollection();
+        $this->languages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,17 +380,28 @@ class Film
         return $this;
     }
 
-    public function getLanguages(): ?array
+    /**
+     * @return Collection|Language[]
+     */
+    public function getLanguages(): Collection
     {
-        if (!is_array($this->languages)) {
-            $this->languages = [];
-        }
         return $this->languages;
     }
 
-    public function setLanguages(array $languages): self
+    public function addLanguage(Language $language): self
     {
-        $this->languages = $languages;
+        if (!$this->languages->contains($language)) {
+            $this->languages[] = $language;
+        }
+
+        return $this;
+    }
+
+    public function removeLanguage(Language $language): self
+    {
+        if ($this->languages->contains($language)) {
+            $this->languages->removeElement($language);
+        }
 
         return $this;
     }
@@ -404,6 +426,30 @@ class Film
     public function setDuration(int $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getSlogan(): ?string
+    {
+        return $this->slogan;
+    }
+
+    public function setSlogan(?string $slogan): self
+    {
+        $this->slogan = $slogan;
+
+        return $this;
+    }
+
+    public function getRating(): ?float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?float $rating): self
+    {
+        $this->rating = $rating;
 
         return $this;
     }

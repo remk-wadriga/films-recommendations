@@ -7,9 +7,9 @@ use App\Entity\Company;
 use App\Entity\Director;
 use App\Entity\Film;
 use App\Entity\Genre;
+use App\Entity\Language;
 use App\Entity\Premium;
 use App\Entity\Producer;
-use App\Entity\Types\Enum\LanguagesEnum;
 use App\Entity\User;
 use App\Entity\Writer;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -17,13 +17,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    protected $isEnabled = true;
+    protected $isEnabled = false;
 
     public function loadData(ObjectManager $manager)
     {
-        $languages = LanguagesEnum::getAvailableTypes();
-
-        $this->createMany(Film::class, 10000, function (Film $film, int $i) use ($languages) {
+        $this->createMany(Film::class, 10000, function (Film $film, int $i) {
             /** @var User $user */
             /** @var Genre[] $genres */
             /** @var Company[] $companies */
@@ -32,6 +30,7 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
             /** @var Producer[] $producers */
             /** @var Writer[] $writers */
             /** @var Premium[] $premiums */
+            /** @var Language[] $languages */
             $user = $this->getRandomReference(User::class);
             $genres = $this->getRandomReferences(Genre::class, $this->faker->numberBetween(1, 3));
             $companies = $this->getRandomReferences(Company::class, $this->faker->numberBetween(1, 5));
@@ -44,6 +43,7 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
             $writers = $this->getRandomReferences(Writer::class, $writersCount);
             $premiumsCount = $this->faker->numberBetween(1, 20) === 1 ? $this->faker->numberBetween(0, 3) : 0;
             $premiums = $this->getRandomReferences(Premium::class, $premiumsCount);
+            $languages = $this->getRandomReferences(Language::class, $this->faker->numberBetween(1, 4));
 
             foreach ($genres as $genre) {
                 $film->addGenre($genre);
@@ -65,6 +65,9 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
             }
             foreach ($premiums as $premium) {
                 $film->addPremium($premium);
+            }
+            foreach ($languages as $language) {
+                $film->addLanguage($language);
             }
 
             $name = $this->faker->name;
@@ -91,38 +94,6 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
                     $sales /= $this->faker->numberBetween(1, 15);
                 } else {
                     $sales -= $this->faker->numberBetween(1, $sales);
-                }
-            }
-
-            $filmLanguages = [];
-            if ($this->faker->numberBetween(1, 5) === 1) {
-                $filmLanguages[] = LanguagesEnum::ENGLISH;
-            }
-            if ($this->faker->numberBetween(1, 15) === 1) {
-                $filmLanguages[] = LanguagesEnum::RUSSIAN;
-            }
-            if ($this->faker->numberBetween(1, 20) === 1) {
-                $filmLanguages[] = LanguagesEnum::FRENCH;
-            }
-            if ($this->faker->numberBetween(1, 20) === 1) {
-                $filmLanguages[] = LanguagesEnum::ITALIAN;
-            }
-            if (empty($filmLanguages) || $this->faker->numberBetween(1, 10) === 1) {
-                $firstLanguage = $this->faker->randomElement($languages);
-                if (!in_array($firstLanguage, $filmLanguages)) {
-                    $filmLanguages[] = $firstLanguage;
-                }
-                if ($this->faker->numberBetween(1, 3) === 1) {
-                    $secondLanguage = $this->faker->randomElement($languages);
-                    if (!in_array($secondLanguage, $filmLanguages)) {
-                        $filmLanguages[] = $secondLanguage;
-                    }
-                    if ($this->faker->numberBetween(1, 3) === 1) {
-                        $thirdLanguage = $this->faker->randomElement($languages);
-                        if (!in_array($thirdLanguage, $filmLanguages)) {
-                            $filmLanguages[] = $thirdLanguage;
-                        }
-                    }
                 }
             }
 
@@ -170,9 +141,10 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
                 ->setPoster('/img/poster/default_poster.jpg')
                 ->setBudget($budget)
                 ->setSales((int)$sales)
-                ->setLanguages($filmLanguages)
                 ->setDate($date)
                 ->setDuration($duration)
+                ->setSlogan($this->faker->text(230))
+                ->setRating($this->faker->randomFloat(1, 0, 10))
             ;
         });
 
@@ -190,6 +162,7 @@ class FilmFixtures extends AbstractFixture implements DependentFixtureInterface
             ProducerFixtures::class,
             WriterFixtures::class,
             PremiumFixtures::class,
+            LanguageFixtures::class,
         ];
     }
 }

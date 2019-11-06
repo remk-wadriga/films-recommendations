@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190801092513 extends AbstractMigration
+final class Version20191106094403 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -26,7 +26,7 @@ final class Version20190801092513 extends AbstractMigration
         $this->addSql('CREATE TABLE company (id INT AUTO_INCREMENT NOT NULL, country_id INT NOT NULL, name VARCHAR(255) NOT NULL, staff INT NOT NULL, INDEX IDX_4FBF094FF92F3E70 (country_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE country (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(4) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE director (id INT AUTO_INCREMENT NOT NULL, country_id INT NOT NULL, name VARCHAR(255) NOT NULL, age INT NOT NULL, sex VARCHAR(8) NOT NULL, INDEX IDX_1E90D3F0F92F3E70 (country_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE film (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, name VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, poster VARCHAR(255) NOT NULL, budget INT NOT NULL, sales INT NOT NULL, languages LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', date DATE NOT NULL, duration INT NOT NULL, INDEX IDX_8244BE22A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE film (id INT AUTO_INCREMENT NOT NULL, user_id INT NOT NULL, name VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, poster VARCHAR(255) NOT NULL, budget INT NOT NULL, sales INT NOT NULL, date DATE NOT NULL, duration INT NOT NULL, slogan VARCHAR(255) DEFAULT NULL, rating DOUBLE PRECISION DEFAULT NULL, INDEX IDX_8244BE22A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE film_genre (film_id INT NOT NULL, genre_id INT NOT NULL, INDEX IDX_1A3CCDA8567F5183 (film_id), INDEX IDX_1A3CCDA84296D31F (genre_id), PRIMARY KEY(film_id, genre_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE film_company (film_id INT NOT NULL, company_id INT NOT NULL, INDEX IDX_AF01126C567F5183 (film_id), INDEX IDX_AF01126C979B1AD6 (company_id), PRIMARY KEY(film_id, company_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE film_director (film_id INT NOT NULL, director_id INT NOT NULL, INDEX IDX_BC171C99567F5183 (film_id), INDEX IDX_BC171C99899FB366 (director_id), PRIMARY KEY(film_id, director_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
@@ -34,7 +34,9 @@ final class Version20190801092513 extends AbstractMigration
         $this->addSql('CREATE TABLE film_producer (film_id INT NOT NULL, producer_id INT NOT NULL, INDEX IDX_35E386B5567F5183 (film_id), INDEX IDX_35E386B589B658FE (producer_id), PRIMARY KEY(film_id, producer_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE film_writer (film_id INT NOT NULL, writer_id INT NOT NULL, INDEX IDX_FC52E588567F5183 (film_id), INDEX IDX_FC52E5881BC7E6B6 (writer_id), PRIMARY KEY(film_id, writer_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE film_premium (film_id INT NOT NULL, premium_id INT NOT NULL, INDEX IDX_69830FA6567F5183 (film_id), INDEX IDX_69830FA6F7798796 (premium_id), PRIMARY KEY(film_id, premium_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE film_language (film_id INT NOT NULL, language_id INT NOT NULL, INDEX IDX_765CBEDC567F5183 (film_id), INDEX IDX_765CBEDC82F1BAF4 (language_id), PRIMARY KEY(film_id, language_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE genre (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE language (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(4) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE premium (id INT AUTO_INCREMENT NOT NULL, country_id INT NOT NULL, name VARCHAR(255) NOT NULL, prize INT DEFAULT NULL, INDEX IDX_893D1485F92F3E70 (country_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE producer (id INT AUTO_INCREMENT NOT NULL, company_id INT NOT NULL, name VARCHAR(255) NOT NULL, age INT NOT NULL, sex VARCHAR(8) NOT NULL, INDEX IDX_976449DC979B1AD6 (company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(255) NOT NULL, first_name VARCHAR(255) DEFAULT NULL, last_name VARCHAR(255) DEFAULT NULL, sex VARCHAR(8) NOT NULL, age INT NOT NULL, about_me LONGTEXT DEFAULT NULL, password VARCHAR(120) NOT NULL, salt VARCHAR(64) NOT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', access_token VARCHAR(64) NOT NULL, renew_token VARCHAR(64) NOT NULL, access_token_expired_at DATETIME NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
@@ -57,6 +59,8 @@ final class Version20190801092513 extends AbstractMigration
         $this->addSql('ALTER TABLE film_writer ADD CONSTRAINT FK_FC52E5881BC7E6B6 FOREIGN KEY (writer_id) REFERENCES writer (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE film_premium ADD CONSTRAINT FK_69830FA6567F5183 FOREIGN KEY (film_id) REFERENCES film (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE film_premium ADD CONSTRAINT FK_69830FA6F7798796 FOREIGN KEY (premium_id) REFERENCES premium (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE film_language ADD CONSTRAINT FK_765CBEDC567F5183 FOREIGN KEY (film_id) REFERENCES film (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE film_language ADD CONSTRAINT FK_765CBEDC82F1BAF4 FOREIGN KEY (language_id) REFERENCES language (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE premium ADD CONSTRAINT FK_893D1485F92F3E70 FOREIGN KEY (country_id) REFERENCES country (id)');
         $this->addSql('ALTER TABLE producer ADD CONSTRAINT FK_976449DC979B1AD6 FOREIGN KEY (company_id) REFERENCES company (id)');
         $this->addSql('ALTER TABLE writer ADD CONSTRAINT FK_97A0D882F92F3E70 FOREIGN KEY (country_id) REFERENCES country (id)');
@@ -83,7 +87,9 @@ final class Version20190801092513 extends AbstractMigration
         $this->addSql('ALTER TABLE film_producer DROP FOREIGN KEY FK_35E386B5567F5183');
         $this->addSql('ALTER TABLE film_writer DROP FOREIGN KEY FK_FC52E588567F5183');
         $this->addSql('ALTER TABLE film_premium DROP FOREIGN KEY FK_69830FA6567F5183');
+        $this->addSql('ALTER TABLE film_language DROP FOREIGN KEY FK_765CBEDC567F5183');
         $this->addSql('ALTER TABLE film_genre DROP FOREIGN KEY FK_1A3CCDA84296D31F');
+        $this->addSql('ALTER TABLE film_language DROP FOREIGN KEY FK_765CBEDC82F1BAF4');
         $this->addSql('ALTER TABLE film_premium DROP FOREIGN KEY FK_69830FA6F7798796');
         $this->addSql('ALTER TABLE film_producer DROP FOREIGN KEY FK_35E386B589B658FE');
         $this->addSql('ALTER TABLE film DROP FOREIGN KEY FK_8244BE22A76ED395');
@@ -100,7 +106,9 @@ final class Version20190801092513 extends AbstractMigration
         $this->addSql('DROP TABLE film_producer');
         $this->addSql('DROP TABLE film_writer');
         $this->addSql('DROP TABLE film_premium');
+        $this->addSql('DROP TABLE film_language');
         $this->addSql('DROP TABLE genre');
+        $this->addSql('DROP TABLE language');
         $this->addSql('DROP TABLE premium');
         $this->addSql('DROP TABLE producer');
         $this->addSql('DROP TABLE user');

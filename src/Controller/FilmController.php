@@ -137,9 +137,11 @@ class FilmController extends AbstractController
                 'premiums' => $this->getItemsList($film->getPremiums()),
                 'budget' => $film->getBudget(),
                 'sales' => $film->getSales(),
-                'languages' => $film->getLanguages(),
+                'languages' => $this->getItemsList($film->getLanguages()),
                 'date' => $this->formatDate($film->getDate()),
                 'duration' => $film->getDuration(),
+                'slogan' => $film->getSlogan(),
+                'rating' => $film->getRating(),
                 'isMy' => $film->getUser() === $this->getUser(),
             ];
         }

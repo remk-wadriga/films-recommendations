@@ -1,21 +1,28 @@
 <?php
 
-
-namespace App\TestService;
+namespace App\Command;
 
 use App\Exception\ServiceException;
 use App\Helpers\File\FileReaderFactory;
 use App\Helpers\File\FileReaderInterface;
 use App\Helpers\Web\WebReaderFactory;
 use App\Helpers\Web\WebReaderInterface;
+use App\TestService\AbstractEntity;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractTestService
+abstract class AbstractCommand extends Command
 {
+    /** @var ObjectManager */
     protected $em;
+
+    /** @var \Faker\Generator */
+    protected $faker;
+
+    /** @var ContainerInterface */
     protected $container;
-    protected $calc;
 
     /** @var FileReaderInterface[] */
     protected $fileReaders = [];
@@ -23,14 +30,18 @@ abstract class AbstractTestService
     /** @var WebReaderInterface[] */
     protected $webReaders = [];
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container, Calculator $calc)
+    protected $filesDir;
+
+    public function __construct(EntityManagerInterface $em, ContainerInterface $container, $name = null)
     {
+        parent::__construct($name);
+
         $this->em = $em;
         $this->container = $container;
-        $this->calc = $calc;
+        $this->filesDir = $this->getParam('files_dir');
     }
 
-    public function getParam($name, $defaultValue = null)
+    protected function getParam($name, $defaultValue = null)
     {
         if (!$this->container->hasParameter($name)) {
             return $defaultValue;
@@ -43,18 +54,16 @@ abstract class AbstractTestService
         if (isset($this->fileReaders[$forFile])) {
             return $this->fileReaders[$forFile];
         }
-        if (!file_exists($forFile)) {
-            $forFile = $this->getParam('files_dir') . DIRECTORY_SEPARATOR . 'test_service' . DIRECTORY_SEPARATOR . $forFile;
-        }
+        $forFile = $this->filesDir . DIRECTORY_SEPARATOR . 'commands' . DIRECTORY_SEPARATOR . $forFile;
         return $this->fileReaders[$forFile] = FileReaderFactory::createFileReader($forFile);
     }
 
-    public function getWebReader(string $type = null, array $config = []): WebReaderInterface
+    public function getWebReader(string $type = null, array $config = [], bool $singleton = true): WebReaderInterface
     {
         if ($type === null) {
             $type = WebReaderFactory::TYPE_HTML;
         }
-        if (isset($this->webReaders[$type])) {
+        if ($singleton && isset($this->webReaders[$type])) {
             return $this->webReaders[$type];
         }
         return $this->webReaders[$type] = WebReaderFactory::createWebReader($type, $config);
