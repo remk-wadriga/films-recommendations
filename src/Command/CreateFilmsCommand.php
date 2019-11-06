@@ -9,6 +9,7 @@ use App\Entity\Country;
 use App\Entity\Director;
 use App\Entity\Film;
 use App\Entity\Genre;
+use App\Entity\Language;
 use App\Entity\Producer;
 use App\Entity\Types\Enum\GenderEnum;
 use App\Entity\User;
@@ -192,12 +193,18 @@ class CreateFilmsCommand extends AbstractCommand
                 $filmModel->addActor($actor);
             }
 
+            /** @var Language[] $languages */
             $languages = [];
             foreach ($film['languages'] as $name) {
-                $name = trim($name);
-                $languages[] = $languagesCodes[$name];
+                /** @var Language $language */
+                $language = $this->em->getRepository(Language::class)->findOneByName($name);
+                if ($language === null) {
+                    $language = $this->setEntityAttributes(new Language(), ['name' => $name, 'code' => $languagesCodes[$name]]);
+                    $this->em->persist($language);
+                }
+                $languages[] = $language;
+                $filmModel->addLanguage($language);
             }
-            $filmModel->setLanguages($languages);
 
             $this->em->persist($filmModel);
         }
