@@ -15,10 +15,10 @@
                 fields: {
                     poster: {},
                     name: {sortable: true},
-                    genres: {},
-                    countries: {},
-                    languages: {},
-                    date: {sortable: true},
+                    //genres: {},
+                    //countries: {},
+                    //languages: {},
+                    year: {sortable: true},
                     budget: {sortable: true},
                     actions: {}
                 },
@@ -75,7 +75,11 @@
                 film.countries.forEach(item => { countries.push(item.name) })
                 film.countries = countries.join(', ')
 
-                film.languages = film.languages.join(', ')
+                let languages = []
+                film.languages.forEach(item => { languages.push(item.name) })
+                film.languages = languages.join(', ')
+
+                film.year = this.$moment(film.date).format('YYYY');
             })
         }
     }

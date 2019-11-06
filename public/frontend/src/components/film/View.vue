@@ -57,7 +57,11 @@
                 this.film.premiums.forEach(item => { premiums.push(item.name) })
                 this.film.premiums = premiums.join(', ')
 
-                this.film.languages = this.film.languages.join(', ')
+                let languages = []
+                this.film.languages.forEach(item => { languages.push(item.name) })
+                this.film.languages = languages.join(', ')
+
+                this.film.year = this.$moment(this.film.date).format('YYYY');
 
                 this.setPageTitle(this.film.name)
 

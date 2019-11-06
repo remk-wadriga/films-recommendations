@@ -120,7 +120,7 @@ class FilmController extends AbstractController
             /** @var Country[] $countries */
             $countries = [];
             foreach ($film->getCompanies() as $company) {
-                $countries[] = $company->getCountry();
+                $countries[$company->getCountry()->getId()] = $company->getCountry();
             }
             $params[] = [
                 'id' => $film->getId(),

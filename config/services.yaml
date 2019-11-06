@@ -13,7 +13,7 @@ parameters:
     images_path: 'img'
     images_dir: '%kernel.project_dir%%dir_sep%public%dir_sep%%images_path%'
     images_web_path: '%web_path%/%images_path%'
-    default_item_limit: 20
+    default_item_limit: 1000
 
 services:
     # default configuration for services in *this* file

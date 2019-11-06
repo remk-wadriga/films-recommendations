@@ -12,6 +12,8 @@ import VueMoment from 'vue-moment'
 import moment from 'moment-timezone'
 import { SET_ACCESS_TOKEN_MUTATION } from '@/store/mutation-types'
 
+Vue.prototype.$moment = moment;
+
 Vue.config.productionTip = true;
 Vue.use(BootstrapVue)
 Vue.use(VueResource)

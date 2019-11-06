@@ -8,7 +8,9 @@
     width="600px"
 >
 
-    <h5 slot="header" class="mb-2">Name: <strong>{{film.name}}</strong></h5>
+    <h5 slot="header" class="mb-2">Name: <strong>{{ film.name }}</strong></h5>
+
+    <h6 slot="header" class="mb-2">Slogan: <i>{{ film.slogan }}</i></h6>
 
     <b-card-text>
         <b>Genres</b>: {{ film.genres }}
@@ -54,10 +56,14 @@
         <b>Languages</b>: {{ film.languages }}
     </b-card-text>
 
+    <b-card-text>
+        <b>Rating</b>: {{ film.rating }}
+    </b-card-text>
+
     <b-card-text v-if="film.description">
         <b>Description</b>: {{ film.description }}
     </b-card-text>
 
-    <em slot="footer">Date: <strong>{{film.date}}</strong></em>
+    <em slot="footer">Year: <strong>{{film.year}}</strong></em>
 
 </b-card>
