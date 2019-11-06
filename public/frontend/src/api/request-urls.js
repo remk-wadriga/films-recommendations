@@ -47,6 +47,8 @@ export const PREMIUM_INFO_URL = 'GET /premium/:id'
 export const PREMIUM_CREATE_URL = 'POST /premium'
 export const PREMIUM_UPDATE_URL = 'PUT /premium/:id'
 
+export const LANGUAGES_LIST_URL = 'GET /languages'
+
 export const TEST_USERS_FRIENDS_COUNT_URL = 'GET /test/users/friends-count'
 export const TEST_USERS_COUNT_TO_FRIENDS_COUNT_URL = 'GET /test/users/count-to-friends-count-relation'
 export const TEST_PROBABILITY_NORMAL_DISTRIBUTION_URL = 'GET /test/probability/normal-distribution'

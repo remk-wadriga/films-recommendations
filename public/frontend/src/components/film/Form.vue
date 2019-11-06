@@ -7,7 +7,7 @@
     import 'vue-datetime/dist/vue-datetime.css'
     import logger from '@/logger'
     import { ROUTE_FILMS_LIST } from '@/router/routes-list'
-    import { FILM_CREATE_URL, FILM_UPDATE_URL, GENRES_LIST_URL, COMPANIES_LIST_URL, DIRECTORS_LIST_URL, ACTORS_LIST_URL, PRODUCERS_LIST_URL, WRITERS_LIST_URL, PREMIUMS_LIST_URL } from '@/api/request-urls'
+    import { FILM_CREATE_URL, FILM_UPDATE_URL, GENRES_LIST_URL, COMPANIES_LIST_URL, DIRECTORS_LIST_URL, ACTORS_LIST_URL, PRODUCERS_LIST_URL, WRITERS_LIST_URL, PREMIUMS_LIST_URL, LANGUAGES_LIST_URL } from '@/api/request-urls'
 
     export default {
         name: "Form",
@@ -32,17 +32,7 @@
                 premiumsNames: [],
                 errors: [],
                 searchTextMinLength: 3,
-                languagesNames: [
-                    {id: 'EN', name: 'English'},
-                    {id: 'RU', name: 'Russian'},
-                    {id: 'FR', name: 'French'},
-                    {id: 'DE', name: 'Deutsch'},
-                    {id: 'KZ', name: 'Kazakh'},
-                    {id: 'IN', name: 'Indian'},
-                    {id: 'IT', name: 'Italian'},
-                    {id: 'CH', name: 'Chinese'},
-                    {id: 'JP', name: 'Japanese'}
-                ],
+                languagesNames: [],
                 dateFormat: 'y-MM-dd'
             }
         },
@@ -379,6 +369,11 @@
             if (premiums.isOk) {
                 premiums.push({id: 'load_more', name: '... load more ...'})
                 this.premiumsNames = this.premiums = premiums
+            }
+
+            let languages = await Vue.api.request(LANGUAGES_LIST_URL)
+            if (languages.isOk) {
+                this.languagesNames = this.languages = languages
             }
         }
     }

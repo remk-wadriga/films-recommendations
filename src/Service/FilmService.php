@@ -69,7 +69,7 @@ class FilmService extends AbstractService
         $errors = [];
         $posterParamsError = 'Param "poster" must be an array with string-params "name" and "data"';
         foreach ($requiredParams as $attr => $type) {
-            if (!array_key_exists($attr, $params) || empty($params[$attr])) {
+            if (!array_key_exists($attr, $params)) {
                 $errors[$attr] = sprintf('Param "%s" is required', $attr);
             } elseif (gettype($params[$attr]) !== $type) {
                 $errors[$attr] = sprintf('Param "%s" must have a type %s', $attr, $type);
