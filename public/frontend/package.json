@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.27",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "luxon": "^1.17.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
